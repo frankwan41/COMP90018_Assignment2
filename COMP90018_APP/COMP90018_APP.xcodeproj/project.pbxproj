@@ -25,6 +25,7 @@
 		A2027C682AB2DDB800BA5391 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = A2027C672AB2DDB800BA5391 /* FirebaseStorage */; };
 		A2027C6B2AB2DDED00BA5391 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = A2027C6A2AB2DDED00BA5391 /* Kingfisher */; };
 		A2027C6D2AB2DEFF00BA5391 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2027C6C2AB2DEFF00BA5391 /* GoogleService-Info.plist */; };
+		A2027C772AB2E3F300BA5391 /* SUImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027C762AB2E3F300BA5391 /* SUImagePickerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,8 @@
 		2DE1A5C42AB2CA68000A2551 /* TabMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabMainView.swift; sourceTree = "<group>"; };
 		2DE1A5C62AB2CC0F000A2551 /* AddPostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPostView.swift; sourceTree = "<group>"; };
 		A2027C6C2AB2DEFF00BA5391 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A2027C762AB2E3F300BA5391 /* SUImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SUImagePickerView.swift; sourceTree = "<group>"; };
+		A2027C782AB2E8AF00BA5391 /* COMP90018-APP-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "COMP90018-APP-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,11 +82,12 @@
 		003803D42AA968E2000BB3B1 /* COMP90018_APP */ = {
 			isa = PBXGroup;
 			children = (
+				A2027C782AB2E8AF00BA5391 /* COMP90018-APP-Info.plist */,
 				003803D52AA968E2000BB3B1 /* COMP90018_APPApp.swift */,
 				A2027C6C2AB2DEFF00BA5391 /* GoogleService-Info.plist */,
-				2DE1A5B52AB2C082000A2551 /* Utilities */,
+				A2027C752AB2E3DF00BA5391 /* Models */,
+				A2027C742AB2E39000BA5391 /* Utilities */,
 				2DE1A5B32AB2C04D000A2551 /* Views */,
-				2DE1A5B42AB2C056000A2551 /* Models */,
 				003803D92AA968E5000BB3B1 /* Assets.xcassets */,
 				003803DB2AA968E5000BB3B1 /* Preview Content */,
 			);
@@ -114,18 +118,19 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		2DE1A5B42AB2C056000A2551 /* Models */ = {
+		A2027C742AB2E39000BA5391 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				A2027C762AB2E3F300BA5391 /* SUImagePickerView.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		A2027C752AB2E3DF00BA5391 /* Models */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		2DE1A5B52AB2C082000A2551 /* Utilities */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -217,6 +222,7 @@
 				2DE1A5C72AB2CC0F000A2551 /* AddPostView.swift in Sources */,
 				2DE1A5BB2AB2C26E000A2551 /* ShakeView.swift in Sources */,
 				2DE1A5B72AB2C1A3000A2551 /* WelcomView.swift in Sources */,
+				A2027C772AB2E3F300BA5391 /* SUImagePickerView.swift in Sources */,
 				2DE1A5BF2AB2C2D7000A2551 /* ProfileView.swift in Sources */,
 				2DE1A5C52AB2CA68000A2551 /* TabMainView.swift in Sources */,
 				2DE1A5B92AB2C25D000A2551 /* PostsView.swift in Sources */,
@@ -351,6 +357,10 @@
 				DEVELOPMENT_TEAM = NZ3P6V45UB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "COMP90018-APP-Info.plist";
+				INFOPLIST_KEY_NSCameraUsageDescription = "I want to access your camera?";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Add to your photos!";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Use your photos!";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -380,6 +390,10 @@
 				DEVELOPMENT_TEAM = NZ3P6V45UB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "COMP90018-APP-Info.plist";
+				INFOPLIST_KEY_NSCameraUsageDescription = "I want to access your camera?";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Add to your photos!";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Use your photos!";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
