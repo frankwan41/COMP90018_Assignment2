@@ -27,6 +27,7 @@
 		A2027C6D2AB2DEFF00BA5391 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2027C6C2AB2DEFF00BA5391 /* GoogleService-Info.plist */; };
 		A2027C772AB2E3F300BA5391 /* SUImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027C762AB2E3F300BA5391 /* SUImagePickerView.swift */; };
 		A2027C962AB2FA4800BA5391 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027C952AB2FA4800BA5391 /* FirebaseManager.swift */; };
+		A2027C982AB2FE1B00BA5391 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027C972AB2FE1B00BA5391 /* LocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		A2027C762AB2E3F300BA5391 /* SUImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SUImagePickerView.swift; sourceTree = "<group>"; };
 		A2027C782AB2E8AF00BA5391 /* COMP90018-APP-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "COMP90018-APP-Info.plist"; sourceTree = SOURCE_ROOT; };
 		A2027C952AB2FA4800BA5391 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
+		A2027C972AB2FE1B00BA5391 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 			children = (
 				A2027C762AB2E3F300BA5391 /* SUImagePickerView.swift */,
 				A2027C952AB2FA4800BA5391 /* FirebaseManager.swift */,
+				A2027C972AB2FE1B00BA5391 /* LocationManager.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -230,6 +233,7 @@
 				2DE1A5BF2AB2C2D7000A2551 /* ProfileView.swift in Sources */,
 				2DE1A5C52AB2CA68000A2551 /* TabMainView.swift in Sources */,
 				2DE1A5B92AB2C25D000A2551 /* PostsView.swift in Sources */,
+				A2027C982AB2FE1B00BA5391 /* LocationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
