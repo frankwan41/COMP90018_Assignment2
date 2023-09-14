@@ -39,8 +39,8 @@ struct WelcomView: View {
                                 .background(RoundedRectangle(cornerRadius: 10).fill(Color.green))
                         }
                         .navigationDestination(isPresented: $naviagtePosts) {
-                            PostsView()
-                                //.navigationBarBackButtonHidden(true)
+                            TabMainView()
+                                .navigationBarBackButtonHidden(true)
                         }
                         .scaleEffect(isAnimating ? 1.8 : 1.0) // Apply the scale effect
                         
@@ -64,7 +64,7 @@ struct WelcomView: View {
                                 .background(RoundedRectangle(cornerRadius: 10).fill(Color.red))
                         }
                         .navigationDestination(isPresented: $navigateShake) {
-                            ShakeView()
+                            ShakeView().navigationBarBackButtonHidden(true)
                         }
                         
                         .scaleEffect(isAnimating ? 1.8 : 1.0) // Apply the scale effect

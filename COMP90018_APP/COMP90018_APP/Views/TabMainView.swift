@@ -8,13 +8,17 @@
 import SwiftUI
 
 struct TabMainView: View {
+    @State var shakeResult: String = ""
+    
     var body: some View {
         TabView{
             PostsView()
+                .navigationBarBackButtonHidden(true)
                 .tabItem {
                     Image(systemName: "fork.knife")
                     Text("Posts")
                 }
+
             ProfileView()
                 .tabItem {
                     Image(systemName: "person")
@@ -27,6 +31,6 @@ struct TabMainView: View {
 
 struct TabView_Previews: PreviewProvider {
     static var previews: some View {
-        TabMainView()
+            TabMainView()
     }
 }

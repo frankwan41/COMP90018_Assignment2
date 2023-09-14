@@ -10,7 +10,10 @@ import SwiftUI
 struct ShakeView: View {
     @State private var categoryName: String?
     @State private var isShaking: Bool = false
+    @State private var hasShaked: Bool = false
     @State private var navigatePosts: Bool = false
+    
+    @Environment(\.presentationMode) var presentationMode
     
     // Replace with real data
     let templateCategories = ["Chinese", "Thailand", "Korean", "Malaysia","Janpanese","Italian"]
@@ -26,36 +29,59 @@ struct ShakeView: View {
                     .frame(width: 350,height: 150)
                     .rotationEffect(.degrees(isShaking ? 0 : -35))
                     
-                Text(categoryName ?? "Find Food Post")
-                    .font(.largeTitle)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(width: 350, height: 100)
-                    .background(RoundedRectangle(cornerRadius: 40).fill(Color.blue))
-                    .onTapGesture {
-                        navigatePosts = true
-                    }
-                    .navigationDestination(isPresented: $navigatePosts) {
-                        PostsView(shakeResult: categoryName ?? "" )
-                            //.navigationBarBackButtonHidden(true)
-                    }
+                CategoryView
             }
         }
         .onShake {
+            hasShaked = true
+            categoryName = templateCategories.randomElement()
             // Create animation for shaking affect
             withAnimation(Animation.easeInOut(duration: 0.5)) {
                 isShaking = true
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 withAnimation(Animation.easeInOut(duration: 0.5)){
-                    categoryName = templateCategories.randomElement()
                     isShaking = false
                 }
+            }
+        }
+        .toolbar{
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                }.foregroundColor(.black)
             }
         }
     }
 }
 
+
+// MARK: COMPONENTS
+extension ShakeView {
+    private var CategoryView: some View{
+        Text(categoryName ?? "Find Food Post")
+            .font(.largeTitle)
+            .foregroundColor(.white)
+            .padding()
+            .frame(width: 350, height: 100)
+            .background(RoundedRectangle(cornerRadius: 40).fill(hasShaked ? Color.blue : Color.gray))
+            .opacity(hasShaked ? 1.0 : 0.5)
+            .disabled(!hasShaked)
+            .onTapGesture {
+                if hasShaked{
+                    navigatePosts = true
+                }
+            }
+            .navigationDestination(isPresented: $navigatePosts) {
+                TabMainView(shakeResult: categoryName ?? "").navigationBarBackButtonHidden(true)
+            }
+    }
+}
+
+
+// MARK: EXTRA SERVICES
 
 // The notification we'll send when a shake gesture happens.
 extension UIDevice {
