@@ -26,6 +26,7 @@
 		A2027C6B2AB2DDED00BA5391 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = A2027C6A2AB2DDED00BA5391 /* Kingfisher */; };
 		A2027C6D2AB2DEFF00BA5391 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A2027C6C2AB2DEFF00BA5391 /* GoogleService-Info.plist */; };
 		A2027C772AB2E3F300BA5391 /* SUImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027C762AB2E3F300BA5391 /* SUImagePickerView.swift */; };
+		A2027C962AB2FA4800BA5391 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027C952AB2FA4800BA5391 /* FirebaseManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +46,7 @@
 		A2027C6C2AB2DEFF00BA5391 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A2027C762AB2E3F300BA5391 /* SUImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SUImagePickerView.swift; sourceTree = "<group>"; };
 		A2027C782AB2E8AF00BA5391 /* COMP90018-APP-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "COMP90018-APP-Info.plist"; sourceTree = SOURCE_ROOT; };
+		A2027C952AB2FA4800BA5391 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				A2027C762AB2E3F300BA5391 /* SUImagePickerView.swift */,
+				A2027C952AB2FA4800BA5391 /* FirebaseManager.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -215,6 +218,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A2027C962AB2FA4800BA5391 /* FirebaseManager.swift in Sources */,
 				003803D62AA968E2000BB3B1 /* COMP90018_APPApp.swift in Sources */,
 				2DE1A5C12AB2C2EE000A2551 /* ProfileSetttingView.swift in Sources */,
 				2DE1A5C32AB2C562000A2551 /* SinglePostView.swift in Sources */,
