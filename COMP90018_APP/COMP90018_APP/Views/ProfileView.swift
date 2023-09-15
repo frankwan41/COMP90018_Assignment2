@@ -18,7 +18,7 @@ struct ProfileView: View {
                 Text("Found out user profile page")
             }
             NavigationLink {
-                SignView()
+                SignView(userViewModel: UserViewModel())
             } label: {
                 Text("Click here to signin/singup")
             }

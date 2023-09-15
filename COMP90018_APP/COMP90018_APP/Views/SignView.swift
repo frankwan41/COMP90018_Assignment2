@@ -11,6 +11,8 @@ import Foundation
 
 struct SignView: View {
     
+    @StateObject var userViewModel: UserViewModel
+    
     @State private var email = ""
     @State private var password = ""
     @State private var passwordCover: Bool = true
@@ -87,24 +89,27 @@ struct SignView: View {
     // Handle submit button
     private func handleSubmit() {
         if isSignUpMode{
-            if !isValidEmail(email: email) {
-                emailInvalidMessage = "Email is not valid format"
-            }
-            let passwordCheck = isValidPassword(password: password)
-            if !passwordCheck.isValid{
-                passwordInvalidMessage = passwordCheck.message
-            }
-
+            validInputCheck(email: email, password: password)
+            userViewModel.signUpUser(email: email, password: password)
         }
-//        else{
-//            if let user = {
-//
-//            }else{
-//                statusMessage = ""
-//            }
-//
-//        }
+        else{
+            validInputCheck(email: email, password: password)
+            userViewModel.signInUser(email: email, password: password)
+        }
     }
+    
+    private func validInputCheck(email: String, password: String) {
+        if !isValidEmail(email: email) {
+            emailInvalidMessage = "Email is not valid format"
+            return
+        }
+        let passwordCheck = isValidPassword(password: password)
+        if !passwordCheck.isValid{
+            passwordInvalidMessage = passwordCheck.message
+            return
+        }
+    }
+    
     // Check if email meet requirements along with changing of email input after submit
     private func emailCheckAftSubmit(newValue: String){
         if hasSubmitted  {
@@ -196,6 +201,6 @@ func isValidPassword(password: String) -> (isValid: Bool, message: String) {
 
 struct SignView_Previews: PreviewProvider {
     static var previews: some View {
-        SignView()
+        SignView(userViewModel: UserViewModel())
     }
 }
