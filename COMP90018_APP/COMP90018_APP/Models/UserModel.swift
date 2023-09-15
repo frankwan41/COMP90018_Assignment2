@@ -15,6 +15,7 @@ struct User: Decodable, Identifiable{
     var email: String
     var profileImageURL: String
     var age: String
+    var phoneNumber: String
     
     init(data: [String: Any]){
         self.userUID = data["useruid"] as? String ?? ""
@@ -23,6 +24,7 @@ struct User: Decodable, Identifiable{
         self.email = data["email"] as? String ?? ""
         self.profileImageURL = data["profileimageurl"] as? String ?? ""
         self.age = data["age"] as? String ?? ""
+        self.phoneNumber = data["phonenumber"] as? String ?? ""
     }
     
 }
