@@ -30,6 +30,7 @@
 		A2027C982AB2FE1B00BA5391 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027C972AB2FE1B00BA5391 /* LocationManager.swift */; };
 		A2027C9A2AB3014F00BA5391 /* PostModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027C992AB3014F00BA5391 /* PostModel.swift */; };
 		A2027C9C2AB304A100BA5391 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027C9B2AB304A100BA5391 /* UserModel.swift */; };
+		A2027CCD2AB42B6400BA5391 /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027CCC2AB42B6400BA5391 /* CommentModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 		A2027C972AB2FE1B00BA5391 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		A2027C992AB3014F00BA5391 /* PostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostModel.swift; sourceTree = "<group>"; };
 		A2027C9B2AB304A100BA5391 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
+		A2027CCC2AB42B6400BA5391 /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +143,7 @@
 			children = (
 				A2027C992AB3014F00BA5391 /* PostModel.swift */,
 				A2027C9B2AB304A100BA5391 /* UserModel.swift */,
+				A2027CCC2AB42B6400BA5391 /* CommentModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -228,6 +231,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2027C962AB2FA4800BA5391 /* FirebaseManager.swift in Sources */,
+				A2027CCD2AB42B6400BA5391 /* CommentModel.swift in Sources */,
 				003803D62AA968E2000BB3B1 /* COMP90018_APPApp.swift in Sources */,
 				2DE1A5C12AB2C2EE000A2551 /* ProfileSetttingView.swift in Sources */,
 				A2027C9A2AB3014F00BA5391 /* PostModel.swift in Sources */,
