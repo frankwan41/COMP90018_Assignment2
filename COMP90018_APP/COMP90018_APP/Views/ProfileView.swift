@@ -8,15 +8,31 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @State private var a = false
     
     var body: some View {
-        Text("This is the profile view")
+        VStack(spacing: 20){
+            Text("This is the profile view")
+            NavigationLink {
+                ProfileSetttingView()
+            } label: {
+                Text("Found out user profile page")
+            }
+            NavigationLink {
+                SignView()
+            } label: {
+                Text("Click here to signin/singup")
+            }
+
+        }
+
+
     }
 }
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileView()
+        NavigationStack{
+            ProfileView()
+        }
     }
 }

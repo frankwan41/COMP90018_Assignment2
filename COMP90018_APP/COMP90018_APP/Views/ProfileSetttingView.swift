@@ -35,17 +35,6 @@ struct ProfileSetttingView: View {
         ]
     }
     
-    
-//    init() {
-//        // Set initial values for editing fields when the view is initialized
-//        _editedEmail = State(initialValue: originalEmail)
-//        _editedPassword = State(initialValue: originalPassword)
-//        _editedPhoneNumber = State(initialValue: originalPhoneNumber)
-//        _editedAge = State(initialValue: originalAge)
-//        _editedGender = State(initialValue: originalGender)
-//    }
-    
-    
     var body: some View {
         ZStack{
             isEditing ?             Color.black.opacity(0.1).ignoresSafeArea()
@@ -86,6 +75,8 @@ struct ProfileSetttingView: View {
         }
     }
 }
+
+// MARK: COMPONENTS
 
 struct EditableTextRow: View {
     var title: String
