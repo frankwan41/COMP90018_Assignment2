@@ -12,7 +12,7 @@ struct Post: Decodable, Identifiable{
     var id: String
     var postTitle: String
     var timestamp: Date
-    var name: String
+    var userName: String
     var userUID: String
     var imageURL: String
     var longitude: Double
@@ -22,7 +22,7 @@ struct Post: Decodable, Identifiable{
         self.id = data["id"] as? String ?? ""
         self.postTitle = data["title"] as? String ?? ""
         self.timestamp = (data["timestamp"] as? Timestamp)?.dateValue() ?? Date()
-        self.name = data["name"] as? String ?? ""
+        self.userName = data["username"] as? String ?? ""
         self.userUID = data["useruid"] as? String ?? ""
         self.imageURL = data["imageurl"] as? String ?? ""
         self.longitude = data["longitude"] as? Double ?? 0
