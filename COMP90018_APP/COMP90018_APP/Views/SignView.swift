@@ -9,12 +9,22 @@ import SwiftUI
 import Foundation
 
 
+struct inputPair{
+    var name: String
+    var TextBinding: Binding<String>
+}
+
 struct SignView: View {
     
     @StateObject var userViewModel: UserViewModel
     
     @State private var email = ""
     @State private var password = ""
+    @State private var username = ""
+    @State private var gender = ""
+    @State private var phoneNumber = ""
+    @State private var age = ""
+    
     @State private var passwordCover: Bool = true
     @State private var isSignUpMode: Bool = false
     @State private var hasSubmitted: Bool = false
@@ -22,17 +32,25 @@ struct SignView: View {
     @State private var passwordInvalidMessage: String = ""
     
     
+    var signupExtras: [inputPair] {
+        [
+        inputPair(name: "Username", TextBinding: $username),
+        inputPair(name: "Age", TextBinding: $age),
+        inputPair(name: "Gender", TextBinding: $gender),
+        inputPair(name: "Phone Number", TextBinding: $phoneNumber)
+        ]
+    }
+    
+    
     var body: some View {
 
         ZStack{
-//            Color.blue.ignoresSafeArea()
-            
             
             VStack{
                 Text(isSignUpMode ? "Create Account" : "Sign In")
                     .font(.largeTitle)
                     .bold()
-                Spacer().frame(height: 50)
+                Spacer().frame(height: 20)
                 TextField("Email", text: $email)
                     .bold()
                     .padding()
@@ -40,10 +58,13 @@ struct SignView: View {
                     .background(Color.black.opacity(0.2))
                     .cornerRadius(10)
                 Text(emailInvalidMessage).foregroundColor(.red)
-                Spacer().frame(height: 30)
+                Spacer().frame(height: 20)
                 passwordField
-                Text(passwordInvalidMessage).foregroundColor(.red)
-                Spacer().frame(height: 25)
+                VStack{
+                    Text(passwordInvalidMessage).foregroundColor(.red)
+                    Text(userViewModel.errorMessage).foregroundColor(.red)
+                }
+                if isSignUpMode {signupExtraField}
                 Button{
                     handleSubmit()
                     hasSubmitted = true
@@ -78,10 +99,16 @@ struct SignView: View {
             }
             .onChange(of: email) { newValue in
                 emailCheckAftSubmit(newValue: newValue)
+                userViewModel.errorMessage = ""
             }
             .onChange(of: password) { newValue in
                 passwordCheckAftSubmit(newValue: newValue)
+                userViewModel.errorMessage = ""
             }
+        }
+        .onTapGesture {
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+
         }
     }
     
@@ -156,6 +183,20 @@ extension SignView{
                 passwordCover.toggle()
             } label: {
                 Image(systemName: passwordCover ? "eye.slash" :  "eye").accentColor(.gray)
+            }
+        }
+    }
+    // Sign Up Extra input fields
+    private var signupExtraField: some View {
+        VStack{
+            ForEach(0..<signupExtras.count, id: \.self) {index in
+                TextField(signupExtras[index].name, text: signupExtras[index].TextBinding)
+                    .bold()
+                    .padding()
+                    .frame(width: 300, height: 50)
+                    .background(Color.black.opacity(0.2))
+                    .cornerRadius(10)
+                Spacer().frame(height: 20)
             }
         }
     }

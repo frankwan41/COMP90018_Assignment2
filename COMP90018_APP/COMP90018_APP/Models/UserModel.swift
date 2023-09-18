@@ -8,8 +8,7 @@
 import Foundation
 import Firebase
 
-struct User: Decodable, Identifiable{
-    var userUID: String
+struct User: Decodable{
     var userName: String
     var gender: String
     var email: String
@@ -18,7 +17,6 @@ struct User: Decodable, Identifiable{
     var phoneNumber: String
     
     init(data: [String: Any]){
-        self.userUID = data["useruid"] as? String ?? ""
         self.userName = data["username"] as? String ?? ""
         self.gender = data["gender"] as? String ?? ""
         self.email = data["email"] as? String ?? ""
@@ -40,8 +38,8 @@ class UserViewModel: ObservableObject {
     func signInUser(email: String, password: String){
         FirebaseManager.shared.auth.signIn(withEmail: email, password: password){ result, error in
             if let error = error {
-                print("Failed to sign in user \(error.localizedDescription)")
-                self.errorMessage = "Failed to sign in"
+                print("Failed to sign in user \(error)")
+                self.errorMessage = "Invalid sign credentials!"
                 return
             }
             self.isLoggedIn = true
@@ -52,7 +50,7 @@ class UserViewModel: ObservableObject {
     func signUpUser(email: String, password: String){
         FirebaseManager.shared.auth.createUser(withEmail: email, password: password) {[self] result, error in
             if let error = error {
-                print("Failed to sign up user \(error.localizedDescription)")
+                print("Failed to sign up user \(error)")
                 self.errorMessage = "Failed to sign up"
                 return
             }
@@ -66,7 +64,7 @@ class UserViewModel: ObservableObject {
         FirebaseManager.shared.auth.sendPasswordReset(withEmail: email){error in
             if let error = error {
                 print("Failed to reset password")
-                print("Some error occured \(error.localizedDescription)")
+                print("Some error occured \(error)")
             }
         }
     }
@@ -81,15 +79,9 @@ class UserViewModel: ObservableObject {
             try FirebaseManager.shared.auth.signOut()
             print("Successfully signed out")
         }catch{
-            print("Error signed out: \(error.localizedDescription)")
+            print("Error signed out: \(error)")
         }
     }
     
 }
 
-
-extension User{
-    var id: String{
-        return userUID
-    }
-}

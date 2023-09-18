@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct PostsView: View {
-    @State var shakeResult: String  = ""
+//    @State var shakeResult: String  = ""
     @State private var searchCategory: String = ""
     
-    @Environment(\.presentationMode) var presentationMode
+    @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
+    @AppStorage("shakeResult") var shakeResult = ""
+    
     var body: some View {
         NavigationView{
             VStack{
@@ -19,21 +21,15 @@ struct PostsView: View {
                 Text("Here is your shake result: \(shakeResult)")
             }
             .toolbar{
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
-                        presentationMode.wrappedValue.dismiss()
+                        viewSwitcher = viewPage.shake
                     } label: {
-                        Image(systemName: "chevron.left")
-                    }.foregroundColor(.black)
+                        Image(systemName: "dice")
+                    }
+
+
                 }
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    NavigationLink {
-//                        ShakeView()
-//                    } label: {
-//                        Image(systemName: "dice")
-//                    }
-//
-//                }
             }
         }
     }

@@ -9,20 +9,23 @@ import SwiftUI
 
 struct ProfileView: View {
     
+    
     var body: some View {
-        VStack(spacing: 20){
-            Text("This is the profile view")
-            NavigationLink {
-                ProfileSetttingView()
-            } label: {
-                Text("Found out user profile page")
+        NavigationView{
+            VStack(spacing: 20){
+                Text("This is the profile view")
+                NavigationLink {
+                    ProfileSetttingView()
+                } label: {
+                    Text("Found out user profile page")
+                }
+                NavigationLink {
+                    SignView(userViewModel: UserViewModel())
+                } label: {
+                    Text("Click here to signin/singup")
+                }
+                
             }
-            NavigationLink {
-                SignView(userViewModel: UserViewModel())
-            } label: {
-                Text("Click here to signin/singup")
-            }
-
         }
 
 

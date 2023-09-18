@@ -13,7 +13,12 @@ struct ShakeView: View {
     @State private var hasShaked: Bool = false
     @State private var navigatePosts: Bool = false
     
-    @Environment(\.presentationMode) var presentationMode
+    @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
+    @AppStorage("shakeResult") var shakeResult = ""
+    
+    init(){
+        shakeResult = ""
+    }
     
     // Replace with real data
     let templateCategories = ["Chinese", "Thailand", "Korean", "Malaysia","Janpanese","Italian"]
@@ -46,11 +51,11 @@ struct ShakeView: View {
             }
         }
         .toolbar{
-            ToolbarItem(placement: .navigationBarLeading) {
+            ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    presentationMode.wrappedValue.dismiss()
+                    viewSwitcher = viewPage.tab
                 } label: {
-                    Image(systemName: "chevron.left")
+                    Image(systemName: "fork.knife")
                 }.foregroundColor(.black)
             }
         }
@@ -70,13 +75,15 @@ extension ShakeView {
             .opacity(hasShaked ? 1.0 : 0.5)
             .disabled(!hasShaked)
             .onTapGesture {
+                print(categoryName ?? "")
                 if hasShaked{
-                    navigatePosts = true
+                    viewSwitcher = viewPage.tab
+                    shakeResult = categoryName ?? ""
                 }
             }
-            .navigationDestination(isPresented: $navigatePosts) {
-                TabMainView(shakeResult: categoryName ?? "").navigationBarBackButtonHidden(true)
-            }
+//            .navigationDestination(isPresented: $navigatePosts) {
+//                TabMainView(shakeResult: categoryName ?? "").navigationBarBackButtonHidden(true)
+//            }
     }
 }
 

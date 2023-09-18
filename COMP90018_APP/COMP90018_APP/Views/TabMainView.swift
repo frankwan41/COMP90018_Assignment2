@@ -20,6 +20,7 @@ struct TabMainView: View {
                 }
 
             ProfileView()
+                .navigationBarBackButtonHidden(true)
                 .tabItem {
                     Image(systemName: "person")
                     Text("Profile")
