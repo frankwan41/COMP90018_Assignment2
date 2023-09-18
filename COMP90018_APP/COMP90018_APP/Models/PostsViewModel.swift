@@ -25,6 +25,11 @@ class PostsViewModel: ObservableObject{
      This function will fetch all posts from the firebase and order them by the timestamp descendingly
      */
     func fetchAllPosts(){
+        
+        // Remove all existing posts
+        self.posts.removeAll()
+        
+        
         FirebaseManager.shared.firestore
             .collection("posts")
             .getDocuments { documentsSnapshot, error in
@@ -70,6 +75,13 @@ class PostsViewModel: ObservableObject{
      This function will return the first specific number of posts and order them by the timestamp descendingly
      */
     func fetchNPosts(number: Int){
+        
+        
+        // Remove all existing posts
+        self.posts.removeAll()
+        
+        
+        
         FirebaseManager.shared.firestore
             .collection("posts")
             .order(by: "timestamp", descending: true)
