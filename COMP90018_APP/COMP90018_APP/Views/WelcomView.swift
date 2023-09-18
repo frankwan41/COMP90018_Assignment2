@@ -14,7 +14,6 @@ struct WelcomView: View {
     var body: some View {
         NavigationView {
             
-            
             VStack(spacing: 150){
                 Text("Do you know what to eat today?")
                     .font(.largeTitle)

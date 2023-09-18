@@ -23,48 +23,48 @@ class LoginViewModel: ObservableObject{
      This function takes the email and the password of the user to login the authentication of Fireabse. It will return error if the process fails,
      
      */
-    func loginUser(email: String, password: String){
-        FirebaseManager.shared.auth.signIn(withEmail: email, password: password){
-            result, error in
-            
-            // Catch any error occurs
-            if let error = error {
-                print("Failed to login user \(error)")
-                return
-            }
-            
-            // Print the message of successful login to the console
-            self.isCurrentlyLoggedOut = false
-            print("Successfully logged in and the id of the user is \(result!.user.uid)")
-            
-        }
-    }
+//    func loginUser(email: String, password: String){
+//        FirebaseManager.shared.auth.signIn(withEmail: email, password: password){
+//            result, error in
+//
+//            // Catch any error occurs
+//            if let error = error {
+//                print("Failed to login user \(error)")
+//                return
+//            }
+//
+//            // Print the message of successful login to the console
+//            self.isCurrentlyLoggedOut = false
+//            print("Successfully logged in and the id of the user is \(result!.user.uid)")
+//
+//        }
+//    }
     
     
     /**
      Inputs: email and password of the user as well as the image
      This function takes the email and password of the user to create an account in the firebase database and associates it with the image of the user.
      */
-//    func createNewAccount(email: String, password: String, image:UIImage, userName: String, gender: String, age: String, phoneNumber: String){
-//        FirebaseManager.shared.auth.createUser(withEmail: email, password: password) { [self] result, error in
-//            if let error = error {
-//                print("Failed to create user for the error \(error)")
-//                return
-//            }
-//
-//            print("User \(result!.user.uid) is created.")
-//
-//
-//            // Automatically login the account after being created
-//            //self.loginUser(email: email, password: password)
-//
-//            // Save the image of the user in the storage
-//            //saveImageToStorage(email: email, image: image)
-//
-//            // Save other information of the user
-//            //saveUserOtherInformation(userName: userName, gender: gender, email: email, age: age, phoneNumber: phoneNumber, )
-//        }
-//    }
+    func createNewAccount(email: String, password: String, image:UIImage, userName: String, gender: String, age: String, phoneNumber: String){
+        FirebaseManager.shared.auth.createUser(withEmail: email, password: password) { [self] result, error in
+            if let error = error {
+                print("Failed to create user for the error \(error)")
+                return
+            }
+
+            print("User \(result!.user.uid) is created.")
+
+
+            // Automatically login the account after being created
+            self.loginUser(email: email, password: password)
+
+            // Save the image of the user in the storage
+            saveImageToStorage(email: email, image: image)
+
+            // Save other information of the user
+            saveUserOtherInformation(userName: userName, gender: gender, email: email, age: age, phoneNumber: phoneNumber)
+        }
+    }
     
     
     /**

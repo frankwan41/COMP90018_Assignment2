@@ -36,6 +36,7 @@
 		A2027CD32AB7C85300BA5391 /* PostsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027CD22AB7C85300BA5391 /* PostsViewModel.swift */; };
 		A2027CD52AB7D36000BA5391 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027CD42AB7D36000BA5391 /* ProfileViewModel.swift */; };
 		A20A9FCE2AB7F8D3003833AA /* TagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A9FCD2AB7F8D3003833AA /* TagModel.swift */; };
+		A20A9FD02AB81927003833AA /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A9FCF2AB81927003833AA /* UserViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +66,7 @@
 		A2027CD22AB7C85300BA5391 /* PostsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsViewModel.swift; sourceTree = "<group>"; };
 		A2027CD42AB7D36000BA5391 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		A20A9FCD2AB7F8D3003833AA /* TagModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagModel.swift; sourceTree = "<group>"; };
+		A20A9FCF2AB81927003833AA /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +161,7 @@
 				A2027CD22AB7C85300BA5391 /* PostsViewModel.swift */,
 				A2027CD42AB7D36000BA5391 /* ProfileViewModel.swift */,
 				A20A9FCD2AB7F8D3003833AA /* TagModel.swift */,
+				A20A9FCF2AB81927003833AA /* UserViewModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -246,6 +249,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2027C962AB2FA4800BA5391 /* FirebaseManager.swift in Sources */,
+				A20A9FD02AB81927003833AA /* UserViewModel.swift in Sources */,
 				A2027CCD2AB42B6400BA5391 /* CommentModel.swift in Sources */,
 				003803D62AA968E2000BB3B1 /* COMP90018_APPApp.swift in Sources */,
 				2DE1A5C12AB2C2EE000A2551 /* ProfileSetttingView.swift in Sources */,
