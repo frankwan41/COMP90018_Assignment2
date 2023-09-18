@@ -33,6 +33,7 @@
 		A2027CCD2AB42B6400BA5391 /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027CCC2AB42B6400BA5391 /* CommentModel.swift */; };
 		A2027CCF2AB5C08E00BA5391 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027CCE2AB5C08E00BA5391 /* LoginViewModel.swift */; };
 		A2027CD12AB7035500BA5391 /* AddPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027CD02AB7035500BA5391 /* AddPostViewModel.swift */; };
+		A2027CD32AB7C85300BA5391 /* PostsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027CD22AB7C85300BA5391 /* PostsViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,6 +60,7 @@
 		A2027CCC2AB42B6400BA5391 /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
 		A2027CCE2AB5C08E00BA5391 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		A2027CD02AB7035500BA5391 /* AddPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPostViewModel.swift; sourceTree = "<group>"; };
+		A2027CD22AB7C85300BA5391 /* PostsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +152,7 @@
 				A2027CCC2AB42B6400BA5391 /* CommentModel.swift */,
 				A2027CCE2AB5C08E00BA5391 /* LoginViewModel.swift */,
 				A2027CD02AB7035500BA5391 /* AddPostViewModel.swift */,
+				A2027CD22AB7C85300BA5391 /* PostsViewModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -250,6 +253,7 @@
 				A2027C772AB2E3F300BA5391 /* SUImagePickerView.swift in Sources */,
 				2DE1A5BF2AB2C2D7000A2551 /* ProfileView.swift in Sources */,
 				2DE1A5C52AB2CA68000A2551 /* TabMainView.swift in Sources */,
+				A2027CD32AB7C85300BA5391 /* PostsViewModel.swift in Sources */,
 				2DE1A5B92AB2C25D000A2551 /* PostsView.swift in Sources */,
 				A2027C9C2AB304A100BA5391 /* UserModel.swift in Sources */,
 				A2027CD12AB7035500BA5391 /* AddPostViewModel.swift in Sources */,
