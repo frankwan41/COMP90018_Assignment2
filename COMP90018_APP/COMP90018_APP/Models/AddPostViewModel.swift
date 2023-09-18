@@ -14,45 +14,56 @@ class AddPostViewModel{
      The function saves the information of the post into the colletion of firebase
      */
     
-    func addPost(postTitle: String, image: UIImage?, date: Date, longitude: Double, latitude: Double){
+    func addPost(postTitle: String, image: UIImage?, date: Date, longitude: Double, latitude: Double, content: String, tags: [String], comments: [String] = [], likes: Int = 0){
         
         // Confirm the status of login and obtain the userUID
         guard let uid = Auth.auth().currentUser?.uid else {return}
         
         // Obtain the username of the user
+        var userName: String = ""
+        
         FirebaseManager.shared.firestore
             .collection("users")
-            .whereField("useruid", isEqualTo: uid)
-            .getDocuments { documentsSnapshot, error in
-                
+            .document(uid)
+            .getDocument { documentSnapshot, error in
                 if let error = error{
-                    print("Failed to obtain the user name from Firebase \(error)")
+                    print("Failed to fetch the user name of the user \(uid), \(error.localizedDescription)")
                     return
                 }
                 
-                let userName = User(data: (documentsSnapshot?.documents.first?.data())!).userName
-                
-                // Create the reference of the new post in collection
-                let ref = Firestore.firestore().collection("posts").document()
-                
-                // Put data into the reference
-                ref.setData([
-                    "id": ref.documentID as String,
-                    "title": postTitle,
-                    "timestamp": date,
-                    "useruid": uid,
-                    "username": userName,
-                    "longitude": longitude,
-                    "latitude": latitude
-                ])
-                
-                // Check if the image exists else fail to add the post
-                guard let image = image else {return}
-                
-                // save the image of the post to the storage
-                self.savePostImage(image: image, documentID: ref.documentID as String)
-                
+                let data = documentSnapshot?.data()
+                let user = User(data: data!)
+                userName = user.userName
             }
+                
+                
+        // Create the reference of the new post in collection
+        let ref = Firestore.firestore().collection("posts").document()
+        
+        
+                
+        // Put data into the reference
+        ref.setData([
+            "id": ref.documentID as String,
+            "title": postTitle,
+            "timestamp": date,
+            "useruid": uid,
+            "username": userName,
+            "longitude": longitude,
+            "latitude": latitude,
+            "content": content,
+            "tags": tags,
+            "comments": comments,
+            "likes": likes
+        ])
+        
+        // Check if the image exists else fail to add the post
+        guard let image = image else {return}
+        
+        // save the image of the post to the storage
+        self.savePostImage(image: image, documentID: ref.documentID as String)
+                
+            
         
         
         

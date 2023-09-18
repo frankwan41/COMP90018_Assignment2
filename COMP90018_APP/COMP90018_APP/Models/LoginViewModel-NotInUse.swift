@@ -45,26 +45,26 @@ class LoginViewModel: ObservableObject{
      Inputs: email and password of the user as well as the image
      This function takes the email and password of the user to create an account in the firebase database and associates it with the image of the user.
      */
-    func createNewAccount(email: String, password: String, image:UIImage, userName: String, gender: String, age: String, phoneNumber: String){
-        FirebaseManager.shared.auth.createUser(withEmail: email, password: password) { [self] result, error in
-            if let error = error {
-                print("Failed to create user for the error \(error)")
-                return
-            }
-            
-            print("User \(result!.user.uid) is created.")
-            
-            
-            // Automatically login the account after being created
-            self.loginUser(email: email, password: password)
-            
-            // Save the image of the user in the storage
-            saveImageToStorage(email: email, image: image)
-            
-            // Save other information of the user
-            saveUserOtherInformation(userName: userName, gender: gender, email: email, age: age, phoneNumber: phoneNumber)
-        }
-    }
+//    func createNewAccount(email: String, password: String, image:UIImage, userName: String, gender: String, age: String, phoneNumber: String){
+//        FirebaseManager.shared.auth.createUser(withEmail: email, password: password) { [self] result, error in
+//            if let error = error {
+//                print("Failed to create user for the error \(error)")
+//                return
+//            }
+//
+//            print("User \(result!.user.uid) is created.")
+//
+//
+//            // Automatically login the account after being created
+//            //self.loginUser(email: email, password: password)
+//
+//            // Save the image of the user in the storage
+//            //saveImageToStorage(email: email, image: image)
+//
+//            // Save other information of the user
+//            //saveUserOtherInformation(userName: userName, gender: gender, email: email, age: age, phoneNumber: phoneNumber, )
+//        }
+//    }
     
     
     /**
@@ -75,13 +75,14 @@ class LoginViewModel: ObservableObject{
     func saveImageToStorage(email: String, image: UIImage){
         
         // Check whether the user has logined
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
+            return}
         
         // Create the reference of the image in storage by the uid of the user
         let ref = FirebaseManager.shared.storage.reference(withPath: uid)
         
         // Compress the image
-        guard let imageData = image.jpegData(compressionQuality: 5) else{return}
+        guard let imageData = image.jpegData(compressionQuality: 1) else{return}
         
         // Put the image data into the reference
         ref.putData(imageData, metadata: nil) { metadata, error in
@@ -109,12 +110,16 @@ class LoginViewModel: ObservableObject{
      Inputs: name, gender, email, age, phone number of the user
      Save them and the uid into the collection.
      */
-    func saveUserOtherInformation(userName: String, gender: String, email: String, age: String, phoneNumber: String){
+    func saveUserOtherInformation(userName: String, gender: String, email: String, age: String, phoneNumber: String, likedPostsIDs: [String]){
         // Confirm login status and obtain the uid of the current user
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else{return}
         
-        let userData = ["useruid": uid, "username": userName, "gender": gender
-                        , "email": email, "age": age, "phonenumber": phoneNumber]
+        let userData = ["username": userName,
+                        "gender": gender,
+                        "email": email,
+                        "age": age,
+                        "phonenumber": phoneNumber,
+                        "likedpostsids": likedPostsIDs] as [String : Any]
         
         FirebaseManager.shared.firestore
             .collection("users")

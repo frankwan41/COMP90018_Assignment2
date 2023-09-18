@@ -31,10 +31,11 @@
 		A2027C9A2AB3014F00BA5391 /* PostModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027C992AB3014F00BA5391 /* PostModel.swift */; };
 		A2027C9C2AB304A100BA5391 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027C9B2AB304A100BA5391 /* UserModel.swift */; };
 		A2027CCD2AB42B6400BA5391 /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027CCC2AB42B6400BA5391 /* CommentModel.swift */; };
-		A2027CCF2AB5C08E00BA5391 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027CCE2AB5C08E00BA5391 /* LoginViewModel.swift */; };
+		A2027CCF2AB5C08E00BA5391 /* LoginViewModel-NotInUse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027CCE2AB5C08E00BA5391 /* LoginViewModel-NotInUse.swift */; };
 		A2027CD12AB7035500BA5391 /* AddPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027CD02AB7035500BA5391 /* AddPostViewModel.swift */; };
 		A2027CD32AB7C85300BA5391 /* PostsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027CD22AB7C85300BA5391 /* PostsViewModel.swift */; };
 		A2027CD52AB7D36000BA5391 /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2027CD42AB7D36000BA5391 /* ProfileViewModel.swift */; };
+		A20A9FCE2AB7F8D3003833AA /* TagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A9FCD2AB7F8D3003833AA /* TagModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,10 +60,11 @@
 		A2027C992AB3014F00BA5391 /* PostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostModel.swift; sourceTree = "<group>"; };
 		A2027C9B2AB304A100BA5391 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		A2027CCC2AB42B6400BA5391 /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
-		A2027CCE2AB5C08E00BA5391 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		A2027CCE2AB5C08E00BA5391 /* LoginViewModel-NotInUse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginViewModel-NotInUse.swift"; sourceTree = "<group>"; };
 		A2027CD02AB7035500BA5391 /* AddPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPostViewModel.swift; sourceTree = "<group>"; };
 		A2027CD22AB7C85300BA5391 /* PostsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsViewModel.swift; sourceTree = "<group>"; };
 		A2027CD42AB7D36000BA5391 /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		A20A9FCD2AB7F8D3003833AA /* TagModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,10 +154,11 @@
 				A2027C992AB3014F00BA5391 /* PostModel.swift */,
 				A2027C9B2AB304A100BA5391 /* UserModel.swift */,
 				A2027CCC2AB42B6400BA5391 /* CommentModel.swift */,
-				A2027CCE2AB5C08E00BA5391 /* LoginViewModel.swift */,
+				A2027CCE2AB5C08E00BA5391 /* LoginViewModel-NotInUse.swift */,
 				A2027CD02AB7035500BA5391 /* AddPostViewModel.swift */,
 				A2027CD22AB7C85300BA5391 /* PostsViewModel.swift */,
 				A2027CD42AB7D36000BA5391 /* ProfileViewModel.swift */,
+				A20A9FCD2AB7F8D3003833AA /* TagModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -252,11 +255,12 @@
 				2DE1A5C72AB2CC0F000A2551 /* AddPostView.swift in Sources */,
 				2DE1A5BB2AB2C26E000A2551 /* ShakeView.swift in Sources */,
 				2DE1A5B72AB2C1A3000A2551 /* WelcomView.swift in Sources */,
-				A2027CCF2AB5C08E00BA5391 /* LoginViewModel.swift in Sources */,
+				A2027CCF2AB5C08E00BA5391 /* LoginViewModel-NotInUse.swift in Sources */,
 				A2027C772AB2E3F300BA5391 /* SUImagePickerView.swift in Sources */,
 				2DE1A5BF2AB2C2D7000A2551 /* ProfileView.swift in Sources */,
 				2DE1A5C52AB2CA68000A2551 /* TabMainView.swift in Sources */,
 				A2027CD52AB7D36000BA5391 /* ProfileViewModel.swift in Sources */,
+				A20A9FCE2AB7F8D3003833AA /* TagModel.swift in Sources */,
 				A2027CD32AB7C85300BA5391 /* PostsViewModel.swift in Sources */,
 				2DE1A5B92AB2C25D000A2551 /* PostsView.swift in Sources */,
 				A2027C9C2AB304A100BA5391 /* UserModel.swift in Sources */,
