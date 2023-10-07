@@ -55,7 +55,7 @@ struct SignView: View {
                     .bold()
                     .padding()
                     .frame(width: 300, height: 50)
-                    .background(Color.black.opacity(0.2))
+                    .background(.primary.opacity(0.2))
                     .cornerRadius(10)
                 Text(emailInvalidMessage).foregroundColor(.red)
                 Spacer().frame(height: 20)
@@ -177,7 +177,7 @@ extension SignView{
             .bold()
             .padding()
             .frame(width: 300, height: 50)
-            .background(Color.black.opacity(0.2))
+            .background(.primary.opacity(0.2))
             .cornerRadius(10)
             Button {
                 passwordCover.toggle()

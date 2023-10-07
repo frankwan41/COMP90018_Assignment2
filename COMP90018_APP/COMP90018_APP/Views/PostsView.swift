@@ -15,10 +15,33 @@ struct PostsView: View {
     @AppStorage("shakeResult") var shakeResult = ""
     
     var body: some View {
-        NavigationView{
-            VStack{
+        NavigationView {
+            List{
                 Text("This is the posts view!")
                 Text("Here is your shake result: \(shakeResult)")
+                ForEach(1..<20) { index in
+                    ZStack {
+                        VStack(alignment:.leading){
+                            Image(systemName: "photo")
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .font(.largeTitle)
+                            Text("This is the title of the post").font(.headline)
+                            HStack{
+                                Image(systemName: "person.circle")
+                                Text("User name").font(.subheadline)
+                                Spacer()
+                                Image(systemName: "heart")
+                                Text("No. Likes \(32)").font(.subheadline)
+                            }
+                        }
+                        .padding()
+                        NavigationLink(destination: SinglePostView().navigationBarBackButtonHidden(true)) {
+                            EmptyView()
+                        }.opacity(0)  // Making the NavigationLink invisible
+                    }
+                    
+                }
             }
             .toolbar{
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -27,8 +50,8 @@ struct PostsView: View {
                     } label: {
                         Image(systemName: "dice")
                     }
-
-
+                    
+                    
                 }
             }
         }
