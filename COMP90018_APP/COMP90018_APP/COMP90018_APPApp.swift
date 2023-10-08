@@ -6,9 +6,17 @@
 //
 
 import SwiftUI
+import UIKit
+
 
 @main
 struct COMP90018_APPApp: App {
+    
+    init() {
+        // Changes the tab bar's background color to white
+        UITabBar.appearance().barTintColor = UIColor.white
+    }
+    
     var body: some Scene {
         WindowGroup {
             NavigationStack{
