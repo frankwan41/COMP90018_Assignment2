@@ -12,21 +12,31 @@ struct Post: Decodable, Identifiable{
     var id: String
     var postTitle: String
     var timestamp: Date
-    var name: String
+    var userName: String
     var userUID: String
     var imageURL: String
     var longitude: Double
     var latitude: Double
+    var content: String
+    var tags: [String] // ID format
+    var comments: [String] //ID format
+    var likes: Int
+    
     
     init(data: [String: Any]){
         self.id = data["id"] as? String ?? ""
         self.postTitle = data["title"] as? String ?? ""
         self.timestamp = (data["timestamp"] as? Timestamp)?.dateValue() ?? Date()
-        self.name = data["name"] as? String ?? ""
+        self.userName = data["username"] as? String ?? ""
         self.userUID = data["useruid"] as? String ?? ""
         self.imageURL = data["imageurl"] as? String ?? ""
         self.longitude = data["longitude"] as? Double ?? 0
         self.latitude = data["latitude"] as? Double ?? 0
+        self.content = data["content"] as? String ?? ""
+        self.tags = data["tags"] as? [String] ?? [""]
+        self.comments = data["comments"] as? [String] ?? [""]
+        self.likes = data["likes"] as? Int ?? 0
+        
         
     }
 }
