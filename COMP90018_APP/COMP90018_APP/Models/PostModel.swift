@@ -14,13 +14,14 @@ struct Post: Decodable, Identifiable{
     var timestamp: Date
     var userName: String
     var userUID: String
-    var imageURL: String
+    var imageURLs: [String]
     var longitude: Double
     var latitude: Double
     var content: String
     var tags: [String] // ID format
     var comments: [String] //ID format
     var likes: Int
+    var location: String
     
     
     init(data: [String: Any]){
@@ -29,13 +30,14 @@ struct Post: Decodable, Identifiable{
         self.timestamp = (data["timestamp"] as? Timestamp)?.dateValue() ?? Date()
         self.userName = data["username"] as? String ?? ""
         self.userUID = data["useruid"] as? String ?? ""
-        self.imageURL = data["imageurl"] as? String ?? ""
+        self.imageURLs = data["imageurls"] as? [String] ?? [""]
         self.longitude = data["longitude"] as? Double ?? 0
         self.latitude = data["latitude"] as? Double ?? 0
         self.content = data["content"] as? String ?? ""
         self.tags = data["tags"] as? [String] ?? [""]
         self.comments = data["comments"] as? [String] ?? [""]
         self.likes = data["likes"] as? Int ?? 0
+        self.location = data["location"] as? String ?? ""
         
         
     }
