@@ -13,11 +13,8 @@ struct AddPostView: View {
     @State private var tags = Array(repeating: "long tag", count: 5)
     
     @State private var locationEnable = false
-    @ObservedObject private var keyboardResponder = KeyboardResponder()
-    @State private var scrollOffset: CGFloat = 0
     
     @Environment(\.presentationMode) var presentationMode
-
     
     var body: some View {
         NavigationView{
@@ -47,10 +44,10 @@ struct AddPostView: View {
                     
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-//                .padding(.bottom, keyboardResponder.currentHeight)
                 .padding(.leading)
                 .padding()
             }
+            .keyboardAvoiding()
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
@@ -74,6 +71,9 @@ struct AddPostView: View {
         }
     }
 }
+
+
+// MARK: COMPONENTS
 
 struct AddPhotoView: View {
     @Binding var images: [Int]
@@ -165,12 +165,12 @@ struct AddPostTagsView: View {
             if !matchingTags.isEmpty {
                 ScrollView {
                     VStack(alignment: .leading) {
-                        ForEach(matchingTags, id: \.self) { tag in
+                        ForEach(matchingTags.indices, id: \.self) {index in
                             Button(action: {
-                                tags.append(tag)
+                                tags.append(matchingTags[index])
                                 searchText = ""
                             }) {
-                                Text(tag)
+                                Text(matchingTags[index])
                                     .padding(10)
                                     .padding(.leading, 5)
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -184,7 +184,6 @@ struct AddPostTagsView: View {
                         RoundedRectangle(cornerRadius: 5)
                             .stroke(Color.gray, lineWidth: 1)
                     )
-                .padding(.top)
                 }
                 .frame(height: 400)
             }
