@@ -9,8 +9,16 @@ import SwiftUI
 import Flow
 
 struct AddPostView: View {
-    @State private var images = Array(repeating: 1, count: 5)
-    @State private var tags = Array(repeating: "long tag", count: 5)
+
+    @State private var titleText = ""
+    @State private var contentText = ""
+    @State private var images: [UIImage] = []
+    @State private var tags = ["placeholder tag", "very very delicious food", "cool", "niubi", "6", "dope","very long long long long tag"]
+    @State private var showImagePicker = false
+    @State private var showImageCamera = false
+    @State private var showActionSheet = false
+    
+    var maxImagesCount = 9
     
     @State private var locationEnable = false
     
@@ -20,15 +28,14 @@ struct AddPostView: View {
         NavigationView{
             ScrollView{
                 VStack(alignment: .leading){
-                    Text("Title......")
+                    TextField("Title......", text: $titleText)
                         .font(.title)
                         .fontWeight(.bold)
                         .padding(.vertical)
-                    
-                    Text("Say Something")
+                    TextField("Say Something......", text: $contentText)
                         .font(.title2)
                         .padding(.bottom)
-                    AddPhotoView(images: $images)
+                    AddPhotoView(images: $images, showActionSheet: $showActionSheet, maxImagesCount: maxImagesCount)
                         .padding(.bottom)
                     Toggle(isOn: $locationEnable) {
                         Text("Add Location".capitalized)
@@ -46,6 +53,25 @@ struct AddPostView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.leading)
                 .padding()
+            }
+            .confirmationDialog("", isPresented: $showActionSheet, actions: {
+                Button("Taking Photo") {
+                    showImageCamera = true
+                }
+                Button("Select photos from album") {
+                    showImagePicker = true
+                }
+            })
+            .sheet(isPresented: $showImageCamera) {
+                ImagePicker(sourceType: .camera) { selectedImage in
+                                if let image = selectedImage {
+                                    images.append(image)
+                                    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)  // Save to photo library
+                                }
+                            }
+            }
+            .sheet(isPresented: $showImagePicker) {
+                ImagePickerCoordinatorView(maxImageCount: maxImagesCount - images.count,images: $images)
             }
             .keyboardAvoiding()
             .toolbar {
@@ -76,25 +102,52 @@ struct AddPostView: View {
 // MARK: COMPONENTS
 
 struct AddPhotoView: View {
-    @Binding var images: [Int]
-    var maxImagesCount = 9
+    @Binding var images: [UIImage]
+    @Binding var showActionSheet: Bool
+    var maxImagesCount: Int
     var maxCol: Int = 3
+    
+    @State private var showImagePicker = false
+    @State var img: UIImage? = nil
     
     var body: some View {
         // Calculate number of rows
         let rows = Int(ceil(Double(images.count) / Double(maxCol))) + 1  // add one for add image button
         VStack(alignment: .leading) {
-            ForEach(0..<rows) {rowIndex in
+            ForEach(0..<rows, id: \.self) {rowIndex in
                 HStack{
-                    ForEach(0..<maxCol) {columnIndex in
+                    ForEach(0..<maxCol, id: \.self) {columnIndex in
                         let index = rowIndex * maxCol + columnIndex
                         if index < images.count {
-                            Rectangle()
-                                .fill(.gray.opacity(0.5))
-                                .frame(width: 100, height: 100)
+                            ZStack(alignment: .topTrailing) {
+                                Image(uiImage: images[index])
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 100, height: 100)
+                                    .clipped()
+                                // Image delete button
+                                Button(action: {
+                                            images.remove(at: index)
+                                        }) {
+                                            Image(systemName: "xmark.circle.fill")
+                                                .font(.caption)
+                                                .foregroundColor(.white)
+                                                .background(.gray)
+                                                .clipShape(Circle())
+                                    
+                                        }
+                            }
+                        // Show the add image button if images count is less than 9
                         } else if index == images.count  && index < maxImagesCount {
-                            Rectangle().fill(.red)
+                            Rectangle().fill(.gray.opacity(0.2))
                                 .frame(width: 100, height: 100)
+                                .overlay(Image(systemName: "plus")
+                                    .resizable()
+                                    .foregroundColor(.gray)
+                                    .frame(width: 50, height: 50))
+                                .onTapGesture {
+                                    showActionSheet = true
+                                }
                         }
                     }
                 }

@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "bsimagepicker",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mikaoj/BSImagePicker.git",
+      "state" : {
+        "revision" : "750f26abd0fafbcc4124adef436251888a7c962a",
+        "version" : "3.3.1"
+      }
+    },
+    {
       "identity" : "firebase-ios-sdk",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/firebase-ios-sdk.git",
