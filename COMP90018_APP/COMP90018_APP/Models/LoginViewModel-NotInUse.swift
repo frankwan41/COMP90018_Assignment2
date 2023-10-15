@@ -23,22 +23,22 @@ class LoginViewModel: ObservableObject{
      This function takes the email and the password of the user to login the authentication of Fireabse. It will return error if the process fails,
      
      */
-//    func loginUser(email: String, password: String){
-//        FirebaseManager.shared.auth.signIn(withEmail: email, password: password){
-//            result, error in
-//
-//            // Catch any error occurs
-//            if let error = error {
-//                print("Failed to login user \(error)")
-//                return
-//            }
-//
-//            // Print the message of successful login to the console
-//            self.isCurrentlyLoggedOut = false
-//            print("Successfully logged in and the id of the user is \(result!.user.uid)")
-//
-//        }
-//    }
+    func loginUser(email: String, password: String){
+        FirebaseManager.shared.auth.signIn(withEmail: email, password: password){
+            result, error in
+
+            // Catch any error occurs
+            if let error = error {
+                print("Failed to login user \(error)")
+                return
+            }
+
+            // Print the message of successful login to the console
+            self.isCurrentlyLoggedOut = false
+            print("Successfully logged in and the id of the user is \(result!.user.uid)")
+
+        }
+    }
     
     
     /**
