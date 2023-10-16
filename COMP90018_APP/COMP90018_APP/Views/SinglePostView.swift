@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import Flow
+
 
 struct SinglePostView: View {
     
@@ -17,6 +19,7 @@ struct SinglePostView: View {
     @FocusState private var autoFocused: Bool
     @State private var commentText: String = ""
     
+    var tags = ["placeholder tag", "very very delicious food", "cool", "niubi", "6", "dope","very long long long long tag"]
     
     
     @State private var commentLikeStates: [Bool] = Array(repeating: false, count: 5)
@@ -41,6 +44,8 @@ struct SinglePostView: View {
                             .fontWeight(.bold)
                             .padding(.horizontal)
                         Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat ac felis donec et odio pellentesque diam. Ut lectus arcu bibendum at varius vel pharetra. Varius vel pharetra vel turpis nunc eget lorem dolor sed. Sed odio morbi quis commodo odio. Pharetra convallis posuere morbi leo urna molestie at. Nisl tincidunt eget nullam non nisi est. Nibh praesent tristique magna sit amet. Sed faucibus turpis in eu mi bibendum neque egestas congue. In arcu cursus euismod quis viverra nibh cras. Tincidunt praesent semper feugiat nibh sed. Maecenas accumsan lacus vel facilisis volutpat est velit egestas. Tristique magna sit amet purus.")
+                            .padding(.horizontal)
+                        TagsSection
                             .padding(.horizontal)
                         HStack{
                             Text("TimeStamp")
@@ -151,6 +156,20 @@ extension SinglePostView{
                     .shadow(radius: 1)
                 }
                 .edgesIgnoringSafeArea(.bottom)
+    }
+    private var TagsSection: some View{
+        HFlow(spacing: 10) {
+            ForEach(tags.indices, id: \.self) {index in
+                ZStack(alignment: .topTrailing) {
+                    Text(tags[index])
+                        .font(.caption)
+                        .lineLimit(1)
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, 10)
+                        .background(Capsule().fill(Color.gray.opacity(0.2)))
+                }
+            }
+        }
     }
     
 }

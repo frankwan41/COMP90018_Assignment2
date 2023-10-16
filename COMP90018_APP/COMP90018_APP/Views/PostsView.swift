@@ -10,6 +10,7 @@ import SwiftUI
 struct PostsView: View {
 //    @State var shakeResult: String  = ""
     @State private var searchCategory: String = ""
+    @FocusState private var isSearchFocused: Bool
     
     @State private var likeStates: [Bool] = Array(repeating: false, count: 20)
     @State private var heartScale: CGFloat = 1.0
@@ -20,45 +21,64 @@ struct PostsView: View {
     
     var body: some View {
         NavigationView {
-            List{
-                Text("This is the posts view!")
-                Text("Here is your shake result: \(shakeResult)")
-                ForEach(1..<20) { index in
-                    ZStack {
-                        VStack(alignment:.leading, spacing: 10){
-                            Image(systemName: "photo")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .font(.largeTitle)
-                            Text("This is the title of the post").font(.headline)
-                            HStack(spacing: 4){
-                                Image(systemName: "person.circle")
-                                Text("User name").font(.subheadline)
-                                Spacer()
-                                LikeButton(index: index, likeStates: $likeStates, heartScale: $heartScale, numLikeStates: $numLikeStates)
-                                Text("\(numLikeStates[index])").font(.subheadline)
+            VStack {
+                List{
+                    HStack {
+                        TextField("Search tag...", text: $searchCategory, onEditingChanged: { isEditing in
+                            isSearchFocused = isEditing
+                        })
+                            .focused($isSearchFocused)
+                            .padding(10)
+                            .background(Color.gray.opacity(0.2))
+                            .cornerRadius(8)
+                        
+                        if isSearchFocused || !searchCategory.isEmpty{
+                            Button("Cancel") {
+                                searchCategory = ""
+                                isSearchFocused = false
                             }
+                            .padding(.trailing)
                         }
-                        .padding()
-                        NavigationLink(destination: SinglePostView().navigationBarBackButtonHidden(true)) {
-                            EmptyView()
-                        }
-                        .opacity(0)  // Making the NavigationLink invisible
-                        .allowsHitTesting(false)
                     }
-                    
+                    Text("Here is your shake result: \(shakeResult)")
+                    ForEach(1..<20) { index in
+                        ZStack {
+                            VStack(alignment:.leading, spacing: 10){
+                                Image(systemName: "photo")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .font(.largeTitle)
+                                Text("This is the title of the post").font(.headline)
+                                HStack(spacing: 4){
+                                    Image(systemName: "person.circle")
+                                    Text("User name").font(.subheadline)
+                                    Spacer()
+                                    LikeButton(index: index, likeStates: $likeStates, heartScale: $heartScale, numLikeStates: $numLikeStates)
+                                    Text("\(numLikeStates[index])").font(.subheadline)
+                                }
+                            }
+                            .padding()
+                            NavigationLink(destination: SinglePostView().navigationBarBackButtonHidden(true)) {
+                                EmptyView()
+                            }
+                            .opacity(0)  // Making the NavigationLink invisible
+                            .allowsHitTesting(false)
+                        }
+                        
+                    }
                 }
+                .listStyle(.plain)
+                .toolbar{
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            viewSwitcher = viewPage.shake
+                        } label: {
+                            Image(systemName: "dice")
+                        }
+                        
+                        
+                    }
             }
-            .toolbar{
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        viewSwitcher = viewPage.shake
-                    } label: {
-                        Image(systemName: "dice")
-                    }
-                    
-                    
-                }
             }
         }
     }
