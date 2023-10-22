@@ -8,6 +8,7 @@
 import Foundation
 import Firebase
 import FirebaseStorage
+import UIKit
 
 class LoginViewModel: ObservableObject{
     @Published var isCurrentlyLoggedOut = false
@@ -110,7 +111,7 @@ class LoginViewModel: ObservableObject{
      Inputs: name, gender, email, age, phone number of the user
      Save them and the uid into the collection.
      */
-    func saveUserOtherInformation(userName: String, gender: String, email: String, age: String, phoneNumber: String, likedPostsIDs: [String]){
+    func saveUserOtherInformation(userName: String, gender: String, email: String, age: String, phoneNumber: String, likedPostsIDs: [String] = []){
         // Confirm login status and obtain the uid of the current user
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else{return}
         

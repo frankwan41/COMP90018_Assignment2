@@ -117,7 +117,7 @@ struct SignView: View {
     private func handleSubmit() {
         if isSignUpMode{
             validInputCheck(email: email, password: password)
-            userViewModel.signUpUser(email: email, password: password)
+            userViewModel.signUpUser(email: email, password: password, userName: username, gender: gender, age: age, phoneNumber: phoneNumber)
         }
         else{
             validInputCheck(email: email, password: password)

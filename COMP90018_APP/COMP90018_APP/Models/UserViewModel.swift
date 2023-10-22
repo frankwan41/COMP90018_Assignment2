@@ -8,6 +8,7 @@
 import Foundation
 import Firebase
 import FirebaseStorage
+import UIKit
 
 class UserViewModel: ObservableObject{
     @Published var isLoggedIn = false
