@@ -62,7 +62,7 @@ class UserViewModel: ObservableObject{
      Save them and the uid into the collection.
      */
     func saveUserTextInformation(userName: String, gender: String, email: String, age: String, phoneNumber: String, likedPostsIDs: [String]){
-        // Check wether the user has logined
+        // Check whether the user has logined
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else{
             return
         }
@@ -80,6 +80,8 @@ class UserViewModel: ObservableObject{
             .collection("users")
             .document(uid)
             .setData(userData)
+        
+        print("Successfully saved the details of user \(FirebaseManager.shared.auth.currentUser?.uid ?? "")")
     }
     
     /**
@@ -96,6 +98,7 @@ class UserViewModel: ObservableObject{
             .collection("users")
             .document(uid)
             .setData(userData)
+        print("Successfully Uploaded the link to the image of user profile to the details of the user \(FirebaseManager.shared.auth.currentUser?.uid ?? "")")
     }
     
     /**
@@ -130,7 +133,7 @@ class UserViewModel: ObservableObject{
                 }
                 
                 // Check whether the url exists
-                print(url?.absoluteString ?? "error")
+                print(url?.absoluteString ?? "error in Uplodaing Image of the user")
                 guard let url = url else{return}
                 self.saveUserImageInformation(imageProfileURL: url)
             }
@@ -147,7 +150,9 @@ class UserViewModel: ObservableObject{
         }
     }
     
+    // TODO: Update Email function
     func updateEmail(email: String) {
+    
         
        
     }

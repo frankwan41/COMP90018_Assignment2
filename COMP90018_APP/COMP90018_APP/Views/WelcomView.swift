@@ -29,6 +29,8 @@ struct WelcomView: View {
                 welcomeMainView()
             }else if viewSwitcher == viewPage.tab{
                 TabMainView()
+                //TODO: Change the color scheme if neccessary
+                    .preferredColorScheme(.light)
             }else if viewSwitcher == viewPage.shake{
                 ShakeView()
             }
