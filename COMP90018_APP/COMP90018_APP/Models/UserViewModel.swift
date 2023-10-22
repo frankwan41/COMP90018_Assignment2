@@ -62,7 +62,7 @@ class UserViewModel: ObservableObject{
      Save them and the uid into the collection.
      */
     func saveUserTextInformation(userName: String, gender: String, email: String, age: String, phoneNumber: String, likedPostsIDs: [String]){
-        // Check wether the user has logined
+        // Check whether the user has logined
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else{
             return
         }

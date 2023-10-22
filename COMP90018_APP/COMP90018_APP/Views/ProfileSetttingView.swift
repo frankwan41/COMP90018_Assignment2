@@ -11,29 +11,42 @@ struct ProfileSetttingView: View {
     @State private var isEditing = false
     @State private var passwordCover: Bool = true
     
+    @StateObject var profileSettingViewModel: ProfileSettingViewModel;
+    
     // Edited input
     @State private var editedEmail = ""
     @State private var editedPassword = ""
     @State private var editedPhoneNumber = ""
     @State private var editedAge = ""
     @State private var editedGender = ""
+    @State private var editedUsername = ""
     
     @State private var originalEmail = "template@example.com"
     @State private var originalPassword = "password"
     @State private var originalPhoneNumber = "000"
     @State private var originalAge = "100"
     @State private var originalGender = "Male"
+    @State private var originalUsername = "Who"
     
+    
+
     
     var fieldData: [(String, Binding<String>, Bool, String)] {
         [
             ("Email", $editedEmail, false, originalEmail),
-            ("Password", $editedPassword, true, originalPassword),
+            //("Password", $editedPassword, true, originalPassword),
             ("Phone Number", $editedPhoneNumber, false, originalPhoneNumber),
             ("Age", $editedAge, false, originalAge),
             ("Gender", $editedGender, false, originalGender),
+            ("Username", $editedUsername, false, originalUsername)
         ]
     }
+    
+    init(){
+        self._profileSettingViewModel = StateObject(wrappedValue: ProfileSettingViewModel())
+    }
+    
+    
     
     var body: some View {
         ZStack{
@@ -59,12 +72,20 @@ struct ProfileSetttingView: View {
                 .listStyle(.inset)
                 .navigationBarTitle(isEditing ? "Edit Profile" : "User Profile", displayMode: .inline)
                 .onAppear {
+                    // Obtain the original fields of the user
+                    originalEmail = profileSettingViewModel.user.email
+                    originalPhoneNumber = profileSettingViewModel.user.phoneNumber
+                    originalAge = profileSettingViewModel.user.age
+                    originalGender = profileSettingViewModel.user.gender
+                    originalUsername = profileSettingViewModel.user.userName
+                    
                     // Set initial values for editing fields when the view appears
                     editedEmail = originalEmail
                     editedPassword = originalPassword
                     editedPhoneNumber = originalPhoneNumber
                     editedAge = originalAge
                     editedGender = originalGender
+                    editedUsername = originalUsername
                 }
                 if isEditing{
                     profileCancelSaveBtn
@@ -127,6 +148,7 @@ extension ProfileSetttingView {
             editedPhoneNumber = originalPhoneNumber
             editedAge = originalAge
             editedGender = originalGender
+            editedUsername = originalUsername
         } label: {
             Text("Edit Profile")
                 .frame(width: 200, height: 20)
@@ -162,6 +184,7 @@ extension ProfileSetttingView {
                 originalPhoneNumber = editedPhoneNumber
                 originalAge = editedAge
                 originalGender = editedGender
+                originalUsername = editedUsername
             } label: {
                 Text("Save")
                     .frame(width: 90, height: 20)
@@ -180,7 +203,7 @@ extension ProfileSetttingView {
 struct ProfileSetttingView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack{
-            ProfileSetttingView()
+            //ProfileSetttingView(profileSettingViewModel: ProfileSettingViewModel())
         }
     }
 }
