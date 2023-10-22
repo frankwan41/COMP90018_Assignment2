@@ -8,6 +8,7 @@
 import Foundation
 import Firebase
 
+
 struct Post: Decodable, Identifiable{
     var id: String
     var postTitle: String
