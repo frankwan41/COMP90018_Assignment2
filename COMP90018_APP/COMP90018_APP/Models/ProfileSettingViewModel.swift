@@ -7,6 +7,7 @@
 
 import Foundation
 import Firebase
+import UIKit
 
 class ProfileSettingViewModel: ObservableObject{
     
@@ -65,4 +66,62 @@ class ProfileSettingViewModel: ObservableObject{
         
     }
     
+    /**
+     Input: the url of image in storage
+     This function saves the url to the image in the collection of user
+     */
+    func saveUserImageInformation(imageProfileURL: URL){
+        // Confirm login status
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
+        
+        let userData = ["profileimageurl":imageProfileURL.absoluteString]
+        
+        FirebaseManager.shared.firestore
+            .collection("users")
+            .document(uid)
+            .setData(userData, merge: true)
+        print("Successfully Uploaded the link to the image of user profile to the details of the user \(FirebaseManager.shared.auth.currentUser?.uid ?? "")")
+    }
+    
+    /**
+     Inputs: Image of the user
+     This function takes iimage of the user and saves them to the storage of firebase
+     
+     */
+    func saveProfileImageToStorage(image: UIImage){
+        
+        // Check whether the user has logined
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
+            return}
+        
+        // Create the reference of the image in storage by the uid of the user
+        let ref = FirebaseManager.shared.storage.reference(withPath: uid)
+        
+        // Compress the image
+        guard let imageData = image.jpegData(compressionQuality: 1) else{return}
+        
+        // Put the image data into the reference
+        ref.putData(imageData, metadata: nil) { metadata, error in
+            if let error = error{
+                print(error)
+                return
+            }
+            
+            // Get the url of the image if it is successfully stored
+            ref.downloadURL { url, error in
+                if let error = error{
+                    print(error)
+                    return
+                }
+                
+                // Check whether the url exists
+                print(url?.absoluteString ?? "error in Uplodaing Image of the user")
+                guard let url = url else{return}
+                self.saveUserImageInformation(imageProfileURL: url)
+            }
+        }
+    }
+    
 }
+
+
