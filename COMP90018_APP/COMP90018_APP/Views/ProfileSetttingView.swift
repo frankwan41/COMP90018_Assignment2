@@ -6,6 +6,9 @@
 //
 
 import SwiftUI
+import FirebaseAuth
+import FirebaseStorage
+import Kingfisher
 
 struct ProfileSetttingView: View {
     @State private var isEditing = false
@@ -27,6 +30,18 @@ struct ProfileSetttingView: View {
     @State private var originalAge = "Loading..."
     @State private var originalGender = "Loading..."
     @State private var originalUsername = "Loading..."
+    
+    @State private var showImagePicker = false
+    @State private var showImageCamera = false
+    @State private var showActionSheet = false
+    @State private var profileImageIsChanged = false
+    @State private var images: [UIImage] = []
+    @State private var imageChosen: UIImage?
+    @State private var profileImage: UIImage?
+    
+    var maxImagesCount = 1
+    
+    
     
     
 
@@ -52,12 +67,44 @@ struct ProfileSetttingView: View {
             
 
             VStack{
-                Circle().fill(.white)
-                    .shadow(radius: 10)
-                    .frame(width: 200, height: 200)
-                    .padding(.vertical, 50)
-                    .overlay(Text("Avatar")
-                    )
+                Button {
+                    if isEditing{
+                        showActionSheet = true
+                    }
+                } label: {
+                    VStack{
+                        Image(uiImage: profileImage ?? UIImage(systemName: "person.circle")!)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width:200, height: 200)
+                            .clipped()
+                            .cornerRadius(50)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 44)
+                                    .stroke(Color(.label), lineWidth:1)
+                                
+                            )
+                            .padding(.vertical, 20)
+                            .shadow(radius: 10)
+                        
+                        if isEditing{
+                            Text("Choose the Image")
+                                .padding(.vertical, 1)
+                                .padding(.horizontal)
+                                .foregroundColor(.blue)
+                                .font(.title2)
+                        }
+                    }
+                    
+//                    Circle().fill(.white)
+//                        .shadow(radius: 10)
+//                        .frame(width: 200, height: 200)
+//                        .padding(.vertical, 50)
+//                        .overlay(Text("Select Your Image")
+//                        )
+                }
+
+                
                     
                 
                 List {
@@ -73,8 +120,8 @@ struct ProfileSetttingView: View {
                     profileSettingViewModel.getUserInformation { user in
                         updateFields(user: user)
                     }
-                    
-                    
+
+                    getProfileImage()
                 }
                 if isEditing{
                     profileCancelSaveBtn
@@ -83,10 +130,45 @@ struct ProfileSetttingView: View {
                 }
             }
         }
+        .onChange(of: imageChosen, perform: { newValue in
+            profileImageIsChanged = true
+            profileImage = imageChosen
+        })
+        
         .onTapGesture {
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
 
         }
+        .confirmationDialog("", isPresented: $showActionSheet, actions: {
+            Button("Taking Photo") {
+                showImageCamera = true
+            }
+            Button("Select photos from album") {
+                showImagePicker = true
+            }
+        })
+        .sheet(isPresented: $showImageCamera) {
+            ImagePicker(sourceType: .camera) { selectedImage in
+                            if let image = selectedImage {
+                                imageChosen = image
+                                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)  // Save to photo library
+                            }
+                        }
+        }
+        .sheet(isPresented: $showImagePicker) {
+            ImagePickerCoordinatorView(maxImageCount: maxImagesCount - images.count,images: $images)
+                .onDisappear {
+                    if (images.count != 0){
+                        imageChosen = images.first!
+                    }
+                }
+                .onAppear {
+                    images.removeAll()
+                }
+            
+        }
+        
+        
     }
 }
 
@@ -156,6 +238,14 @@ extension ProfileSetttingView {
             Button {
                 isEditing = false
                 passwordCover = true
+                
+                profileImageIsChanged = false
+                images.removeAll()
+                // Fetch the latest version of the details of the user
+                getProfileImage()
+                profileSettingViewModel.getUserInformation { user in
+                    updateFields(user: user)
+                }
             } label: {
                 Text("Cancel")
                     .frame(width: 90, height: 20)
@@ -174,6 +264,14 @@ extension ProfileSetttingView {
                 
                 // Update the details of the user
                 profileSettingViewModel.updateUserInformation(userName: editedUsername, gender: editedGender, age: editedAge, phoneNumber: editedPhoneNumber)
+                
+                if let profileImage = profileImage{
+                    if profileImageIsChanged{
+                        profileSettingViewModel.saveProfileImageToStorage(image: profileImage)
+                        profileImageIsChanged = false
+                        images.removeAll()
+                    }
+                }
                 
                 // Fetch the latest version of the details of the user
                 profileSettingViewModel.getUserInformation { user in
@@ -215,6 +313,27 @@ extension ProfileSetttingView{
         editedGender = originalGender
         editedUsername = originalUsername
         
+    }
+    
+    
+    private func getProfileImage(){
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
+            print("Unable to get the uid of the user to obtain the profile image.")
+            return}
+        
+        let storageRef = Storage.storage().reference(withPath: uid)
+        storageRef.getData(maxSize: 20 * 1024 * 1024) { data, error in
+            if let error = error{
+                print("Error while downloading profile image, \(error.localizedDescription)")
+                return
+            }
+            
+            guard let imageData = data, let image = UIImage(data: imageData) else {return}
+            
+            DispatchQueue.main.async {
+                profileImage = image
+            }
+        }
     }
 }
 
