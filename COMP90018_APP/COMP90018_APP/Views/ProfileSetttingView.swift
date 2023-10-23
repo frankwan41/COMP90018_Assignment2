@@ -168,12 +168,17 @@ extension ProfileSetttingView {
             Button {
                 isEditing = false
                 passwordCover = true
+                
                 //originalEmail = editedEmail
                 //originalPassword = editedPassword
-                originalPhoneNumber = editedPhoneNumber
-                originalAge = editedAge
-                originalGender = editedGender
-                originalUsername = editedUsername
+                
+                // Update the details of the user
+                profileSettingViewModel.updateUserInformation(userName: editedUsername, gender: editedGender, age: editedAge, phoneNumber: editedPhoneNumber)
+                
+                // Fetch the latest version of the details of the user
+                profileSettingViewModel.getUserInformation { user in
+                    updateFields(user: user)
+                }
             } label: {
                 Text("Save")
                     .frame(width: 90, height: 20)
