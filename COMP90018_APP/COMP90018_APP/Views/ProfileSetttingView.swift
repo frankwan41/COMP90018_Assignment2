@@ -11,7 +11,7 @@ struct ProfileSetttingView: View {
     @State private var isEditing = false
     @State private var passwordCover: Bool = true
     
-    @StateObject var profileSettingViewModel: ProfileSettingViewModel;
+    @StateObject var profileSettingViewModel: ProfileSettingViewModel
     
     // Edited input
     @State private var editedEmail = ""
@@ -21,30 +21,27 @@ struct ProfileSetttingView: View {
     @State private var editedGender = ""
     @State private var editedUsername = ""
     
-    @State private var originalEmail = "template@example.com"
-    @State private var originalPassword = "password"
-    @State private var originalPhoneNumber = "000"
-    @State private var originalAge = "100"
-    @State private var originalGender = "Male"
-    @State private var originalUsername = "Who"
+    @State private var originalEmail = "Loading..."
+    @State private var originalPassword = "Loading..."
+    @State private var originalPhoneNumber = "Loading..."
+    @State private var originalAge = "Loading..."
+    @State private var originalGender = "Loading..."
+    @State private var originalUsername = "Loading..."
     
     
 
     
     var fieldData: [(String, Binding<String>, Bool, String)] {
         [
-            ("Email", $editedEmail, false, originalEmail),
+            //("Email", $editedEmail, false, originalEmail),
+            ("Username", $editedUsername, false, originalUsername),
             //("Password", $editedPassword, true, originalPassword),
             ("Phone Number", $editedPhoneNumber, false, originalPhoneNumber),
             ("Age", $editedAge, false, originalAge),
-            ("Gender", $editedGender, false, originalGender),
-            ("Username", $editedUsername, false, originalUsername)
+            ("Gender", $editedGender, false, originalGender)
         ]
     }
     
-    init(){
-        self._profileSettingViewModel = StateObject(wrappedValue: ProfileSettingViewModel())
-    }
     
     
     
@@ -72,20 +69,12 @@ struct ProfileSetttingView: View {
                 .listStyle(.inset)
                 .navigationBarTitle(isEditing ? "Edit Profile" : "User Profile", displayMode: .inline)
                 .onAppear {
-                    // Obtain the original fields of the user
-                    originalEmail = profileSettingViewModel.user.email
-                    originalPhoneNumber = profileSettingViewModel.user.phoneNumber
-                    originalAge = profileSettingViewModel.user.age
-                    originalGender = profileSettingViewModel.user.gender
-                    originalUsername = profileSettingViewModel.user.userName
                     
-                    // Set initial values for editing fields when the view appears
-                    editedEmail = originalEmail
-                    editedPassword = originalPassword
-                    editedPhoneNumber = originalPhoneNumber
-                    editedAge = originalAge
-                    editedGender = originalGender
-                    editedUsername = originalUsername
+                    profileSettingViewModel.getUserInformation { user in
+                        updateFields(user: user)
+                    }
+                    
+                    
                 }
                 if isEditing{
                     profileCancelSaveBtn
@@ -143,8 +132,8 @@ extension ProfileSetttingView {
     private var profileEditButton: some View{
         Button {
             isEditing = true
-            editedEmail = originalEmail
-            editedPassword = originalPassword
+            //editedEmail = originalEmail
+            //editedPassword = originalPassword
             editedPhoneNumber = originalPhoneNumber
             editedAge = originalAge
             editedGender = originalGender
@@ -179,8 +168,8 @@ extension ProfileSetttingView {
             Button {
                 isEditing = false
                 passwordCover = true
-                originalEmail = editedEmail
-                originalPassword = editedPassword
+                //originalEmail = editedEmail
+                //originalPassword = editedPassword
                 originalPhoneNumber = editedPhoneNumber
                 originalAge = editedAge
                 originalGender = editedGender
@@ -199,6 +188,31 @@ extension ProfileSetttingView {
     }
     
 }
+
+
+
+// MARK: Functions
+
+extension ProfileSetttingView{
+    
+    private func updateFields(user: User?){
+        // Obtain the original fields of the user
+        //originalEmail = user?.email ?? "Network Error"
+        originalPhoneNumber = user?.phoneNumber ?? "Network Error"
+        originalAge = user?.age ?? "Network Error"
+        originalGender = user?.gender ?? "Network Error"
+        originalUsername = user?.userName ?? "Network Error"
+        
+        // Set initial values for editing fields when the view appears
+        //editedEmail = originalEmail
+        editedPhoneNumber = originalPhoneNumber
+        editedAge = originalAge
+        editedGender = originalGender
+        editedUsername = originalUsername
+        
+    }
+}
+
 
 struct ProfileSetttingView_Previews: PreviewProvider {
     static var previews: some View {

@@ -9,16 +9,9 @@ import Foundation
 import Firebase
 
 class ProfileSettingViewModel: ObservableObject{
-    @Published var user = User(data: [:])
-    
-    init(){
-        
-        // Obtain the information of the user
-        getUserInformation();
-    }
     
     
-    func getUserInformation(){
+    func getUserInformation(completion: @escaping (User?) -> Void){
         
         // Confirm the login status and retrieve the uid of the user
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
@@ -32,17 +25,20 @@ class ProfileSettingViewModel: ObservableObject{
             .getDocument { documentSnapshot, error in
                 if let error = error{
                     print("Failed to fetch the details of the user \(uid), \(error.localizedDescription)")
-                    return
+                    completion(nil)
+                }else{
+                    if let documentSnapshot = documentSnapshot {
+                        let data = documentSnapshot.data()
+                        let user = User(data: data!)
+                        print("Successfully fetched the details of the user \(uid)")
+                        completion(user)
+                    }
                 }
-                
-                let data = documentSnapshot?.data()
-                let user = User(data: data!)
-                self.user = user
-                print("Successfully fetched the details of the user \(uid)")
-                
             }
         
+        
     }
+    
     
     func updateUserInformation(userName:String, gender:String, age:String, phoneNumber:String){
         
@@ -66,10 +62,6 @@ class ProfileSettingViewModel: ObservableObject{
             .updateData(updatedData)
         
         print("Successfully updated the details of user \(uid).")
-        
-        getUserInformation()
-    
-        
         
     }
     

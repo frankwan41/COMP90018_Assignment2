@@ -15,7 +15,8 @@ struct ProfileView: View {
             VStack(spacing: 20){
                 Text("This is the profile view")
                 NavigationLink {
-                    ProfileSetttingView()
+                    
+                    ProfileSetttingView(profileSettingViewModel: ProfileSettingViewModel())
                 } label: {
                     Text("Found out user profile page")
                 }
