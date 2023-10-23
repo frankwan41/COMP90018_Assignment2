@@ -31,6 +31,8 @@ struct SignView: View {
     @State private var emailInvalidMessage:String = ""
     @State private var passwordInvalidMessage: String = ""
     
+
+    
     
     var signupExtras: [inputPair] {
         [
@@ -240,8 +242,8 @@ func isValidPassword(password: String) -> (isValid: Bool, message: String) {
 
 
 
-struct SignView_Previews: PreviewProvider {
-    static var previews: some View {
-        SignView(userViewModel: UserViewModel())
-    }
-}
+//struct SignView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SignView(userViewModel: UserViewModel())
+//    }
+//}

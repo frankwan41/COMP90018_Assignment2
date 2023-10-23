@@ -9,6 +9,11 @@ import SwiftUI
 
 struct ProfileView: View {
     
+    @ObservedObject var userViewModel = UserViewModel()
+    @State private var showLoginAlert = false
+    @State private var wantsLogin = false
+    
+
     
     var body: some View {
         NavigationView{
@@ -21,15 +26,46 @@ struct ProfileView: View {
                     Text("Found out user profile page")
                 }
                 NavigationLink {
-                    SignView(userViewModel: UserViewModel())
+                    // SignView(userViewModel: userViewModel)
                 } label: {
                     Text("Click here to signin/singup")
                 }
+                .alert(isPresented: $showLoginAlert) {
+                    Alert(
+                        title: Text("Alert"),
+                        message: Text("Please log in or sign up"),
+                        primaryButton: .default(Text("Sign in")) {
+                            wantsLogin = true
+                        },
+                        secondaryButton: .cancel(Text("Cancel")) {
+                            wantsLogin = false
+                        }
+                    )
+                }
                 
             }
+            .onAppear {
+                if !userViewModel.isLoggedIn {
+                    showLoginAlert = true
+                }
+            }
+            .onChange(of: userViewModel.isLoggedIn, perform: { newValue in
+                if newValue {
+                    wantsLogin = false
+                }
+            })
+            .sheet(isPresented: $wantsLogin) {
+                SignView(userViewModel: userViewModel)
+                    .onDisappear{
+                        if !userViewModel.isLoggedIn{
+                            showLoginAlert = true
+                        }
+                        wantsLogin = false
+                    }
+                    
+            }
+            
         }
-
-
     }
 }
 

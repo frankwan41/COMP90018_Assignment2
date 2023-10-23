@@ -11,13 +11,13 @@ import Firebase
 class ProfileViewModel: ObservableObject{
     @Published var posts = [Post]()
     @Published var user = User(data: [:])
+   
     
     
     
     init(){
-        // Obtain the posts and information of the user
-        getUserPosts()
-        getUserInformation()
+            getUserPosts()
+            getUserInformation()
     }
     
     /**
