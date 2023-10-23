@@ -24,39 +24,41 @@ struct ShakeView: View {
     let templateCategories = ["Chinese", "Thailand", "Korean", "Malaysia","Janpanese","Italian"]
     
     var body: some View {
-        ZStack{
-            Color.orange.ignoresSafeArea()
-            
-            VStack(spacing: 150){
-                Image("shakePhone")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 350,height: 150)
-                    .rotationEffect(.degrees(isShaking ? 0 : -35))
+        NavigationView{
+            ZStack{
+                Color.orange.ignoresSafeArea()
+                
+                VStack(spacing: 150){
+                    Image("shakePhone")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 350,height: 150)
+                        .rotationEffect(.degrees(isShaking ? 0 : -35))
                     
-                CategoryView
-            }
-        }
-        .onShake {
-            hasShaked = true
-            categoryName = templateCategories.randomElement()
-            // Create animation for shaking affect
-            withAnimation(Animation.easeInOut(duration: 0.5)) {
-                isShaking = true
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                withAnimation(Animation.easeInOut(duration: 0.5)){
-                    isShaking = false
+                    CategoryView
                 }
             }
-        }
-        .toolbar{
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    viewSwitcher = viewPage.tab
-                } label: {
-                    Image(systemName: "fork.knife")
-                }.foregroundColor(.black)
+            .onShake {
+                hasShaked = true
+                categoryName = templateCategories.randomElement()
+                // Create animation for shaking affect
+                withAnimation(Animation.easeInOut(duration: 0.5)) {
+                    isShaking = true
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    withAnimation(Animation.easeInOut(duration: 0.5)){
+                        isShaking = false
+                    }
+                }
+            }
+            .toolbar{
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        viewSwitcher = viewPage.tab
+                    } label: {
+                        Image(systemName: "fork.knife")
+                    }.foregroundColor(.black)
+                }
             }
         }
     }
@@ -81,9 +83,9 @@ extension ShakeView {
                     shakeResult = categoryName ?? ""
                 }
             }
-//            .navigationDestination(isPresented: $navigatePosts) {
-//                TabMainView(shakeResult: categoryName ?? "").navigationBarBackButtonHidden(true)
-//            }
+        //            .navigationDestination(isPresented: $navigatePosts) {
+        //                TabMainView(shakeResult: categoryName ?? "").navigationBarBackButtonHidden(true)
+        //            }
     }
 }
 
@@ -97,17 +99,17 @@ extension UIDevice {
 
 //  Override the default behavior of shake gestures to send our notification instead.
 extension UIWindow {
-     open override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+    open override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         if motion == .motionShake {
             NotificationCenter.default.post(name: UIDevice.deviceDidShakeNotification, object: nil)
         }
-     }
+    }
 }
 
 // A view modifier that detects shaking and calls a function of our choosing.
 struct DeviceShakeViewModifier: ViewModifier {
     let action: () -> Void
-
+    
     func body(content: Content) -> some View {
         content
             .onAppear()
