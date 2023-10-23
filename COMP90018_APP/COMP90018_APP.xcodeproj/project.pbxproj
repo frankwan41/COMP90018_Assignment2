@@ -10,6 +10,11 @@
 		003803D62AA968E2000BB3B1 /* COMP90018_APPApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 003803D52AA968E2000BB3B1 /* COMP90018_APPApp.swift */; };
 		003803DA2AA968E5000BB3B1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 003803D92AA968E5000BB3B1 /* Assets.xcassets */; };
 		003803DD2AA968E5000BB3B1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 003803DC2AA968E5000BB3B1 /* Preview Assets.xcassets */; };
+		2D1890EE2AE5EF2500B63D8F /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = 2DD0A3072AD6918E009D612D /* Flow */; };
+		2D1890EF2AE5EF2500B63D8F /* Renderer in Frameworks */ = {isa = PBXBuildFile; productRef = 2DD0A3092AD6918E009D612D /* Renderer */; };
+		2D1890F02AE5EF2500B63D8F /* BSImagePicker in Frameworks */ = {isa = PBXBuildFile; productRef = 2DAC32732ADA3BE800BBE467 /* BSImagePicker */; };
+		2D1890F22AE5F50A00B63D8F /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1890F12AE5F50A00B63D8F /* ImagePickerView.swift */; };
+		2D1890F42AE5F51000B63D8F /* KeyboardSpacer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1890F32AE5F51000B63D8F /* KeyboardSpacer.swift */; };
 		2DE1A5B72AB2C1A3000A2551 /* WelcomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE1A5B62AB2C1A3000A2551 /* WelcomView.swift */; };
 		2DE1A5B92AB2C25D000A2551 /* PostsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE1A5B82AB2C25D000A2551 /* PostsView.swift */; };
 		2DE1A5BB2AB2C26E000A2551 /* ShakeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE1A5BA2AB2C26E000A2551 /* ShakeView.swift */; };
@@ -44,6 +49,8 @@
 		003803D52AA968E2000BB3B1 /* COMP90018_APPApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COMP90018_APPApp.swift; sourceTree = "<group>"; };
 		003803D92AA968E5000BB3B1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		003803DC2AA968E5000BB3B1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2D1890F12AE5F50A00B63D8F /* ImagePickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
+		2D1890F32AE5F51000B63D8F /* KeyboardSpacer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardSpacer.swift; sourceTree = "<group>"; };
 		2DE1A5B62AB2C1A3000A2551 /* WelcomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomView.swift; sourceTree = "<group>"; };
 		2DE1A5B82AB2C25D000A2551 /* PostsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsView.swift; sourceTree = "<group>"; };
 		2DE1A5BA2AB2C26E000A2551 /* ShakeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeView.swift; sourceTree = "<group>"; };
@@ -53,7 +60,6 @@
 		2DE1A5C22AB2C562000A2551 /* SinglePostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SinglePostView.swift; sourceTree = "<group>"; };
 		2DE1A5C42AB2CA68000A2551 /* TabMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabMainView.swift; sourceTree = "<group>"; };
 		2DE1A5C62AB2CC0F000A2551 /* AddPostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPostView.swift; sourceTree = "<group>"; };
-		A2027C762AB2E3F300BA5391 /* SUImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SUImagePickerView.swift; sourceTree = "<group>"; };
 		A2027C952AB2FA4800BA5391 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
 		A2027C972AB2FE1B00BA5391 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		A2027C992AB3014F00BA5391 /* PostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostModel.swift; sourceTree = "<group>"; };
@@ -74,13 +80,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D1890F02AE5EF2500B63D8F /* BSImagePicker in Frameworks */,
+				2D1890EF2AE5EF2500B63D8F /* Renderer in Frameworks */,
+				2D1890EE2AE5EF2500B63D8F /* Flow in Frameworks */,
 				A2027C642AB2DDB800BA5391 /* FirebaseDatabaseSwift in Frameworks */,
 				A2027C682AB2DDB800BA5391 /* FirebaseStorage in Frameworks */,
-				2DD0A3082AD6918E009D612D /* Flow in Frameworks */,
-				2DAC32742ADA3BE800BBE467 /* BSImagePicker in Frameworks */,
 				A2027C622AB2DDB800BA5391 /* FirebaseAuth in Frameworks */,
 				A2027C662AB2DDB800BA5391 /* FirebaseFirestore in Frameworks */,
-				2DD0A30A2AD6918E009D612D /* Renderer in Frameworks */,
 				A2027C6B2AB2DDED00BA5391 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -146,9 +152,9 @@
 			isa = PBXGroup;
 			children = (
 				A2027C952AB2FA4800BA5391 /* FirebaseManager.swift */,
+				2D1890F12AE5F50A00B63D8F /* ImagePickerView.swift */,
+				2D1890F32AE5F51000B63D8F /* KeyboardSpacer.swift */,
 				A2027C972AB2FE1B00BA5391 /* LocationManager.swift */,
-				2DD0A30B2AD6A010009D612D /* KeyboardSpacer.swift */,
-				2DAC32702ADA3B6800BBE467 /* ImagePickerView.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -258,7 +264,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A2027C962AB2FA4800BA5391 /* FirebaseManager.swift in Sources */,
-				2DAC32712ADA3B6800BBE467 /* ImagePickerView.swift in Sources */,
+				2D1890F22AE5F50A00B63D8F /* ImagePickerView.swift in Sources */,
 				A20A9FD02AB81927003833AA /* UserViewModel.swift in Sources */,
 				A219E3DC2AE510B20082F991 /* ProfileSettingViewModel.swift in Sources */,
 				A2027CCD2AB42B6400BA5391 /* CommentModel.swift in Sources */,
@@ -277,9 +283,9 @@
 				A20A9FCE2AB7F8D3003833AA /* TagModel.swift in Sources */,
 				A2027CD32AB7C85300BA5391 /* PostsViewModel.swift in Sources */,
 				2DE1A5B92AB2C25D000A2551 /* PostsView.swift in Sources */,
-				2DD0A30C2AD6A010009D612D /* KeyboardSpacer.swift in Sources */,
 				A2027C9C2AB304A100BA5391 /* UserModel.swift in Sources */,
 				A2027CD12AB7035500BA5391 /* AddPostViewModel.swift in Sources */,
+				2D1890F42AE5F51000B63D8F /* KeyboardSpacer.swift in Sources */,
 				A2027C982AB2FE1B00BA5391 /* LocationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -409,7 +415,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"COMP90018_APP/Preview Content\"";
-				DEVELOPMENT_TEAM = BP5V2KJJ9F;
+				DEVELOPMENT_TEAM = NZ3P6V45UB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "COMP90018-APP-Info.plist";
@@ -427,7 +433,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "COMP90018.COMP90018-APP-Test";
+				PRODUCT_BUNDLE_IDENTIFIER = "COMP90018.COMP90018-APP";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -443,7 +449,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"COMP90018_APP/Preview Content\"";
-				DEVELOPMENT_TEAM = BP5V2KJJ9F;
+				DEVELOPMENT_TEAM = NZ3P6V45UB;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "COMP90018-APP-Info.plist";
@@ -461,7 +467,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "COMP90018.COMP90018-APP-Test";
+				PRODUCT_BUNDLE_IDENTIFIER = "COMP90018.COMP90018-APP";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

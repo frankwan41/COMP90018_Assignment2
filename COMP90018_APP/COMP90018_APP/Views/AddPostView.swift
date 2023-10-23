@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Flow
+import BSImagePicker
 
 struct AddPostView: View {
 
