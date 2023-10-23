@@ -31,6 +31,8 @@ struct ProfileView: View {
                 if !userViewModel.isLoggedIn {
                     showLoginAlert = true
                 }
+                profileViewModel.getUserInformation()
+                profileViewModel.getUserPosts()
             }
             .onChange(of: userViewModel.isLoggedIn, perform: { newValue in
                 if newValue {
