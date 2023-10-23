@@ -15,6 +15,10 @@ struct TabMainView: View {
 
     
     var body: some View {
+        let gradientStart = Color.orange.opacity(0.5)
+        let gradientEnd = Color.orange
+        let gradientBackground = LinearGradient(gradient: Gradient(colors: [gradientStart, gradientEnd]), startPoint: .top, endPoint: .bottom)
+        
         TabView{
             PostsView()
                 .navigationBarBackButtonHidden(true)

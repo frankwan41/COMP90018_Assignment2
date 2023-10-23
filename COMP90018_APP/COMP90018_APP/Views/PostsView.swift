@@ -19,6 +19,10 @@ struct PostsView: View {
     @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
     @AppStorage("shakeResult") var shakeResult = ""
     
+    @StateObject var userViewModel = UserViewModel() // <-- Add this line
+    @State private var showLoginSheet = false       // <-- Add this line
+    @State private var shouldShowProfile = false
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -53,7 +57,12 @@ struct PostsView: View {
                                     Image(systemName: "person.circle")
                                     Text("User name").font(.subheadline)
                                     Spacer()
-                                    LikeButton(index: index, likeStates: $likeStates, heartScale: $heartScale, numLikeStates: $numLikeStates)
+                                    LikeButton(index: index,
+                                               likeStates: $likeStates,
+                                               heartScale: $heartScale,
+                                               numLikeStates: $numLikeStates,
+                                               isLoggedIn: $userViewModel.isLoggedIn,
+                                               showLoginSheet:$showLoginSheet)
                                     Text("\(numLikeStates[index])").font(.subheadline)
                                 }
                             }
@@ -80,6 +89,9 @@ struct PostsView: View {
                     }
             }
             }
+            NavigationLink(destination: ProfileView(), isActive: $shouldShowProfile) {
+                            EmptyView()
+                        }
         }
     }
 }
@@ -88,29 +100,49 @@ struct PostsView: View {
 
 struct LikeButton: View {
     let index: Int
+    
     @Binding var likeStates: [Bool]
     @Binding var heartScale: CGFloat
     @Binding var numLikeStates: [Int]
+    @Binding var isLoggedIn: Bool
+    @Binding var showLoginSheet: Bool
+    @State private var showLoginAlert = false
+    
     
     var body: some View{
         Button {
-            withAnimation {
-                // Slightly increase the size for a moment
-                heartScale = 1.5
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            print(isLoggedIn)
+            if isLoggedIn {
                 withAnimation {
-                    heartScale = 1.0 // Return to normal size
+                    // Slightly increase the size for a moment
+                    heartScale = 1.5
                 }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    withAnimation {
+                        heartScale = 1.0 // Return to normal size
+                    }
+                }
+                toggleLikes()
+            } else {
+                showLoginAlert = true
             }
-            toggleLikes()
-            
         } label: {
             Image(systemName: likeStates[index] ? "heart.fill" : "heart")
                 .scaleEffect(heartScale)
                 .foregroundColor(likeStates[index] ? .red : .gray)
             
-        }.buttonStyle(PlainButtonStyle())
+        }
+        .alert(isPresented: $showLoginAlert) {
+            Alert(
+                title: Text("Login Required"),
+                message: Text("You need to be logged in to like posts."),
+                dismissButton: .default(Text("OK"), action: {
+                    showLoginSheet = true
+                })
+                
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
     }
     
     // Toggle number of likes, +1 / -1

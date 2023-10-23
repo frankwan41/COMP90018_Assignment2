@@ -335,6 +335,8 @@ struct SingleComment: View {
     @Binding var commentLikeStates: [Bool]
     @Binding var heartScale: CGFloat
     @Binding var commentNumLikeStates: [Int]
+    @StateObject var userViewModel = UserViewModel() // <-- Add this line
+    @State private var showLoginSheet = false       // <-- Add this line
     
     var body: some View {
 
@@ -357,7 +359,11 @@ struct SingleComment: View {
             }
             // End section: contains like button and number of likes
             VStack{
-                LikeButton(index: index, likeStates: $commentLikeStates, heartScale: $heartScale, numLikeStates: $commentNumLikeStates)
+                LikeButton(index: index, likeStates: $commentLikeStates,
+                           heartScale: $heartScale,
+                           numLikeStates: $commentNumLikeStates,
+                           isLoggedIn: $userViewModel.isLoggedIn,
+                           showLoginSheet:$showLoginSheet)
                 Text("\(commentNumLikeStates[index])")
                     .font(.footnote)
                     .foregroundColor(.gray)

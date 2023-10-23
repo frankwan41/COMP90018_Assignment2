@@ -15,7 +15,10 @@ class UserViewModel: ObservableObject{
     @Published var errorMessage = ""
     
     init(){
-        isLoggedIn = FirebaseManager.shared.auth.currentUser?.uid == nil
+        FirebaseManager.shared.auth.addStateDidChangeListener { (auth, user) in
+                self.isLoggedIn = (user != nil)
+        }
+        //isLoggedIn = FirebaseManager.shared.auth.currentUser?.uid == nil 不知道是哪个写的，每次都要重新登录。
     }
     
     

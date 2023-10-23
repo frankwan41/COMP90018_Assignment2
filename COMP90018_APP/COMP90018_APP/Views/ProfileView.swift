@@ -1,48 +1,31 @@
-//
-//  ProfileView.swift
-//  COMP90018_APP
-//
-//  Created by frank w on 14/9/2023.
-//
-
 import SwiftUI
+import Kingfisher
 
 struct ProfileView: View {
-    
-    @ObservedObject var userViewModel = UserViewModel()
+
+    @StateObject var userViewModel = UserViewModel()
+    @StateObject var profileViewModel = ProfileViewModel()
     @State private var showLoginAlert = false
     @State private var wantsLogin = false
-    
 
-    
     var body: some View {
-        NavigationView{
-            VStack(spacing: 20){
-                Text("This is the profile view")
-                NavigationLink {
-                    
-                    ProfileSetttingView(profileSettingViewModel: ProfileSettingViewModel())
-                } label: {
-                    Text("Found out user profile page")
+        let gradientStart = Color.orange.opacity(0.5)
+        let gradientEnd = Color.orange
+        let gradientBackground = LinearGradient(gradient: Gradient(colors: [gradientStart, gradientEnd]), startPoint: .top, endPoint: .bottom)
+
+        NavigationView {
+            ZStack {
+                gradientBackground.edgesIgnoringSafeArea(.all)
+
+                VStack(spacing: 20) {
+                    if !userViewModel.isLoggedIn {
+                        guestView
+                    } else {
+                        loggedInView
+                    }
                 }
-                NavigationLink {
-                    // SignView(userViewModel: userViewModel)
-                } label: {
-                    Text("Click here to signin/singup")
-                }
-                .alert(isPresented: $showLoginAlert) {
-                    Alert(
-                        title: Text("Alert"),
-                        message: Text("Please log in or sign up"),
-                        primaryButton: .default(Text("Sign in")) {
-                            wantsLogin = true
-                        },
-                        secondaryButton: .cancel(Text("Cancel")) {
-                            wantsLogin = false
-                        }
-                    )
-                }
-                
+                .padding(.horizontal)
+                .navigationBarItems(trailing: userViewModel.isLoggedIn ? logoutButton : nil)
             }
             .onAppear {
                 if !userViewModel.isLoggedIn {
@@ -56,23 +39,88 @@ struct ProfileView: View {
             })
             .sheet(isPresented: $wantsLogin) {
                 SignView(userViewModel: userViewModel)
-                    .onDisappear{
-                        if !userViewModel.isLoggedIn{
+                    .onDisappear {
+                        if !userViewModel.isLoggedIn {
                             showLoginAlert = true
                         }
                         wantsLogin = false
                     }
-                    
             }
-            
+        }
+    }
+
+    private var guestView: some View {
+        VStack(spacing: 20) {
+            Image(systemName: "person.circle.fill")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 100, height: 100)
+                .foregroundColor(.gray)
+
+            Text("Welcome Guest!")
+                .font(.largeTitle)
+                .bold()
+
+            Text("Log in or sign up to access your profile.")
+                .font(.headline)
+                .multilineTextAlignment(.center)
+
+            Button(action: { wantsLogin = true }) {
+                Text("Log In or Sign Up")
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.orange)
+                    .cornerRadius(10)
+            }
+        }
+    }
+
+    private var loggedInView: some View {
+        VStack(spacing: 15) {
+            if let url = URL(string: profileViewModel.user.profileImageURL) {
+                KFImage(url)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 150, height: 150)
+                    .clipShape(Circle())
+                    .shadow(radius: 10)
+            } else {
+                ProgressView()
+            }
+
+            Text(profileViewModel.user.userName)
+                .font(.largeTitle)
+                .bold()
+
+            Text(profileViewModel.user.email)
+                .font(.subheadline)
+
+            Text(profileViewModel.user.phoneNumber)
+                .font(.subheadline)
+
+            NavigationLink(destination: ProfileSetttingView(profileSettingViewModel: ProfileSettingViewModel())) {
+                Text("View Profile Settings")
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.orange)
+                    .cornerRadius(10)
+            }
+        }
+    }
+
+    private var logoutButton: some View {
+        Button(action: {
+            userViewModel.signOutUser()
+        }) {
+            Text("Sign Out")
+                .foregroundColor(.orange)
+                .bold()
         }
     }
 }
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationStack{
-            ProfileView()
-        }
+        ProfileView()
     }
 }
