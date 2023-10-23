@@ -35,6 +35,8 @@ struct ProfileView: View {
             .onChange(of: userViewModel.isLoggedIn, perform: { newValue in
                 if newValue {
                     wantsLogin = false
+                    profileViewModel.getUserInformation()
+                    profileViewModel.getUserPosts()
                 }
             })
             .sheet(isPresented: $wantsLogin) {
