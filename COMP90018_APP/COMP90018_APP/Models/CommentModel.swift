@@ -13,7 +13,6 @@ struct Comment: Decodable{
     var commentID: String
     var likes: Int
     var userID: String
-    var userName: String
     
     init(data: [String: Any]){
        
@@ -21,7 +20,6 @@ struct Comment: Decodable{
         self.commentID = data["commentid"] as?  String ?? ""
         self.likes = data["likes"] as? Int ?? 0
         self.userID = data["userid"] as? String ?? ""
-        self.userName = data["username"] as? String ?? ""
     }
     
     

@@ -6,3 +6,17 @@
 //
 
 import Foundation
+
+struct Tag: Decodable{
+    var name: String
+    
+    init(data: [String: Any]){
+        
+        self.name = data["name"] as?  String ?? ""
+
+    }
+    
+    
+    
+    
+}
