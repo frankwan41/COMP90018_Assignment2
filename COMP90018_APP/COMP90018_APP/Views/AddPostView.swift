@@ -43,28 +43,7 @@ struct AddPostView: View {
                         .padding(.bottom)
                     AddPhotoView(images: $images, showActionSheet: $showActionSheet, maxImagesCount: maxImagesCount)
                         .padding(.bottom)
-                    Toggle(isOn: $locationEnable) {
-                        HStack{
-                            Text("Add Location".capitalized)
-                                .font(.title3)
-                                .fontWeight(.bold)
-                            
-                            switch locationManager.isLoading {
-                                case .defaults:
-                                    EmptyView()
-                                case .loading:
-                                    ProgressView()
-                                case .success:
-                                if locationEnable{
-                                    Text("Success!")
-                                }
-                                case .failed:
-                                    Text("Failed finding location")
-                                case .denied:
-                                    Text("Access Denied")
-                                }
-                        }
-                    }
+                    LocationSection
                     .padding([.vertical,.trailing])
                     .padding(.bottom)
                     
@@ -106,7 +85,10 @@ struct AddPostView: View {
                     showLocationAlert = true
                 }
                 if value {
-                    locationManager.requestLocation()
+                    if (locationManager.location == nil) {
+                        locationManager.requestLocation()
+                    }
+                    
                 }
             })
             .confirmationDialog("", isPresented: $showActionSheet, actions: {
@@ -155,6 +137,35 @@ struct AddPostView: View {
 
 
 // MARK: COMPONENTS
+
+extension AddPostView {
+    private var LocationSection: some View {
+        Toggle(isOn: $locationEnable) {
+            HStack(spacing: 30){
+                Text("Add Location".capitalized)
+                    .font(.title3)
+                    .fontWeight(.bold)
+                
+                
+                switch locationManager.isLoading {
+                    case .defaults:
+                        EmptyView()
+                    case .loading:
+                        ProgressView()
+                    case .success:
+                    if locationEnable{
+                        Text("\(locationManager.locationString)")
+                    }
+                    case .failed:
+                        Text("Failed finding location")
+                    case .denied:
+                        Text("Access Denied")
+                    }
+            }
+        }
+    }
+}
+
 
 struct AddPhotoView: View {
     @Binding var images: [UIImage]
