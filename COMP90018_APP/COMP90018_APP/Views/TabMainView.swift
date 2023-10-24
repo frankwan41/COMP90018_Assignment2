@@ -12,7 +12,8 @@ struct TabMainView: View {
     
     @State private var isActive: Bool = false
     @State private var selectedTab: Int = 0
-
+    @StateObject var userViewModel = UserViewModel()
+    @State private var showLoginAlert = false
     
     var body: some View {
         let gradientStart = Color.orange.opacity(0.5)
@@ -40,7 +41,13 @@ struct TabMainView: View {
             // Customize an add button to tab items to start a post
             .overlay(
                 Button(action: {
-                    isActive = true
+                    if(userViewModel.isLoggedIn){
+                        isActive = true
+                    }
+                    else{
+                        showLoginAlert = true
+                    }
+                    
                 }) {
                     Image(systemName: "plus.app.fill")
                         .resizable()
@@ -48,6 +55,14 @@ struct TabMainView: View {
                         .foregroundColor(.pink)
                         .cornerRadius(10)
                 }
+                    .alert(isPresented: $showLoginAlert) {
+                        Alert(
+                            title: Text("Login Required"),
+                            message: Text("You need to log in to create post."),
+                            dismissButton: .default(Text("OK"))
+                            
+                        )
+                    }
                     .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height - 118)
                     .fullScreenCover(isPresented: $isActive, content: {
                         // Your destination view goes here

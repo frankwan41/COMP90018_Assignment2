@@ -211,7 +211,7 @@ struct SinglePostLikeBtn: View{
             .alert(isPresented: $showLoginAlert) {
                 Alert(
                     title: Text("Login Required"),
-                    message: Text("You need to be logged in to like posts."),
+                    message: Text("You need to log in to like posts."),
                     dismissButton: .default(Text("OK"))
                     
                 )
@@ -259,7 +259,7 @@ struct SinglePostCommentBtn: View {
         .alert(isPresented: $showLoginAlert) {
             Alert(
                 title: Text("Login Required"),
-                message: Text("You need to be logged in to comment posts."),
+                message: Text("You need to log in to comment posts."),
                 dismissButton: .default(Text("OK"))
                 
             )
