@@ -7,6 +7,7 @@
 
 import Foundation
 import Firebase
+import FirebaseFirestore
 
 class AddPostViewModel{
     /**
@@ -58,10 +59,13 @@ class AddPostViewModel{
             "location": location
         ])
         
+        print("Successfully uploaded the post \(ref.documentID)")
        
         // save the image of the post to the storage
         self.savePostImage(images: images, documentID: ref.documentID as String)
         
+        // Upload the tags of the post to the collection of the tags
+        self.uploadTagsInPost(tags: tags)
                 
             
         
@@ -89,6 +93,8 @@ class AddPostViewModel{
             .collection("posts")
             .document(documentID)
             .setData(["imageurls": imageURLs], merge: true)
+        
+        print("Successfully saved the images in the post \(documentID)")
         
     }
     
@@ -126,7 +132,31 @@ class AddPostViewModel{
             }
         }
         
+        if imageURL.isEmpty{
+            print("Failed to upload one of the images in the post \(documentID)")
+        }else{
+            print("Successfully uploaded one of the images in the post \(documentID)")
+        }
+        
         return imageURL
+        
+        
+    }
+    
+    
+    // TODO: Submit the tags to firestore
+    func uploadTagsInPost(tags: [String]){
+        for tag in tags {
+            let tagData = [
+                "name": tag
+            ] as [String: Any]
+            
+            FirebaseManager.shared.firestore
+                .collection("tags")
+                .document(tag)
+                .setData(tagData)
+            print("Successfully uploaded tag \(tag)")
+        }
         
         
     }

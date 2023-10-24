@@ -16,8 +16,11 @@ struct AddPostView: View {
 
     @State private var titleText = ""
     @State private var contentText = ""
+    @State private var location = ""
+    @State private var longitude = Double(0)
+    @State private var latitude = Double(0)
     @State private var images: [UIImage] = []
-    @State private var tags = ["placeholder tag", "very very delicious food", "cool", "niubi", "6", "dope","very long long long long tag"]
+    @State private var tags: [String] = []
     @State private var showImagePicker = false
     @State private var showImageCamera = false
     @State private var showActionSheet = false
@@ -29,6 +32,7 @@ struct AddPostView: View {
     @State private var locationEnable = false
     
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationView{
@@ -140,6 +144,9 @@ struct AddPostView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
+                        
+                        //TODO: Submit the post
+                        
                         
                     } label: {
                         Text("post".uppercased())

@@ -165,11 +165,11 @@
 			children = (
 				A2027C992AB3014F00BA5391 /* PostModel.swift */,
 				A2027C9B2AB304A100BA5391 /* UserModel.swift */,
+				A20A9FCD2AB7F8D3003833AA /* TagModel.swift */,
 				A2027CCC2AB42B6400BA5391 /* CommentModel.swift */,
 				A2027CD02AB7035500BA5391 /* AddPostViewModel.swift */,
 				A2027CD22AB7C85300BA5391 /* PostsViewModel.swift */,
 				A2027CD42AB7D36000BA5391 /* ProfileViewModel.swift */,
-				A20A9FCD2AB7F8D3003833AA /* TagModel.swift */,
 				A20A9FCF2AB81927003833AA /* UserViewModel.swift */,
 				A219E3DB2AE510B20082F991 /* ProfileSettingViewModel.swift */,
 			);
