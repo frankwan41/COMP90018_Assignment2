@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct PostsView: View {
 //    @State var shakeResult: String  = ""
@@ -148,7 +149,13 @@ struct AllPostsView: View {
                         .font(.largeTitle)
                     Text(post.postTitle).font(.headline)
                     HStack(spacing: 4){
-                        Image(systemName: "person.circle")
+                        //
+                        if let urlString = getUserProfileImageURL(userUID: post.userUID){
+                            let url = URL(string:urlString)
+                            KFImage(url)
+                        }else{
+                            Image(systemName: "person.circle")
+                        }
                         Text(post.userName).font(.subheadline)
                         Spacer()
                         LikeButton(index: index,
@@ -167,8 +174,35 @@ struct AllPostsView: View {
                 .opacity(0)  // Making the NavigationLink invisible
                 .allowsHitTesting(false)
             }
+            
         }
     }
+}
+
+// MARK: Functions
+private func getUserProfileImageURL(userUID: String) -> String?{
+    var output: String = ""
+    FirebaseManager.shared.firestore
+        .collection("users")
+        .document(userUID)
+        .getDocument { documentSnapshot, error in
+            if let error = error{
+                print("Unable to fetch the details of the user\(userUID), \(error.localizedDescription)")
+            }else{
+                if let documentSnapshot = documentSnapshot{
+                    let data = documentSnapshot.data()
+                    let user = User(data: data!)
+                    print("Successfully fetched the profile image url of the user\(userUID)")
+                    output = user.profileImageURL
+                }
+            }
+            
+            
+        }
+    
+    return output
+    
+    
 }
 
 
