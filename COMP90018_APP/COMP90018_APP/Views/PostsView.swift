@@ -45,36 +45,7 @@ struct PostsView: View {
                         }
                     }
                     Text("Here is your shake result: \(shakeResult)")
-                    ForEach(1..<20) { index in
-                        ZStack {
-                            VStack(alignment:.leading, spacing: 10){
-                                Image(systemName: "photo")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .font(.largeTitle)
-                                Text("This is the title of the post").font(.headline)
-                                HStack(spacing: 4){
-                                    Image(systemName: "person.circle")
-                                    Text("User name").font(.subheadline)
-                                    Spacer()
-                                    LikeButton(index: index,
-                                               likeStates: $likeStates,
-                                               heartScale: $heartScale,
-                                               numLikeStates: $numLikeStates,
-                                               isLoggedIn: $userViewModel.isLoggedIn,
-                                               showLoginSheet:$showLoginSheet)
-                                    Text("\(numLikeStates[index])").font(.subheadline)
-                                }
-                            }
-                            .padding()
-                            NavigationLink(destination: SinglePostView().navigationBarBackButtonHidden(true)) {
-                                EmptyView()
-                            }
-                            .opacity(0)  // Making the NavigationLink invisible
-                            .allowsHitTesting(false)
-                        }
-                        
-                    }
+                    AllPostsView(likeStates: $likeStates, heartScale: $heartScale, numLikeStates: $numLikeStates, isLoggedIn: $userViewModel.isLoggedIn, showLoginSheet: $showLoginSheet)
                 }
                 .listStyle(.plain)
                 .toolbar{
@@ -156,6 +127,47 @@ struct LikeButton: View {
     }
 }
 
+struct AllPostsView: View {
+    @Binding var likeStates: [Bool]
+    @Binding var heartScale: CGFloat
+    @Binding var numLikeStates: [Int]
+    @Binding var isLoggedIn: Bool
+    @Binding var showLoginSheet: Bool
+    
+    
+    var body: some View {
+        ForEach(1..<likeStates.count) { index in
+            ZStack {
+                VStack(alignment:.leading, spacing: 10){
+                    Image(systemName: "photo")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .font(.largeTitle)
+                    Text("This is the title of the post").font(.headline)
+                    HStack(spacing: 4){
+                        Image(systemName: "person.circle")
+                        Text("User name").font(.subheadline)
+                        Spacer()
+                        LikeButton(index: index,
+                                   likeStates: $likeStates,
+                                   heartScale: $heartScale,
+                                   numLikeStates: $numLikeStates,
+                                   isLoggedIn: $isLoggedIn,
+                                   showLoginSheet:$showLoginSheet)
+                        Text("\(numLikeStates[index])").font(.subheadline)
+                    }
+                }
+                .padding()
+                NavigationLink(destination: SinglePostView().navigationBarBackButtonHidden(true)) {
+                    EmptyView()
+                }
+                .opacity(0)  // Making the NavigationLink invisible
+                .allowsHitTesting(false)
+            }
+            
+        }
+    }
+}
 
 struct PostsView_Previews: PreviewProvider {
     static var previews: some View {
