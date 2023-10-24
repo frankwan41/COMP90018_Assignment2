@@ -36,3 +36,10 @@ struct COMP90018_APPApp: App {
 //        return viewControllers.count > 1
 //    }
 //}
+
+extension UINavigationController {
+    open override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        navigationBar.isHidden = true
+    }
+}
