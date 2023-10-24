@@ -178,6 +178,8 @@ struct SinglePostLikeBtn: View{
         @Binding var likeState: Bool
         @Binding var heartScale: CGFloat
         @Binding var numLikeState: Int
+        @StateObject var userViewModel = UserViewModel()
+        @State private var showLoginAlert = false
         
         var body: some View{
             Button {
@@ -190,7 +192,13 @@ struct SinglePostLikeBtn: View{
                         heartScale = 1.0 // Return to normal size
                     }
                 }
-                toggleLikes()
+                if (userViewModel.isLoggedIn){
+                    toggleLikes()
+                }
+                else{
+                    showLoginAlert = true
+                }
+                
                 
             } label: {
                 Image(systemName: likeState ? "heart.fill" : "heart")
@@ -199,9 +207,16 @@ struct SinglePostLikeBtn: View{
                     .scaleEffect(heartScale)
                     .foregroundColor(likeState ? .red : .black)
                     .padding(.vertical)
+            }
+            .alert(isPresented: $showLoginAlert) {
+                Alert(
+                    title: Text("Login Required"),
+                    message: Text("You need to be logged in to like posts."),
+                    dismissButton: .default(Text("OK"))
                     
-                
-            }.buttonStyle(PlainButtonStyle())
+                )
+            }
+            .buttonStyle(PlainButtonStyle())
         }
         
         // Toggle number of likes, +1 / -1
@@ -220,18 +235,34 @@ struct SinglePostCommentBtn: View {
     @Binding var isTextFieldVisible: Bool
     @Binding var commentText: String
     @FocusState.Binding var autoFocused: Bool
+    @StateObject var userViewModel = UserViewModel()
+    @State private var showLoginAlert = false
     
     var body: some View {
         Button(action: {
             // Handle message button action
-            isTextFieldVisible = true
-            autoFocused = true
+            if(userViewModel.isLoggedIn){
+                isTextFieldVisible = true
+                autoFocused = true
+            }
+            else{
+                showLoginAlert = true
+            }
+            
         }) {
             Image(systemName: "ellipsis.message")
                 .resizable()
                 .frame(width: 27, height: 27)
                 .foregroundColor(.black)
                 .padding(.vertical)
+        }
+        .alert(isPresented: $showLoginAlert) {
+            Alert(
+                title: Text("Login Required"),
+                message: Text("You need to be logged in to like posts."),
+                dismissButton: .default(Text("OK"))
+                
+            )
         }
     }
 }

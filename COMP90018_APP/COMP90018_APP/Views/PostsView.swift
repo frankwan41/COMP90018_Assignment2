@@ -19,8 +19,8 @@ struct PostsView: View {
     @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
     @AppStorage("shakeResult") var shakeResult = ""
     
-    @StateObject var userViewModel = UserViewModel() // <-- Add this line
-    @State private var showLoginSheet = false       // <-- Add this line
+    @StateObject var userViewModel = UserViewModel()
+    @State private var showLoginSheet = false
     @State private var shouldShowProfile = false
     
     var body: some View {
