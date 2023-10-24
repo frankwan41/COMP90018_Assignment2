@@ -19,46 +19,49 @@ struct TabMainView: View {
         let gradientEnd = Color.orange
         let gradientBackground = LinearGradient(gradient: Gradient(colors: [gradientStart, gradientEnd]), startPoint: .top, endPoint: .bottom)
         
-        TabView{
-            PostsView()
-                .navigationBarBackButtonHidden(true)
-                .tabItem {
-                    Image(systemName: "fork.knife")
-                    Text("Posts")
-                }
-            
-            // Transparent view to introduce spacing
-            Color.clear
-            .frame(width: 45, height: 40)
-            .tabItem {
-                EmptyView()
-            }
-
-            ProfileView()
-                .navigationBarBackButtonHidden(true)
-                .tabItem {
-                    Image(systemName: "person")
-                    Text("Profile")
-                }
-        }
-        .tint(.black)
-        // Customize an add button to tab items to start a post
-        .overlay(
-                    Button(action: {
-                        isActive = true
-                    }) {
-                        Image(systemName: "plus.app.fill")
-                            .resizable()
-                            .frame(width: 45, height: 40)
-                            .foregroundColor(.pink)
-                            .cornerRadius(10)
+        NavigationStack{
+            TabView{
+                PostsView()
+                    .navigationBarBackButtonHidden(true)
+                    .tabItem {
+                        Image(systemName: "fork.knife")
+                        Text("Posts")
                     }
+                
+                // Transparent view to introduce spacing
+                Color.clear
+                    .frame(width: 45, height: 40)
+                    .tabItem {
+                        EmptyView()
+                    }
+                
+                ProfileView()
+                    .navigationBarBackButtonHidden(true)
+                    .tabItem {
+                        Image(systemName: "person")
+                        Text("Profile")
+                    }
+            }
+            
+            .tint(.black)
+            // Customize an add button to tab items to start a post
+            .overlay(
+                Button(action: {
+                    isActive = true
+                }) {
+                    Image(systemName: "plus.app.fill")
+                        .resizable()
+                        .frame(width: 45, height: 40)
+                        .foregroundColor(.pink)
+                        .cornerRadius(10)
+                }
                     .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height - 105)
                     .fullScreenCover(isPresented: $isActive, content: {
                         // Your destination view goes here
                         AddPostView()
                     })
-                )
+            )
+        }
         
     }
 }

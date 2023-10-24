@@ -10,6 +10,8 @@ import Flow
 import BSImagePicker
 
 struct AddPostView: View {
+    
+    @StateObject var locationManager = LocationManager()
 
     @State private var titleText = ""
     @State private var contentText = ""
@@ -39,9 +41,13 @@ struct AddPostView: View {
                     AddPhotoView(images: $images, showActionSheet: $showActionSheet, maxImagesCount: maxImagesCount)
                         .padding(.bottom)
                     Toggle(isOn: $locationEnable) {
-                        Text("Add Location".capitalized)
-                            .font(.title3)
-                            .fontWeight(.bold)
+                        HStack{
+                            Text("Add Location".capitalized)
+                                .font(.title3)
+                                .fontWeight(.bold)
+                            Text((locationManager.location != nil) ? "Located" : "")
+                                .font(.caption)
+                        }
                     }
                     .padding([.vertical,.trailing])
                     .padding(.bottom)
@@ -55,6 +61,12 @@ struct AddPostView: View {
                 .padding(.leading)
                 .padding()
             }
+            .onChange(of: locationEnable, perform: { value in
+                print(value)
+                if value {
+                        locationManager.requestLocation()
+                }
+            })
             .confirmationDialog("", isPresented: $showActionSheet, actions: {
                 Button("Taking Photo") {
                     showImageCamera = true
