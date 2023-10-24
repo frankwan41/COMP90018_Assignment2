@@ -12,6 +12,7 @@ struct PostsView: View {
     @State private var searchCategory: String = ""
     @FocusState private var isSearchFocused: Bool
     
+    
     @State private var likeStates: [Bool] = Array(repeating: false, count: 20)
     @State private var heartScale: CGFloat = 1.0
     @State private var numLikeStates: [Int] = Array(repeating: 32, count: 20)
@@ -22,6 +23,7 @@ struct PostsView: View {
     @StateObject var userViewModel = UserViewModel() // <-- Add this line
     @State private var showLoginSheet = false       // <-- Add this line
     @State private var shouldShowProfile = false
+    @StateObject var postViewModel = PostsViewModel()
     
     var body: some View {
         NavigationView {
@@ -45,7 +47,7 @@ struct PostsView: View {
                         }
                     }
                     Text("Here is your shake result: \(shakeResult)")
-                    AllPostsView(likeStates: $likeStates, heartScale: $heartScale, numLikeStates: $numLikeStates, isLoggedIn: $userViewModel.isLoggedIn, showLoginSheet: $showLoginSheet)
+                    AllPostsView(likeStates: $likeStates, heartScale: $heartScale, numLikeStates: $numLikeStates, isLoggedIn: $userViewModel.isLoggedIn, showLoginSheet: $showLoginSheet, posts: $postViewModel.posts)
                 }
                 .listStyle(.plain)
                 .toolbar{
@@ -133,27 +135,28 @@ struct AllPostsView: View {
     @Binding var numLikeStates: [Int]
     @Binding var isLoggedIn: Bool
     @Binding var showLoginSheet: Bool
-    
+    @Binding var posts: [Post]
     
     var body: some View {
-        ForEach(1..<likeStates.count) { index in
+        ForEach(Array(posts.enumerated()), id: \.element.id) { (index, post) in
             ZStack {
                 VStack(alignment:.leading, spacing: 10){
+                    //TODO: Fetch Image
                     Image(systemName: "photo")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .font(.largeTitle)
-                    Text("This is the title of the post").font(.headline)
+                    Text(post.postTitle).font(.headline)
                     HStack(spacing: 4){
                         Image(systemName: "person.circle")
-                        Text("User name").font(.subheadline)
+                        Text(post.userName).font(.subheadline)
                         Spacer()
                         LikeButton(index: index,
                                    likeStates: $likeStates,
                                    heartScale: $heartScale,
                                    numLikeStates: $numLikeStates,
                                    isLoggedIn: $isLoggedIn,
-                                   showLoginSheet:$showLoginSheet)
+                                   showLoginSheet: $showLoginSheet)
                         Text("\(numLikeStates[index])").font(.subheadline)
                     }
                 }
@@ -164,10 +167,10 @@ struct AllPostsView: View {
                 .opacity(0)  // Making the NavigationLink invisible
                 .allowsHitTesting(false)
             }
-            
         }
     }
 }
+
 
 struct PostsView_Previews: PreviewProvider {
     static var previews: some View {

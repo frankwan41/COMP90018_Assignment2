@@ -145,7 +145,8 @@ extension ProfileView {
                         heartScale: $heartScale,
                         numLikeStates: $numLikeStates,
                         isLoggedIn: $userViewModel.isLoggedIn,
-                        showLoginSheet: $showLoginSheet
+                        showLoginSheet: $showLoginSheet,
+                        posts: $profileViewModel.posts
                     )
                 } else if selectedTab == .liked {
                     // Replace with your LikedPostsView or a modified AllPostsView
@@ -155,11 +156,12 @@ extension ProfileView {
                         heartScale: $heartScale,
                         numLikeStates: $numLikeStates,
                         isLoggedIn: $userViewModel.isLoggedIn,
-                        showLoginSheet: $showLoginSheet
+                        showLoginSheet: $showLoginSheet,
+                        posts: $profileViewModel.posts
                     )
-                    Text("Liked Posts View")
                 }
             }.listStyle(.plain)
+
         }
     }
 
