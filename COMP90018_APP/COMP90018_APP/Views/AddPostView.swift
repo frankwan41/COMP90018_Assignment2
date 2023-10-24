@@ -13,6 +13,8 @@ import CoreLocationUI
 struct AddPostView: View {
     
     @StateObject var locationManager = LocationManager()
+   
+    var addPostViewModel = AddPostViewModel()
 
     @State private var titleText = ""
     @State private var contentText = ""
@@ -146,7 +148,10 @@ struct AddPostView: View {
                     Button {
                         
                         //TODO: Submit the post
-                        
+                        addPostViewModel.addPost(
+                            postTitle:titleText, images: images, date: Date(), longitude: longitude, latitude: latitude, content: contentText, tags: tags, location: location
+                        )
+                        dismiss()
                         
                     } label: {
                         Text("post".uppercased())
@@ -251,10 +256,12 @@ struct PostTagsView: View {
 
 struct AddPostTagsView: View {
     
+    @State private var addPostViewModel = AddPostViewModel()
     @Binding var tags: [String]
+    @State private var tagsExsiting: [String] = []
     @State private var searchText: String = ""
     @State private var showDropdown: Bool = false
-    var matchingTags: [String] { tags.filter { $0.lowercased().contains(searchText.lowercased()) && !searchText.isEmpty }}
+    var matchingTags: [String] { tagsExsiting.filter { $0.lowercased().contains(searchText.lowercased()) && !searchText.isEmpty }}
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -282,8 +289,11 @@ struct AddPostTagsView: View {
                     VStack(alignment: .leading) {
                         ForEach(matchingTags.indices, id: \.self) {index in
                             Button(action: {
-                                tags.append(matchingTags[index])
-                                searchText = ""
+                                if !tags.contains(searchText) {
+                                    tags.append(matchingTags[index])
+                                    searchText = ""
+                                }
+                                
                             }) {
                                 Text(matchingTags[index])
                                     .padding(10)
@@ -301,6 +311,13 @@ struct AddPostTagsView: View {
                     )
                 }
                 .frame(height: 400)
+            }
+        }
+        .task {
+            addPostViewModel.fetchAllTags(){ tagsFetched in
+                if let tagsFetched = tagsFetched{
+                    tagsExsiting = tagsFetched
+                }
             }
         }
     }

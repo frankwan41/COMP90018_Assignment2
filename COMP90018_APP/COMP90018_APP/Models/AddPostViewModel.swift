@@ -15,7 +15,7 @@ class AddPostViewModel{
      The function saves the information of the post into the colletion of firebase
      */
     
-    func addPost(postTitle: String, images: [UIImage], date: Date, longitude: Double, latitude: Double, content: String, tags: [String], comments: [String] = [], likes: Int = 0, location: String){
+    func addPost(postTitle: String, images: [UIImage], date: Date, longitude: Double, latitude: Double, content: String, tags: [String], location: String, comments: [String] = [], likes: Int = 0 ){
         
         // Confirm the status of login and obtain the userUID
         guard let uid = Auth.auth().currentUser?.uid else {return}
@@ -80,14 +80,30 @@ class AddPostViewModel{
     func savePostImage(images: [UIImage], documentID: String){
         
         var imageURLs = [String]()
-        var numberImages = images.count
+        let numberImages = images.count
+        
+        var numberProcessed = 0
+        
+        
         
         for idx in 0...(numberImages - 1){
-            var imageReference = documentID + String(idx)
-            var image = images[idx]
-            var imageURL = self.saveSingleImage(image: image, documentID: imageReference)
-            imageURLs.append(imageURL)
+            let imageReference = documentID + String(idx)
+            let image = images[idx]
+            self.saveSingleImage(image: image, documentID: imageReference){ imageURL in
+                if let imageURL = imageURL{
+                    imageURLs.append(imageURL)
+                    print("Successfully uploaded the image \(imageURL) of the post \(documentID)")
+                    
+                }else{
+                    print("Failed to upload one image of the post \(documentID)")
+                }
+                numberProcessed += 1
+            }
         }
+        
+//        while (numberProcessed < numberImages){
+//            continue
+//        }
         
         Firestore.firestore()
             .collection("posts")
@@ -99,20 +115,24 @@ class AddPostViewModel{
     }
     
     
-    func saveSingleImage(image: UIImage, documentID: String) -> String {
+    func saveSingleImage(image: UIImage, documentID: String, completion: @escaping (String?) -> Void){
         
-        var imageURL = ""
         
         // create the reference in the storage by the doumentID of the post
         let ref = FirebaseManager.shared.storage.reference(withPath: documentID)
         
         // Compress the image
-        guard let imageData = image.jpegData(compressionQuality: 0.5) else {return ""}
+        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+            print("Unable to compress the image of post \(documentID)")
+            completion(nil)
+            return}
         
         // Put the compressed image into the storage
         ref.putData(imageData, metadata: nil) { metadata, error in
             if let error = error{
                 print("Error in storing the image, \(error.localizedDescription)")
+                print("Failed to upload one of the images in the post \(documentID)")
+                completion(nil)
                 return
             }
             
@@ -120,25 +140,20 @@ class AddPostViewModel{
             ref.downloadURL { url, error in
                 if let error = error{
                     print("Error in obtaining the url of the image \(error.localizedDescription)")
+                    print("Failed to upload one of the images in the post \(documentID)")
+                    completion(nil)
                     return
                 }
                 
                 // Put the url to the collections of the post
                 if let url = url{
                     print("The URL of the image is \(url)")
-                    imageURL = url.absoluteString
+                    print("Successfully uploaded one of the images in the post \(documentID)")
+                    completion(url.absoluteString)
                 }
             
             }
         }
-        
-        if imageURL.isEmpty{
-            print("Failed to upload one of the images in the post \(documentID)")
-        }else{
-            print("Successfully uploaded one of the images in the post \(documentID)")
-        }
-        
-        return imageURL
         
         
     }
@@ -160,4 +175,32 @@ class AddPostViewModel{
         
         
     }
+    
+    // TODO: Fetch all tags from Firestore
+    func fetchAllTags(completion: @escaping ([String]?) -> Void) {
+        
+        
+        FirebaseManager.shared.firestore
+            .collection("tags")
+            .getDocuments { documentsSnapshot, error in
+                if let error = error {
+                    print("Failed to fecth all tags \(error)")
+                    return
+                }
+                var tags: [String] = []
+                
+                documentsSnapshot?.documents.forEach({ snapshot in
+                    let data = snapshot.data()
+                    let tag = Tag(data: data)
+                    tags.append(tag.name)
+                })
+                
+                completion(tags)
+                
+                
+            }
+        
+        completion(nil)
+    }
+    
 }
