@@ -86,6 +86,10 @@ struct SignView: View {
                             
                         } label: {
                             Text(!isSignUpMode ? "Forgot Password?" : "")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.blue)
+                                .underline()
+                                
                         }
                         
                     }
@@ -95,6 +99,9 @@ struct SignView: View {
                             isSignUpMode.toggle()
                         }label: {
                             Text(isSignUpMode ? "Sign In" : "Register")
+                                .fontWeight(.bold)
+                                .foregroundStyle(.blue)
+                                .underline()
                         }
                     }
                 }
