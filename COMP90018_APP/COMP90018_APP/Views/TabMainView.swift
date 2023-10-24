@@ -28,13 +28,6 @@ struct TabMainView: View {
                         Text("Posts")
                     }
                 
-                // Transparent view to introduce spacing
-                Color.clear
-                    .frame(width: 45, height: 40)
-                    .tabItem {
-                        EmptyView()
-                    }
-                
                 ProfileView()
                     .navigationBarBackButtonHidden(true)
                     .tabItem {
@@ -55,7 +48,7 @@ struct TabMainView: View {
                         .foregroundColor(.pink)
                         .cornerRadius(10)
                 }
-                    .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height - 105)
+                    .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height - 118)
                     .fullScreenCover(isPresented: $isActive, content: {
                         // Your destination view goes here
                         AddPostView()

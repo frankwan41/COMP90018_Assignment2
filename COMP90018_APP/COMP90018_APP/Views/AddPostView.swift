@@ -8,6 +8,7 @@
 import SwiftUI
 import Flow
 import BSImagePicker
+import CoreLocationUI
 
 struct AddPostView: View {
     
@@ -20,6 +21,8 @@ struct AddPostView: View {
     @State private var showImagePicker = false
     @State private var showImageCamera = false
     @State private var showActionSheet = false
+    
+    @State private var showLocationAlert = false
     
     var maxImagesCount = 9
     
@@ -45,8 +48,21 @@ struct AddPostView: View {
                             Text("Add Location".capitalized)
                                 .font(.title3)
                                 .fontWeight(.bold)
-                            Text((locationManager.location != nil) ? "Located" : "")
-                                .font(.caption)
+                            
+                            switch locationManager.isLoading {
+                                case .defaults:
+                                    EmptyView()
+                                case .loading:
+                                    ProgressView()
+                                case .success:
+                                if locationEnable{
+                                    Text("Success!")
+                                }
+                                case .failed:
+                                    Text("Failed finding location")
+                                case .denied:
+                                    Text("Access Denied")
+                                }
                         }
                     }
                     .padding([.vertical,.trailing])
@@ -61,10 +77,36 @@ struct AddPostView: View {
                 .padding(.leading)
                 .padding()
             }
+            .alert(isPresented: $showLocationAlert, content: {
+                Alert(
+                    title: Text("You have to enable location service in the device settings"),
+                    dismissButton: .cancel({
+                        locationEnable = false
+                    })
+                    
+                )
+            })
+            .onChange(of: locationManager.isLoading, perform: { value in
+                switch value{
+                case .denied:
+                    locationEnable = false
+                    break
+                case .loading:
+                    break
+                case .success:
+                    break
+                case .failed:
+                    print("Error finding location")
+                case .defaults:
+                    break
+                }
+            })
             .onChange(of: locationEnable, perform: { value in
-                print(value)
+                if locationManager.isLoading == .denied && locationEnable == true{
+                    showLocationAlert = true
+                }
                 if value {
-                        locationManager.requestLocation()
+                    locationManager.requestLocation()
                 }
             })
             .confirmationDialog("", isPresented: $showActionSheet, actions: {
