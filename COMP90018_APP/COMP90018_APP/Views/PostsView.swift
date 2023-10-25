@@ -26,60 +26,70 @@ struct PostsView: View {
     @State private var shouldShowProfile = false
     
     var body: some View {
+        let gradientStart = Color.orange.opacity(0.5)
+        let gradientEnd = Color.orange
+        let gradientBackground = LinearGradient(gradient: Gradient(colors: [gradientStart, gradientEnd]), startPoint: .top, endPoint: .bottom)
+        
         NavigationView {
-            VStack {
-                List {
-                    HStack {
-                        TextField(
-                            "Search tag...",
-                            text: $searchCategory,
-                            onEditingChanged: { isEditing in
-                                isSearchFocused = isEditing
-                                // when user press return will call this function
-                                if (isSearchFocused == true){
-                                    processUserInput()
-                                    shakeResult = searchCategory
+            ZStack{
+                gradientBackground.edgesIgnoringSafeArea(.all)
+                
+                VStack {
+                    List {
+                        HStack {
+                            TextField(
+                                "Search tag...",
+                                text: $searchCategory,
+                                onEditingChanged: { isEditing in
+                                    isSearchFocused = isEditing
+                                    // when user press return will call this function
+                                    if (isSearchFocused == true){
+                                        processUserInput()
+                                        shakeResult = searchCategory
+                                    }
                                 }
+                            )
+                            .focused($isSearchFocused)
+                            
+                            .padding(10)
+                            .background(Color.gray.opacity(0.2))
+                            .cornerRadius(8)
+                            
+                            if isSearchFocused || !searchCategory.isEmpty{
+                                Button("Cancel") {
+                                    searchCategory = ""
+                                    shakeResult = ""
+                                    isSearchFocused = false
+                                    processUserInput()
+                                }
+                                .padding(.trailing)
                             }
+                        }
+                        
+                        
+                        if !shakeResult.isEmpty{
+                            Text("Tag chosen: \(shakeResult)")
+                                
+                        }
+                        
+                        AllPostsView(
+                            heartScale: $heartScale,
+                            isLoggedIn: $userViewModel.isLoggedIn,
+                            showLoginSheet: $showLoginSheet,
+                            posts: $postsViewModel.posts
                         )
-                        .focused($isSearchFocused)
-                        
-                        .padding(10)
-                        .background(Color.gray.opacity(0.2))
-                        .cornerRadius(8)
-                        
-                        if isSearchFocused || !searchCategory.isEmpty{
-                            Button("Cancel") {
-                                searchCategory = ""
-                                shakeResult = ""
-                                isSearchFocused = false
-                                processUserInput()
+                    }
+                    .listStyle(.plain)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button {
+                                viewSwitcher = viewPage.shake
+                            } label: {
+                                Image(systemName: "dice")
                             }
-                            .padding(.trailing)
+                            
+                            
                         }
-                    }
-                    
-                    if !shakeResult.isEmpty{
-                        Text("Tag chosen: \(shakeResult)")
-                    }
-                    
-                    AllPostsView(
-                        heartScale: $heartScale,
-                        isLoggedIn: $userViewModel.isLoggedIn,
-                        showLoginSheet: $showLoginSheet,
-                        posts: $postsViewModel.posts
-                    )
-                }
-                .listStyle(.plain)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            viewSwitcher = viewPage.shake
-                        } label: {
-                            Image(systemName: "dice")
-                        }
-                        
-                        
                     }
                 }
             }
