@@ -35,10 +35,16 @@ struct ProfileView: View {
                         guestView
                     } else {
                         loggedInView
+                            .refreshable {
+                                profileViewModel.getUserInformation()
+                                profileViewModel.getUserPosts()
+                            }
+                            
                     }
                 }
                 .padding(.horizontal)
                 .navigationBarItems(trailing: userViewModel.isLoggedIn ? logoutButton : nil)
+                
             }
             .onAppear {
                 if !userViewModel.isLoggedIn {
@@ -112,13 +118,17 @@ extension ProfileView {
                         .shadow(radius: 10)
                 } else {
                     ProgressView()
+                        .scaledToFit()
+                        .frame(width: 150, height: 150)
+                        .clipShape(Circle())
+                        .shadow(radius: 10)
                 }
                 VStack{
                     Text(profileViewModel.user.userName)
                         .font(.largeTitle)
                         .bold()
                     
-                    NavigationLink(destination: ProfileSetttingView(profileSettingViewModel: ProfileSettingViewModel())) {
+                    NavigationLink(destination: ProfileSetttingView(profileSettingViewModel: ProfileSettingViewModel(), profileViewModel: profileViewModel)) {
                         Text("Modify Profile Details")
                             .font(.caption)
                             .foregroundColor(.white)
@@ -126,6 +136,7 @@ extension ProfileView {
                             .background(Color.orange)
                             .cornerRadius(20)
                     }
+                    
                 }
             }
             Divider()
@@ -153,7 +164,7 @@ extension ProfileView {
                         heartScale: $heartScale,
                         isLoggedIn: $userViewModel.isLoggedIn,
                         showLoginSheet: $showLoginSheet,
-                        posts: $profileViewModel.posts
+                        posts: $profileViewModel.likedPosts
                     )
                 }
             }.listStyle(.plain)
