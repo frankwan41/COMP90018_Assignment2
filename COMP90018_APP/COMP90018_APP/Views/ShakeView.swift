@@ -21,7 +21,16 @@ struct ShakeView: View {
     }
     
     // Replace with real data
-    let templateCategories = ["Chinese", "Thailand", "Korean", "Malaysia","Janpanese","Italian"]
+    let templateCategories = ["Italian",
+                              "Japanese",
+                              "Indian",
+                              "Mexican",
+                              "French",
+                              "Thai",
+                              "Chinese",
+                              "Mediterranean",
+                              "Ethiopian",
+                              "Brazilian"]
     
     var body: some View {
         NavigationView{

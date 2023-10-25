@@ -15,6 +15,7 @@ struct ProfileSetttingView: View {
     @State private var passwordCover: Bool = true
     
     @StateObject var profileSettingViewModel: ProfileSettingViewModel
+    @ObservedObject var profileViewModel: ProfileViewModel
     
     // Edited input
     @State private var editedEmail = ""
@@ -123,6 +124,10 @@ struct ProfileSetttingView: View {
 
                     getProfileImage()
                 }
+                .onDisappear {
+                    profileViewModel.getUserInformation()
+                }
+                
                 if isEditing{
                     profileCancelSaveBtn
                 }else{
@@ -277,6 +282,8 @@ extension ProfileSetttingView {
                 profileSettingViewModel.getUserInformation { user in
                     updateFields(user: user)
                 }
+                
+                
             } label: {
                 Text("Save")
                     .frame(width: 90, height: 20)

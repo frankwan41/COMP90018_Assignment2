@@ -11,6 +11,7 @@ import Firebase
 class ProfileViewModel: ObservableObject{
     @Published var posts = [Post]()
     @Published var user = User(data: [:])
+    @Published var likedPosts = [Post]()
    
     
     
@@ -30,6 +31,7 @@ class ProfileViewModel: ObservableObject{
         
         // Remove the current posts
         self.posts.removeAll()
+        self.likedPosts.removeAll()
         
         FirebaseManager.shared.firestore
             .collection("posts")
@@ -47,9 +49,27 @@ class ProfileViewModel: ObservableObject{
                     self.posts.sort{ $0.timestamp > $1.timestamp}
                 })
                 
-                
-                
             }
+        
+        for likedPostID in user.likedPostsIDs{
+            FirebaseManager.shared.firestore
+                .collection("posts")
+                .whereField("id", isEqualTo: likedPostID)
+                .getDocuments { documentsSnapshot, error in
+                    if let error = error{
+                        print("Failed to fetch the post \(likedPostID), \(error.localizedDescription)")
+                        return
+                    }
+                    
+                    documentsSnapshot?.documents.forEach({ snapshot in
+                        let data = snapshot.data()
+                        let post = Post(data: data)
+                        self.likedPosts.append(post)
+                        self.likedPosts.sort{$0.timestamp > $1.timestamp}
+                    })
+                    
+                }
+        }
     }
     
     /**

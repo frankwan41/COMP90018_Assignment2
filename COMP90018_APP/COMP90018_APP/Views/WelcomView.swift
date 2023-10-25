@@ -42,6 +42,7 @@ struct WelcomView: View {
 struct welcomeMainView: View {
     
     @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
+    @AppStorage("shakeResult") var shakeResult = ""
     
     @State private var isAnimating = false
     
@@ -61,6 +62,7 @@ struct welcomeMainView: View {
                     Button {
                         // Navigate to posts view
                         viewSwitcher = viewPage.tab
+                        shakeResult = ""
                     } label: {
                         Text("YES")
                             .font(.headline)
