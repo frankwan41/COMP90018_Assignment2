@@ -175,12 +175,12 @@ extension SinglePostView {
             HStack {
                 Spacer()
                 HStack {
-//                    SinglePostLikeBtn(
-//                        likeState: $postLikeState,
-//                        heartScale: $heartScale,
-//                        numLikeState: $postNumLikeState
-//                    )
-//                    Text("\(postNumLikeState)")
+                    LikeButton(
+                        isSinglePostView: true,
+                        isLoggedIn: $userViewModel.isLoggedIn,
+                        post: $post
+                    )
+                    Text(String(post.likes))
                 }
                 // Pushes the two buttons apart
                 Spacer()
@@ -192,7 +192,7 @@ extension SinglePostView {
                         commentText: $commentText,
                         autoFocused: $autoFocused
                     )
-                    // Text("\(postNumComments)")
+                    Text(String(post.comments.count))
                 }
                 Spacer()
             }
@@ -215,63 +215,6 @@ extension SinglePostView {
             }
         }
     }
-    
-}
-
-struct SinglePostLikeBtn: View{
-        @Binding var likeState: Bool
-        @Binding var heartScale: CGFloat
-        @Binding var numLikeState: Int
-        @StateObject var userViewModel = UserViewModel()
-        @State private var showLoginAlert = false
-        
-        var body: some View{
-            Button {
-                withAnimation {
-                    // Slightly increase the size for a moment
-                    heartScale = 1.5
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                    withAnimation {
-                        heartScale = 1.0 // Return to normal size
-                    }
-                }
-                if (userViewModel.isLoggedIn){
-                    toggleLikes()
-                }
-                else{
-                    showLoginAlert = true
-                }
-                
-                
-            } label: {
-                Image(systemName: likeState ? "heart.fill" : "heart")
-                    .resizable()
-                    .frame(width: 30, height: 25)
-                    .scaleEffect(heartScale)
-                    .foregroundColor(likeState ? .red : .black)
-                    .padding(.vertical)
-            }
-            .alert(isPresented: $showLoginAlert) {
-                Alert(
-                    title: Text("Login Required"),
-                    message: Text("You need to log in to like posts."),
-                    dismissButton: .default(Text("OK"))
-                    
-                )
-            }
-            .buttonStyle(PlainButtonStyle())
-        }
-        
-        // Toggle number of likes, +1 / -1
-        func toggleLikes(){
-            likeState.toggle()
-            if likeState {
-                numLikeState += 1
-            }else{
-                numLikeState -= 1
-            }
-        }
     
 }
 

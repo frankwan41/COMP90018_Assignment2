@@ -98,6 +98,8 @@ struct PostsView: View {
 
 struct LikeButton: View {
     
+    let isSinglePostView: Bool
+    
     @Binding var isLoggedIn: Bool
     @Binding var post: Post
     @State var user: User? = nil
@@ -128,9 +130,18 @@ struct LikeButton: View {
                 showLoginAlert = true
             }
         } label: {
-            Image(systemName: isLiked ? "heart.fill" : "heart")
-                .scaleEffect(heartScale)
-                .foregroundColor(isLiked ? .red : .gray)
+            if isSinglePostView {
+                Image(systemName: isLiked ? "heart.fill" : "heart")
+                    .resizable()
+                    .frame(width: 30, height: 25)
+                    .scaleEffect(heartScale)
+                    .foregroundColor(isLiked ? .red : .black)
+                    .padding(.vertical)
+            } else {
+                Image(systemName: isLiked ? "heart.fill" : "heart")
+                    .scaleEffect(heartScale)
+                    .foregroundColor(isLiked ? .red : .gray)
+            }
         }
         .alert(isPresented: $showLoginAlert) {
             Alert(
@@ -224,6 +235,7 @@ struct SinglePostPreview: View {
                     Text(post.userName).font(.subheadline)
                     Spacer()
                     LikeButton(
+                        isSinglePostView: false,
                         isLoggedIn: $isLoggedIn,
                         post: $post
                     )
