@@ -169,9 +169,8 @@ struct LikeButton: View {
                 currentUser.likedPostsIDs.removeAll { $0 == post.id }
                 post.likes -= 1
             }
-            userViewModel.updateUserLikes(newLikedPostsIDs: currentUser.likedPostsIDs)
+            userViewModel.clickPostLikeButton(postID: post.id)
             postsViewModel.updatePostLikes(postID: post.id, newLikes: post.likes)
-            user = currentUser
         }
     }
 }

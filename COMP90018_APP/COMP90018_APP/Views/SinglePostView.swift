@@ -446,11 +446,13 @@ struct SingleComment: View {
                 Text(comment.content)
                     .padding(.bottom)
             }
+            // End section: contains like button and number of likes
+            Spacer() // Aligns the following UI to the right
             VStack {
                 LikeButtonComment(isLoggedIn: $userViewModel.isLoggedIn, comment: $comment)
-//                Text("\(commentNumLikeStates[index])")
-//                    .font(.footnote)
-//                    .foregroundColor(.gray)
+                Text(String(comment.likes))
+                    .font(.footnote)
+                    .foregroundColor(.gray)
             }
             
         }
@@ -578,9 +580,8 @@ struct LikeButtonComment: View {
                 currentUser.likedCommentsIDs.removeAll { $0 == comment.commentID }
                 comment.likes -= 1
             }
-            userViewModel.updateUserCommentsLikes(newLikedCommentsIDs: currentUser.likedCommentsIDs)
+            userViewModel.clickCommentLikeButton(commentID: comment.commentID)
             singlePostViewModel.updateCommentLikes(commentID: comment.commentID, newLikes: comment.likes)
-            user = currentUser
         }
     }
 }
