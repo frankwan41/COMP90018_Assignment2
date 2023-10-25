@@ -81,27 +81,27 @@ struct SinglePostView: View {
                             
                         }
                     }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            // Follow
-                        } label: {
-                            Text("Follow")
-                                .font(.subheadline)
-                                .fontWeight(.bold)
-                                .foregroundColor(Color.pink)
-                                .padding(.horizontal, 15)
-                                .padding(.vertical, 5)
-                                .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
-                        }
-                    }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button{
-                            // Share / Other manipulations
-                        }label: {
-                            Image(systemName: "square.and.arrow.up")
-                                .foregroundColor(.black)
-                        }
-                    }
+//                    ToolbarItem(placement: .navigationBarTrailing) {
+//                        Button {
+//                            // Follow
+//                        } label: {
+//                            Text("Follow")
+//                                .font(.subheadline)
+//                                .fontWeight(.bold)
+//                                .foregroundColor(Color.pink)
+//                                .padding(.horizontal, 15)
+//                                .padding(.vertical, 5)
+//                                .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
+//                        }
+//                    }
+//                    ToolbarItem(placement: .navigationBarTrailing) {
+//                        Button{
+//                            // Share / Other manipulations
+//                        }label: {
+//                            Image(systemName: "square.and.arrow.up")
+//                                .foregroundColor(.black)
+//                        }
+//                    }
             }
                 
                 // Disable the text editor when tap screen
