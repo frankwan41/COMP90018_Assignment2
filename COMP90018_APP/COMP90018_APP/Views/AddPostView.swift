@@ -9,6 +9,8 @@ import SwiftUI
 import Flow
 import BSImagePicker
 import CoreLocationUI
+import MapKit
+import Combine
 
 struct AddPostView: View {
     
@@ -23,6 +25,11 @@ struct AddPostView: View {
     @State private var showActionSheet = false
     
     @State private var showLocationAlert = false
+    @State private var locationText = "Add Location"
+    @State private var selectedLatitude: Double = 0
+    @State private var selectedLongitude: Double = 0
+    @State private var showLocationSearchSheet = false
+    @State private var showLocationRequestAlert = false
     
     var maxImagesCount = 9
     
@@ -43,8 +50,9 @@ struct AddPostView: View {
                         .padding(.bottom)
                     AddPhotoView(images: $images, showActionSheet: $showActionSheet, maxImagesCount: maxImagesCount)
                         .padding(.bottom)
+                    Divider()
                     LocationSection
-                    .padding([.vertical,.trailing])
+                    Divider()
                     .padding(.bottom)
                     
                     PostTagsView(tags: $tags)
@@ -65,31 +73,17 @@ struct AddPostView: View {
                     
                 )
             })
-            .onChange(of: locationManager.isLoading, perform: { value in
-                switch value{
-                case .denied:
-                    locationEnable = false
-                    break
-                case .loading:
-                    break
-                case .success:
-                    break
-                case .failed:
-                    print("Error finding location")
-                case .defaults:
-                    break
-                }
+            .alert(isPresented: $showLocationRequestAlert, content: {
+                Alert(
+                title: Text("Location Permission Denied"),
+                message: Text("The App requires location permission"),
+                primaryButton: .default(Text("Go Settings"), action: openAppSettings),
+                secondaryButton: .cancel(Text("Reject"))
+            )
             })
-            .onChange(of: locationEnable, perform: { value in
-                if locationManager.isLoading == .denied && locationEnable == true{
-                    showLocationAlert = true
-                }
-                if value {
-                    if (locationManager.location == nil) {
-                        locationManager.requestLocation()
-                    }
+            .sheet(isPresented: $showLocationSearchSheet, content: {
+                LocationSearchView(locationManager: locationManager, locationText: $locationText, selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude)
                     
-                }
             })
             .confirmationDialog("", isPresented: $showActionSheet, actions: {
                 Button("Taking Photo") {
@@ -140,30 +134,34 @@ struct AddPostView: View {
 
 extension AddPostView {
     private var LocationSection: some View {
-        Toggle(isOn: $locationEnable) {
-            HStack(spacing: 30){
-                Text("Add Location".capitalized)
-                    .font(.title3)
-                    .fontWeight(.bold)
+        Button {
+            locationManager.requestPermission { authorized in
+                if authorized {
+                    showLocationSearchSheet = true
+                } else {
+                    showLocationRequestAlert = true
+                }
                 
+            }
+            
+        } label: {
+            HStack{
+                Image("locationIcon")
+                    .resizable()
+                    .frame(width: 18,height: 20)
+                Text(locationText.capitalized)
+                    .font(.subheadline)
+                    .foregroundStyle(.black)
+                Text("lat: \(selectedLatitude), lon: \(selectedLongitude)")
+                Spacer()
                 
-                switch locationManager.isLoading {
-                    case .defaults:
-                        EmptyView()
-                    case .loading:
-                        ProgressView()
-                    case .success:
-                    if locationEnable{
-                        Text("\(locationManager.locationString)")
-                    }
-                    case .failed:
-                        Text("Failed finding location")
-                    case .denied:
-                        Text("Access Denied")
-                    }
+                Image(systemName: "chevron.right")
+                    .tint(.gray)
             }
         }
+
     }
+    
 }
 
 
@@ -309,6 +307,122 @@ struct AddPostTagsView: View {
         }
     }
 }
+
+struct LocationSearchView: View {
+    
+    @Environment(\.dismiss) var dismiss
+    @State private var searchText = ""
+    @ObservedObject var locationManager: LocationManager
+    
+    @StateObject var placeViewModel = LocationViewModel()
+    @Binding var locationText: String
+    @Binding var selectedLatitude: Double
+    @Binding var selectedLongitude: Double
+    
+    @State private var debounceTimer: AnyCancellable?
+    
+    var body: some View {
+        NavigationView {
+            VStack{
+                List(placeViewModel.places) {place in
+                    VStack(alignment: .leading) {
+                        Text(place.name)
+                            .font(.title2)
+                        Text(place.address)
+                            .font(.callout)
+                    }
+                    .onTapGesture {
+                        locationText = "Name: \(place.name)\nAddress: \(place.address)"
+                        selectedLatitude = place.latitude
+                        selectedLongitude = place.longitude
+                        dismiss()
+                    }
+                }
+                .listStyle(.plain)
+                .searchable(text: $searchText)
+                .onChange(of: searchText, perform: { text in
+                    debounceTimer?.cancel()  // 2. Cancel the previous timer
+                    
+                    // 3. Create a new timer
+                    debounceTimer = Just(text)
+                        .delay(for: .milliseconds(300), scheduler: DispatchQueue.main)
+                        .sink { text in
+                            placeViewModel.search(text: text, region: locationManager.region)
+
+                        }
+                })
+            }
+            .onAppear {
+                placeViewModel.search(region: locationManager.region)
+            }
+            .toolbarBackground(.gray.opacity(0.1), for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
+        }
+    }
+}
+
+
+// MARK: UTILITIES
+struct Place: Identifiable{
+    let id = UUID().uuidString
+    private var mapItem: MKMapItem
+    
+    init(mapItem: MKMapItem) {
+        self.mapItem = mapItem
+    }
+    
+    var name: String {
+        self.mapItem.name ?? ""
+    }
+    
+    var address: String {
+        let placemark = self.mapItem.placemark
+        var cityAndState = ""
+        var address = ""
+        
+        cityAndState = placemark.locality ?? "" // city
+        if let state = placemark.administrativeArea {
+            // Show either state or city, state
+            cityAndState = cityAndState.isEmpty ? state : "\(cityAndState), \(state)"
+        }
+        
+        address = placemark.subThoroughfare ?? "" // address number
+        if let street = placemark.thoroughfare {
+            // Show the street unless there is a street number, then add street
+            address = address.isEmpty ? street : "\(address) \(street)"
+        }
+        
+        if address.trimmingCharacters(in: .whitespaces).isEmpty && !cityAndState.isEmpty {
+            // No address
+            address = cityAndState
+        } else {
+            // No city and state
+            address = cityAndState.isEmpty ? address : "\(address), \(cityAndState)"
+        }
+        
+        return address
+    }
+    
+    var latitude: CLLocationDegrees {
+        self.mapItem.placemark.coordinate.latitude
+    }
+    
+    var longitude: CLLocationDegrees {
+        self.mapItem.placemark.coordinate.longitude
+    }
+    
+}
+
+// Open device setting of the application to allow user to grant location permission
+func openAppSettings() {
+        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+        if UIApplication.shared.canOpenURL(settingsUrl) {
+            UIApplication.shared.open(settingsUrl, completionHandler: nil)
+        }
+    }
+
 
 struct AddPostView_Previews: PreviewProvider {
     static var previews: some View {

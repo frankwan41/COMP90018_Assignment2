@@ -1,63 +1,63 @@
 import Foundation
 import CoreLocation
-
-enum LoadingStatus {
-    case loading
-    case success
-    case failed
-    case denied
-    case defaults
-}
+import MapKit
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     var manager = CLLocationManager()
         
         @Published var location: CLLocationCoordinate2D?
-    @Published var isLoading: LoadingStatus = .defaults
+    @Published var region = MKCoordinateRegion()
     @Published var locationString: String = ""
         
         override init() {
             super.init()
+            manager.desiredAccuracy = kCLLocationAccuracyBest
+            manager.distanceFilter = kCLDistanceFilterNone
+            manager.startUpdatingLocation()
             manager.delegate = self
 
         }
-        
-        func requestLocation() {
-            switch manager.authorizationStatus {
+    
+    func requestPermission(completion: @escaping (Bool) -> Void) {
+            let status = manager.authorizationStatus
+            switch status {
             case .authorizedWhenInUse, .authorizedAlways:
-                isLoading = .loading
-                manager.requestLocation()
+                // Permissions have already been granted
+                completion(true)
             case .notDetermined:
-                isLoading = .loading
-                manager.requestWhenInUseAuthorization()  // Request permission
-            case .denied, .restricted:
-                isLoading = .denied
-                print("Location authorization is \(manager.authorizationStatus.rawValue)")
-            @unknown default:
-                print("Unknown authorization status: \(manager.authorizationStatus.rawValue)")
+                // Request permissions
+                manager.requestWhenInUseAuthorization()
+                self.completionHandler = completion
+            default:
+                // Permissions have been denied or restricted
+                completion(false)
             }
         }
+    
+        private var completionHandler: ((Bool) -> Void)?
+    
         
         func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
             switch manager.authorizationStatus {
             case .authorizedWhenInUse, .authorizedAlways:
-                requestLocation()
+                completionHandler?(true)
             case .denied, .restricted:
+                completionHandler?(false)
                 print("Location authorization is \(manager.authorizationStatus.rawValue)")
-                isLoading = .denied
             case .notDetermined:
-                isLoading = .defaults
                 print("Location authorization waiting...")
             @unknown default:
+                completionHandler?(false)
                 print("Unknown authorization status: \(manager.authorizationStatus.rawValue)")
-                isLoading = .failed
             }
+            completionHandler = nil
         }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         print("Locations: \(locations)")
-        location = locations.first?.coordinate
-        isLoading = .success
+        self.location = locations.first?.coordinate
+        guard let loc = locations.last else {return}
+        self.region = MKCoordinateRegion(center: loc.coordinate, latitudinalMeters: 2000, longitudinalMeters: 2000)
         
         let geocoder = CLGeocoder()
         let location = CLLocation(latitude: location!.latitude, longitude: location!.longitude)
@@ -77,7 +77,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Encountered error while getting location, \(error)")
-        isLoading = .failed
     }
 
 }
