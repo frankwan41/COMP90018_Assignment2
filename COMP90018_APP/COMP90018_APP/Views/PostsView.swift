@@ -19,7 +19,9 @@ struct PostsView: View {
     @AppStorage("shakeResult") var shakeResult = ""
     
     @StateObject var userViewModel = UserViewModel()
+
     @StateObject var postViewModel = PostsViewModel()
+  
     @State private var showLoginSheet = false
     @State private var shouldShowProfile = false
     
@@ -28,15 +30,19 @@ struct PostsView: View {
             VStack {
                 List {
                     HStack {
-                        TextField(
-                            "Search tag...",
-                            text: $searchCategory,
-                            onEditingChanged: { isEditing in isSearchFocused = isEditing }
-                        )
-                        .focused($isSearchFocused)
-                        .padding(10)
-                        .background(Color.gray.opacity(0.2))
-                        .cornerRadius(8)
+                        TextField("Search tag...", text: $searchCategory, onEditingChanged: { isEditing in
+                            isSearchFocused = isEditing
+                            
+                            // when user press return will call this function
+                            if (isSearchFocused == true){
+                                processUserInput()
+                            }
+                        })
+                            .focused($isSearchFocused)
+                        
+                            .padding(10)
+                            .background(Color.gray.opacity(0.2))
+                            .cornerRadius(8)
                         
                         if isSearchFocused || !searchCategory.isEmpty{
                             Button("Cancel") {
@@ -71,6 +77,13 @@ struct PostsView: View {
                 EmptyView()
             }
         }
+    }
+    
+    // when user press return, search the tag
+    func processUserInput() {
+        let userInput = searchCategory
+        // Now you can use userInput to perform any operations you need
+        print("User input is: \(userInput)")
     }
 }
 
@@ -251,6 +264,8 @@ struct AllPostsView: View {
         }
     }
 }
+
+
 
 struct PostsView_Previews: PreviewProvider {
     static var previews: some View {

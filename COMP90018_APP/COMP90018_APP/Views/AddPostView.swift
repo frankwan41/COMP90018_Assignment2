@@ -8,22 +8,33 @@
 import SwiftUI
 import Flow
 import BSImagePicker
+import CoreLocationUI
 
 struct AddPostView: View {
+    
+    @StateObject var locationManager = LocationManager()
+   
+    var addPostViewModel = AddPostViewModel()
 
     @State private var titleText = ""
     @State private var contentText = ""
+    @State private var location = ""
+    @State private var longitude = Double(0)
+    @State private var latitude = Double(0)
     @State private var images: [UIImage] = []
-    @State private var tags = ["placeholder tag", "very very delicious food", "cool", "niubi", "6", "dope","very long long long long tag"]
+    @State private var tags: [String] = []
     @State private var showImagePicker = false
     @State private var showImageCamera = false
     @State private var showActionSheet = false
+    
+    @State private var showLocationAlert = false
     
     var maxImagesCount = 9
     
     @State private var locationEnable = false
     
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationView{
@@ -38,11 +49,7 @@ struct AddPostView: View {
                         .padding(.bottom)
                     AddPhotoView(images: $images, showActionSheet: $showActionSheet, maxImagesCount: maxImagesCount)
                         .padding(.bottom)
-                    Toggle(isOn: $locationEnable) {
-                        Text("Add Location".capitalized)
-                            .font(.title3)
-                            .fontWeight(.bold)
-                    }
+                    LocationSection
                     .padding([.vertical,.trailing])
                     .padding(.bottom)
                     
@@ -55,6 +62,41 @@ struct AddPostView: View {
                 .padding(.leading)
                 .padding()
             }
+            .alert(isPresented: $showLocationAlert, content: {
+                Alert(
+                    title: Text("You have to enable location service in the device settings"),
+                    dismissButton: .cancel({
+                        locationEnable = false
+                    })
+                    
+                )
+            })
+            .onChange(of: locationManager.isLoading, perform: { value in
+                switch value{
+                case .denied:
+                    locationEnable = false
+                    break
+                case .loading:
+                    break
+                case .success:
+                    break
+                case .failed:
+                    print("Error finding location")
+                case .defaults:
+                    break
+                }
+            })
+            .onChange(of: locationEnable, perform: { value in
+                if locationManager.isLoading == .denied && locationEnable == true{
+                    showLocationAlert = true
+                }
+                if value {
+                    if (locationManager.location == nil) {
+                        locationManager.requestLocation()
+                    }
+                    
+                }
+            })
             .confirmationDialog("", isPresented: $showActionSheet, actions: {
                 Button("Taking Photo") {
                     showImageCamera = true
@@ -87,6 +129,12 @@ struct AddPostView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         
+                        //TODO: Submit the post
+                        addPostViewModel.addPost(
+                            postTitle:titleText, images: images, date: Date(), longitude: longitude, latitude: latitude, content: contentText, tags: tags, location: location
+                        )
+                        dismiss()
+                        
                     } label: {
                         Text("post".uppercased())
                     }
@@ -101,6 +149,35 @@ struct AddPostView: View {
 
 
 // MARK: COMPONENTS
+
+extension AddPostView {
+    private var LocationSection: some View {
+        Toggle(isOn: $locationEnable) {
+            HStack(spacing: 30){
+                Text("Add Location".capitalized)
+                    .font(.title3)
+                    .fontWeight(.bold)
+                
+                
+                switch locationManager.isLoading {
+                    case .defaults:
+                        EmptyView()
+                    case .loading:
+                        ProgressView()
+                    case .success:
+                    if locationEnable{
+                        Text("\(locationManager.locationString)")
+                    }
+                    case .failed:
+                        Text("Failed finding location")
+                    case .denied:
+                        Text("Access Denied")
+                    }
+            }
+        }
+    }
+}
+
 
 struct AddPhotoView: View {
     @Binding var images: [UIImage]
@@ -190,10 +267,12 @@ struct PostTagsView: View {
 
 struct AddPostTagsView: View {
     
+    @State private var addPostViewModel = AddPostViewModel()
     @Binding var tags: [String]
+    @State private var tagsExsiting: [String] = []
     @State private var searchText: String = ""
     @State private var showDropdown: Bool = false
-    var matchingTags: [String] { tags.filter { $0.lowercased().contains(searchText.lowercased()) && !searchText.isEmpty }}
+    var matchingTags: [String] { tagsExsiting.filter { $0.lowercased().contains(searchText.lowercased()) && !searchText.isEmpty }}
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -221,8 +300,11 @@ struct AddPostTagsView: View {
                     VStack(alignment: .leading) {
                         ForEach(matchingTags.indices, id: \.self) {index in
                             Button(action: {
-                                tags.append(matchingTags[index])
-                                searchText = ""
+                                if !tags.contains(searchText) {
+                                    tags.append(matchingTags[index])
+                                    searchText = ""
+                                }
+                                
                             }) {
                                 Text(matchingTags[index])
                                     .padding(10)
@@ -240,6 +322,13 @@ struct AddPostTagsView: View {
                     )
                 }
                 .frame(height: 400)
+            }
+        }
+        .task {
+            addPostViewModel.fetchAllTags(){ tagsFetched in
+                if let tagsFetched = tagsFetched{
+                    tagsExsiting = tagsFetched
+                }
             }
         }
     }

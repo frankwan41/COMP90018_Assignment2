@@ -81,27 +81,27 @@ struct SinglePostView: View {
                             
                         }
                     }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            // Follow
-                        } label: {
-                            Text("Follow")
-                                .font(.subheadline)
-                                .fontWeight(.bold)
-                                .foregroundColor(Color.pink)
-                                .padding(.horizontal, 15)
-                                .padding(.vertical, 5)
-                                .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
-                        }
-                    }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button{
-                            // Share / Other manipulations
-                        }label: {
-                            Image(systemName: "square.and.arrow.up")
-                                .foregroundColor(.black)
-                        }
-                    }
+//                    ToolbarItem(placement: .navigationBarTrailing) {
+//                        Button {
+//                            // Follow
+//                        } label: {
+//                            Text("Follow")
+//                                .font(.subheadline)
+//                                .fontWeight(.bold)
+//                                .foregroundColor(Color.pink)
+//                                .padding(.horizontal, 15)
+//                                .padding(.vertical, 5)
+//                                .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
+//                        }
+//                    }
+//                    ToolbarItem(placement: .navigationBarTrailing) {
+//                        Button{
+//                            // Share / Other manipulations
+//                        }label: {
+//                            Image(systemName: "square.and.arrow.up")
+//                                .foregroundColor(.black)
+//                        }
+//                    }
             }
                 
                 // Disable the text editor when tap screen
@@ -178,6 +178,8 @@ struct SinglePostLikeBtn: View{
         @Binding var likeState: Bool
         @Binding var heartScale: CGFloat
         @Binding var numLikeState: Int
+        @StateObject var userViewModel = UserViewModel()
+        @State private var showLoginAlert = false
         
         var body: some View{
             Button {
@@ -190,7 +192,13 @@ struct SinglePostLikeBtn: View{
                         heartScale = 1.0 // Return to normal size
                     }
                 }
-                toggleLikes()
+                if (userViewModel.isLoggedIn){
+                    toggleLikes()
+                }
+                else{
+                    showLoginAlert = true
+                }
+                
                 
             } label: {
                 Image(systemName: likeState ? "heart.fill" : "heart")
@@ -199,9 +207,16 @@ struct SinglePostLikeBtn: View{
                     .scaleEffect(heartScale)
                     .foregroundColor(likeState ? .red : .black)
                     .padding(.vertical)
+            }
+            .alert(isPresented: $showLoginAlert) {
+                Alert(
+                    title: Text("Login Required"),
+                    message: Text("You need to log in to like posts."),
+                    dismissButton: .default(Text("OK"))
                     
-                
-            }.buttonStyle(PlainButtonStyle())
+                )
+            }
+            .buttonStyle(PlainButtonStyle())
         }
         
         // Toggle number of likes, +1 / -1
@@ -220,18 +235,34 @@ struct SinglePostCommentBtn: View {
     @Binding var isTextFieldVisible: Bool
     @Binding var commentText: String
     @FocusState.Binding var autoFocused: Bool
+    @StateObject var userViewModel = UserViewModel()
+    @State private var showLoginAlert = false
     
     var body: some View {
         Button(action: {
             // Handle message button action
-            isTextFieldVisible = true
-            autoFocused = true
+            if(userViewModel.isLoggedIn){
+                isTextFieldVisible = true
+                autoFocused = true
+            }
+            else{
+                showLoginAlert = true
+            }
+            
         }) {
             Image(systemName: "ellipsis.message")
                 .resizable()
                 .frame(width: 27, height: 27)
                 .foregroundColor(.black)
                 .padding(.vertical)
+        }
+        .alert(isPresented: $showLoginAlert) {
+            Alert(
+                title: Text("Login Required"),
+                message: Text("You need to log in to comment posts."),
+                dismissButton: .default(Text("OK"))
+                
+            )
         }
     }
 }

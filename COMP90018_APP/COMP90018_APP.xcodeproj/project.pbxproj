@@ -15,6 +15,7 @@
 		2D1890F02AE5EF2500B63D8F /* BSImagePicker in Frameworks */ = {isa = PBXBuildFile; productRef = 2DAC32732ADA3BE800BBE467 /* BSImagePicker */; };
 		2D1890F22AE5F50A00B63D8F /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1890F12AE5F50A00B63D8F /* ImagePickerView.swift */; };
 		2D1890F42AE5F51000B63D8F /* KeyboardSpacer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D1890F32AE5F51000B63D8F /* KeyboardSpacer.swift */; };
+		2D5B978C2AE76E49008ED0A5 /* COMP90018-APP-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D5B978B2AE76E49008ED0A5 /* COMP90018-APP-Info.plist */; };
 		2DE1A5B72AB2C1A3000A2551 /* WelcomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE1A5B62AB2C1A3000A2551 /* WelcomView.swift */; };
 		2DE1A5B92AB2C25D000A2551 /* PostsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE1A5B82AB2C25D000A2551 /* PostsView.swift */; };
 		2DE1A5BB2AB2C26E000A2551 /* ShakeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE1A5BA2AB2C26E000A2551 /* ShakeView.swift */; };
@@ -50,6 +51,7 @@
 		003803DC2AA968E5000BB3B1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2D1890F12AE5F50A00B63D8F /* ImagePickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
 		2D1890F32AE5F51000B63D8F /* KeyboardSpacer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardSpacer.swift; sourceTree = "<group>"; };
+		2D5B978B2AE76E49008ED0A5 /* COMP90018-APP-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "COMP90018-APP-Info.plist"; sourceTree = SOURCE_ROOT; };
 		2DE1A5B62AB2C1A3000A2551 /* WelcomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomView.swift; sourceTree = "<group>"; };
 		2DE1A5B82AB2C25D000A2551 /* PostsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsView.swift; sourceTree = "<group>"; };
 		2DE1A5BA2AB2C26E000A2551 /* ShakeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeView.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 			isa = PBXGroup;
 			children = (
 				003803D52AA968E2000BB3B1 /* COMP90018_APPApp.swift */,
+				2D5B978B2AE76E49008ED0A5 /* COMP90018-APP-Info.plist */,
 				A219E3E12AE51B850082F991 /* GoogleService-Info.plist */,
 				A2027C752AB2E3DF00BA5391 /* Models */,
 				A2027C742AB2E39000BA5391 /* Utilities */,
@@ -162,11 +165,11 @@
 			children = (
 				A2027C992AB3014F00BA5391 /* PostModel.swift */,
 				A2027C9B2AB304A100BA5391 /* UserModel.swift */,
+				A20A9FCD2AB7F8D3003833AA /* TagModel.swift */,
 				A2027CCC2AB42B6400BA5391 /* CommentModel.swift */,
 				A2027CD02AB7035500BA5391 /* AddPostViewModel.swift */,
 				A2027CD22AB7C85300BA5391 /* PostsViewModel.swift */,
 				A2027CD42AB7D36000BA5391 /* ProfileViewModel.swift */,
-				A20A9FCD2AB7F8D3003833AA /* TagModel.swift */,
 				A20A9FCF2AB81927003833AA /* UserViewModel.swift */,
 				A219E3DB2AE510B20082F991 /* ProfileSettingViewModel.swift */,
 			);
@@ -249,6 +252,7 @@
 			files = (
 				003803DD2AA968E5000BB3B1 /* Preview Assets.xcassets in Resources */,
 				003803DA2AA968E5000BB3B1 /* Assets.xcassets in Resources */,
+				2D5B978C2AE76E49008ED0A5 /* COMP90018-APP-Info.plist in Resources */,
 				A219E3E22AE51B850082F991 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -416,6 +420,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "COMP90018-APP-Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "I want to access your camera?";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We need access to your location to provide accurate data.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "We need access to your location to provide accurate data.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Record your location";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Add to your photos!";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Use your photos!";
@@ -450,6 +456,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "COMP90018-APP-Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "I want to access your camera?";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "We need access to your location to provide accurate data.";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "We need access to your location to provide accurate data.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Record your location";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Add to your photos!";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Use your photos!";

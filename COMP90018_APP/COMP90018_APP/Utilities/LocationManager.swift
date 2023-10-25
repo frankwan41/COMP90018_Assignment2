@@ -1,40 +1,83 @@
-//
-//  LocationManager.swift
-//  COMP90018_APP
-//
-//  Created by Junran Lin on 14/9/2023.
-//
-
-import Foundation
 import Foundation
 import CoreLocation
 
-class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate{
+enum LoadingStatus {
+    case loading
+    case success
+    case failed
+    case denied
+    case defaults
+}
+
+class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     var manager = CLLocationManager()
-    
-    @Published var location: CLLocationCoordinate2D?
-    @Published var isLoading = false
-    
-    override init() {
-        super.init()
-        manager.delegate = self
         
-    }
-    
-    
-    func requestLocation() {
-        isLoading = true
-        manager.requestLocation()
+        @Published var location: CLLocationCoordinate2D?
+    @Published var isLoading: LoadingStatus = .defaults
+    @Published var locationString: String = ""
         
-    }
+        override init() {
+            super.init()
+            manager.delegate = self
+
+        }
+        
+        func requestLocation() {
+            switch manager.authorizationStatus {
+            case .authorizedWhenInUse, .authorizedAlways:
+                isLoading = .loading
+                manager.requestLocation()
+            case .notDetermined:
+                isLoading = .loading
+                manager.requestWhenInUseAuthorization()  // Request permission
+            case .denied, .restricted:
+                isLoading = .denied
+                print("Location authorization is \(manager.authorizationStatus.rawValue)")
+            @unknown default:
+                print("Unknown authorization status: \(manager.authorizationStatus.rawValue)")
+            }
+        }
+        
+        func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+            switch manager.authorizationStatus {
+            case .authorizedWhenInUse, .authorizedAlways:
+                requestLocation()
+            case .denied, .restricted:
+                print("Location authorization is \(manager.authorizationStatus.rawValue)")
+                isLoading = .denied
+            case .notDetermined:
+                isLoading = .defaults
+                print("Location authorization waiting...")
+            @unknown default:
+                print("Unknown authorization status: \(manager.authorizationStatus.rawValue)")
+                isLoading = .failed
+            }
+        }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print("Locations: \(locations)")
         location = locations.first?.coordinate
-        isLoading = false
+        isLoading = .success
+        
+        let geocoder = CLGeocoder()
+        let location = CLLocation(latitude: location!.latitude, longitude: location!.longitude)
+        
+        geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
+            guard let placemark = placemarks?.first, error == nil else {
+                print("No placemarks found or an error occurred: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+            
+            let addressString = "\(placemark.locality ?? ""), \(placemark.administrativeArea ?? ""), \(placemark.country ?? "")"
+            print(addressString)
+            self.locationString = addressString
+        }
+        
     }
     
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error){
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Encountered error while getting location, \(error)")
-        isLoading = false
+        isLoading = .failed
     }
+
 }
