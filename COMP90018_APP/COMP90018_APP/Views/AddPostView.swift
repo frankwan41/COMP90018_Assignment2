@@ -20,7 +20,7 @@ struct AddPostView: View {
 
     @State private var titleText = ""
     @State private var contentText = ""
-    @State private var location = ""
+    @State private var location = "Add Location"
     @State private var longitude = Double(0)
     @State private var latitude = Double(0)
     @State private var images: [UIImage] = []
@@ -30,9 +30,6 @@ struct AddPostView: View {
     @State private var showActionSheet = false
     
     @State private var showLocationAlert = false
-    @State private var locationText = "Add Location"
-    @State private var selectedLatitude: Double = 0
-    @State private var selectedLongitude: Double = 0
     @State private var showLocationSearchSheet = false
     @State private var showLocationRequestAlert = false
     
@@ -88,7 +85,7 @@ struct AddPostView: View {
             )
             })
             .sheet(isPresented: $showLocationSearchSheet, content: {
-                LocationSearchView(locationManager: locationManager, locationText: $locationText, selectedLatitude: $selectedLatitude, selectedLongitude: $selectedLongitude)
+                LocationSearchView(locationManager: locationManager, locationText: $location, selectedLatitude: $latitude, selectedLongitude: $longitude)
                     
             })
             .confirmationDialog("", isPresented: $showActionSheet, actions: {
@@ -161,10 +158,9 @@ extension AddPostView {
                 Image("locationIcon")
                     .resizable()
                     .frame(width: 18,height: 20)
-                Text(locationText.capitalized)
+                Text(location.capitalized)
                     .font(.subheadline)
                     .foregroundStyle(.black)
-                Text("lat: \(selectedLatitude), lon: \(selectedLongitude)")
                 Spacer()
                 
                 Image(systemName: "chevron.right")
@@ -356,7 +352,7 @@ struct LocationSearchView: View {
                             .font(.callout)
                     }
                     .onTapGesture {
-                        locationText = "Name: \(place.name)\nAddress: \(place.address)"
+                        locationText = "\(place.name)"
                         selectedLatitude = place.latitude
                         selectedLongitude = place.longitude
                         dismiss()
