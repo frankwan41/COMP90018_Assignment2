@@ -38,6 +38,7 @@ struct PostsView: View {
                                 // when user press return will call this function
                                 if (isSearchFocused == true){
                                     processUserInput()
+                                    shakeResult = searchCategory
                                 }
                             }
                         )
@@ -50,12 +51,18 @@ struct PostsView: View {
                         if isSearchFocused || !searchCategory.isEmpty{
                             Button("Cancel") {
                                 searchCategory = ""
+                                shakeResult = ""
                                 isSearchFocused = false
+                                processUserInput()
                             }
                             .padding(.trailing)
                         }
                     }
-                    Text("Here is your shake result: \(shakeResult)")
+                    
+                    if !shakeResult.isEmpty{
+                        Text("Tag chosen: \(shakeResult)")
+                    }
+                    
                     AllPostsView(
                         heartScale: $heartScale,
                         isLoggedIn: $userViewModel.isLoggedIn,
@@ -88,6 +95,12 @@ struct PostsView: View {
                 postsViewModel.fetchAllPosts()
             }
         }
+        .task{
+            
+            searchCategory = shakeResult
+            processUserInput()
+            
+        }
     }
     
     // when user press return, search the tag
@@ -95,6 +108,8 @@ struct PostsView: View {
         // Now you can use userInput to perform any operations you need
         if searchCategory != "" {
             postsViewModel.fetchPostsByTag(tag: searchCategory)
+        }else{
+            postsViewModel.fetchAllPosts()
         }
     }
 }
