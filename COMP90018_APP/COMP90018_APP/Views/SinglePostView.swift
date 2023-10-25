@@ -7,25 +7,29 @@
 
 import SwiftUI
 import Flow
+import Kingfisher
 
 
 struct SinglePostView: View {
     
+    @Binding var post: Post
+    
     @State private var postLikeState = false
     @State private var postNumLikeState =  32
     
-    @State private var postNumComments = 6
     @State private var isTextFieldVisible = false
     @FocusState private var autoFocused: Bool
     @State private var commentText: String = ""
     
-    var tags = ["placeholder tag", "very very delicious food", "cool", "niubi", "6", "dope","very long long long long tag"]
-    
-    
-    @State private var commentLikeStates: [Bool] = Array(repeating: false, count: 5)
-    @State private var heartScale: CGFloat = 1.0
-    @State private var commentNumLikeStates: [Int] = Array(repeating: 32, count: 20)
     @State private var selectedPhotoIndex = 0
+    
+    @StateObject private var userViewModel = UserViewModel()
+    @StateObject private var singlePostViewModel = SinglePostViewModel()
+    
+    @State var authorUsername: String?
+    @State var profileImageURL: String?
+    
+    private let dateFormatter = DateFormatter()
     
     @Environment(\.presentationMode) var presentationMode
 
@@ -34,21 +38,21 @@ struct SinglePostView: View {
             ZStack {
                 // Create a background gray effect when text editor for comment is visible
                 Color.gray.opacity(isTextFieldVisible ? 0.5 : 0) // Background color
-                                .edgesIgnoringSafeArea(.all)
+                    .edgesIgnoringSafeArea(.all)
                 
-                ScrollView{
-                    VStack(alignment: .leading, spacing: 20){
-                        PostPhotoView(selectedPhotoIndex: $selectedPhotoIndex)
-                        Text("Titles")
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 20) {
+                        PostPhotoView(post: $post, selectedPhotoIndex: $selectedPhotoIndex)
+                        Text(post.postTitle)
                             .font(.title)
                             .fontWeight(.bold)
                             .padding(.horizontal)
-                        Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Consequat ac felis donec et odio pellentesque diam. Ut lectus arcu bibendum at varius vel pharetra. Varius vel pharetra vel turpis nunc eget lorem dolor sed. Sed odio morbi quis commodo odio. Pharetra convallis posuere morbi leo urna molestie at. Nisl tincidunt eget nullam non nisi est. Nibh praesent tristique magna sit amet. Sed faucibus turpis in eu mi bibendum neque egestas congue. In arcu cursus euismod quis viverra nibh cras. Tincidunt praesent semper feugiat nibh sed. Maecenas accumsan lacus vel facilisis volutpat est velit egestas. Tristique magna sit amet purus.")
+                        Text(post.content)
                             .padding(.horizontal)
                         TagsSection
                             .padding(.horizontal)
-                        HStack{
-                            Text("TimeStamp")
+                        HStack {
+                            Text(dateFormatter.string(from: post.timestamp))
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                                 .padding(.horizontal)
@@ -56,7 +60,7 @@ struct SinglePostView: View {
                         }
                         Divider()
                         
-                        CommentsSection(commentLikeStates: $commentLikeStates, heartScale: $heartScale, commentNumLikeStates: $commentNumLikeStates)
+                        CommentsSection(comments: $singlePostViewModel.comments)
                     }
                     .padding(.horizontal)
                 }
@@ -74,8 +78,26 @@ struct SinglePostView: View {
                             // Access user profile
                         } label: {
                             HStack{
-                                Image(systemName: "person.circle.fill")
-                                Text("Username")
+                                // Get user profile picture
+                                if let urlString = profileImageURL {
+                                    let url = URL(string: urlString)
+                                    KFImage(url)
+                                        .resizable()
+                                        .frame(maxWidth: 30, maxHeight: 30)
+                                        .clipped()
+                                        .cornerRadius(50)
+                                        .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label), lineWidth: 1))
+                                } else {
+                                    Image(systemName: "person.circle.fill")
+                                        .resizable()
+                                        .frame(maxWidth: 30, maxHeight: 30)
+                                        .clipped()
+                                        .cornerRadius(50)
+                                        .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label), lineWidth: 1))
+                                }
+                                if let username = authorUsername {
+                                    Text(username)
+                                }
                             }
                             .foregroundColor(.black)
                             
@@ -115,53 +137,78 @@ struct SinglePostView: View {
                 }
 
                 if isTextFieldVisible{
-                    CommentTextField(commentText: $commentText, isTextFieldVisible: $isTextFieldVisible, autoFocused: $autoFocused)
-                }else{
+                    CommentTextField(
+                        commentText: $commentText,
+                        isTextFieldVisible: $isTextFieldVisible,
+                        autoFocused: $autoFocused
+                    )
+                } else {
                     BottomBar
                 }
                 
             }
             
         }
-        
+        .onAppear {
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            userViewModel.getUser(userUID: post.userUID) { user in
+                if let user = user {
+                    authorUsername = user.userName
+                    profileImageURL = user.profileImageURL
+                } else {
+                    authorUsername = nil
+                    profileImageURL = nil
+                }
+            }
+            singlePostViewModel.fetchAllComments(commentIDs: post.comments)
+        }
         
     }
+    
 }
 
 
 // MARK: COMPONENTS
 
-extension SinglePostView{
+extension SinglePostView {
     private var BottomBar: some View {
         VStack {
             
-                    Spacer()  // Push the HStack to the bottom of the ZStack
-                    HStack {
-                        Spacer()
-                        HStack{
-                            SinglePostLikeBtn(likeState: $postLikeState, heartScale: $heartScale, numLikeState: $postNumLikeState)
-                            Text("\(postNumLikeState)")
-                        }
-                        // Pushes the two buttons apart
-                        Spacer()
-                        Spacer()
-                        Spacer()
-                        HStack{
-                            SinglePostCommentBtn(isTextFieldVisible: $isTextFieldVisible, commentText: $commentText, autoFocused: $autoFocused)
-                            Text("\(postNumComments)")
-                        }
-                        Spacer()
-                    }
-                    .background(Color.white)
-                    .shadow(radius: 1)
+            Spacer()  // Push the HStack to the bottom of the ZStack
+            HStack {
+                Spacer()
+                HStack {
+//                    SinglePostLikeBtn(
+//                        likeState: $postLikeState,
+//                        heartScale: $heartScale,
+//                        numLikeState: $postNumLikeState
+//                    )
+//                    Text("\(postNumLikeState)")
                 }
-                .edgesIgnoringSafeArea(.bottom)
+                // Pushes the two buttons apart
+                Spacer()
+                Spacer()
+                Spacer()
+                HStack {
+                    SinglePostCommentBtn(
+                        isTextFieldVisible: $isTextFieldVisible,
+                        commentText: $commentText,
+                        autoFocused: $autoFocused
+                    )
+                    // Text("\(postNumComments)")
+                }
+                Spacer()
+            }
+            .background(Color.white)
+            .shadow(radius: 1)
+        }
+        .edgesIgnoringSafeArea(.bottom)
     }
     private var TagsSection: some View{
         HFlow(spacing: 10) {
-            ForEach(tags.indices, id: \.self) {index in
+            ForEach(post.tags.indices, id: \.self) { index in
                 ZStack(alignment: .topTrailing) {
-                    Text(tags[index])
+                    Text(post.tags[index])
                         .font(.caption)
                         .lineLimit(1)
                         .padding(.vertical, 5)
@@ -268,7 +315,7 @@ struct SinglePostCommentBtn: View {
 }
 
 
-struct CommentTextField: View{
+struct CommentTextField: View {
     @Binding var commentText: String
     @Binding var isTextFieldVisible: Bool
     @FocusState.Binding var autoFocused: Bool
@@ -289,7 +336,7 @@ struct CommentTextField: View{
 
     
     
-    var body: some View{
+    var body: some View {
         VStack {
             Spacer()
             HStack {
@@ -337,84 +384,113 @@ struct CommentTextField: View{
 
 
 struct CommentsSection: View {
-    @Binding var commentLikeStates: [Bool]
-    @Binding var heartScale: CGFloat
-    @Binding var commentNumLikeStates: [Int]
+    
+    @Binding var comments: [Comment]
     
     var body: some View {
         VStack(alignment:.leading){
             HStack{
-                Text("384 Comments")
+                Text("\(comments.count) Comments")
                     .font(.headline)
                     .fontWeight(.thin)
                     .padding(.horizontal)
                 Spacer()
             }.padding(.bottom)
             
-            ForEach(1..<5) { index in
-                SingleComment(index: index, commentLikeStates: $commentLikeStates, heartScale: $heartScale, commentNumLikeStates: $commentNumLikeStates)
-                    .padding()
-                Divider()
+            if comments.count > 0 {
+                ForEach(0 ..< comments.count) { index in
+                    SingleComment(comment: $comments[index]).padding()
+                    Divider()
+                }
             }
-            
         }
     }
 }
 
 struct SingleComment: View {
-    let index: Int
-    @Binding var commentLikeStates: [Bool]
-    @Binding var heartScale: CGFloat
-    @Binding var commentNumLikeStates: [Int]
-    @StateObject var userViewModel = UserViewModel() // <-- Add this line
-    @State private var showLoginSheet = false       // <-- Add this line
+    
+    @Binding var comment: Comment
+    
+    @State private var showLoginSheet = false
+    
+    @State var profileImageURL: String?
+    @State var authorUsername: String?
+    
+    @StateObject var userViewModel = UserViewModel()
     
     var body: some View {
 
-        HStack(alignment: .top, spacing: 10){
+        HStack(alignment: .top, spacing: 10) {
             // Front section: contains only user profile photo
-            Image(systemName: "person.circle.fill")
-                .resizable()
-                .frame(width: 35, height: 35)
+            if let urlString = profileImageURL {
+                let url = URL(string: urlString)
+                KFImage(url)
+                    .resizable()
+                    .frame(maxWidth: 35, maxHeight: 35)
+                    .clipped()
+                    .cornerRadius(50)
+                    .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label), lineWidth: 1))
+            } else {
+                Image(systemName: "person.circle.fill")
+                    .resizable()
+                    .frame(maxWidth: 35, maxHeight: 35)
+                    .clipped()
+                    .cornerRadius(50)
+                    .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label), lineWidth: 1))
+            }
             
             // Middle section: contains username, comments, possible image comment
             VStack(alignment:.leading, spacing: 5){
-                Text("Username")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.")
+                if let username = authorUsername {
+                    Text(username)
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+                Text(comment.content)
                     .padding(.bottom)
-                Image(systemName: "photo")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
             }
-            // End section: contains like button and number of likes
-            VStack{
-//                LikeButton(index: index, likeStates: $commentLikeStates,
+            VStack {
+//               LikeButton(likeStates: $commentLikeStates,
 //                           heartScale: $heartScale,
 //                           numLikeStates: $commentNumLikeStates,
 //                           isLoggedIn: $userViewModel.isLoggedIn,
 //                           showLoginSheet:$showLoginSheet)
-                Text("\(commentNumLikeStates[index])")
-                    .font(.footnote)
-                    .foregroundColor(.gray)
+//                Text("\(commentNumLikeStates[index])")
+//                    .font(.footnote)
+//                    .foregroundColor(.gray)
             }
             
+        }
+        .onAppear {
+            userViewModel.getUser(userUID: comment.userID) { user in
+                if let user = user {
+                    authorUsername = user.userName
+                    profileImageURL = user.profileImageURL
+                } else {
+                    authorUsername = nil
+                    profileImageURL = nil
+                }
+            }
         }
     }
 }
 
 struct PostPhotoView: View {
+    
+    @Binding var post: Post
     @Binding var selectedPhotoIndex: Int
     
     var body: some View {
         ZStack(alignment: .bottom) {
             TabView(selection: $selectedPhotoIndex) {
-                ForEach(1..<5) {_ in
-                    Image(systemName: "photo")
-                        .resizable()
-                        .scaledToFit()
-                        .padding()
+                if post.imageURLs.count > 0 {
+                    ForEach (0 ..< post.imageURLs.count) { index in
+                        KFImage(URL(string: post.imageURLs[index]))
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .font(.largeTitle)
+                            .frame(maxWidth: 600, maxHeight: 400)
+                    }
                 }
             }
         }
@@ -423,20 +499,15 @@ struct PostPhotoView: View {
         
         GeometryReader { geo in
             HStack(spacing: 8) {
-                ForEach(1..<5, id: \.self) { index in
-                    Circle()
-                        .frame(width: 8, height: 8)
-                        .foregroundColor(selectedPhotoIndex == index-1 ? .pink : .gray)
+                if post.imageURLs.count > 0 {
+                    ForEach(0 ..< post.imageURLs.count, id: \.self) { index in
+                        Circle()
+                            .frame(width: 8, height: 8)
+                            .foregroundColor(selectedPhotoIndex == index ? .pink : .gray)
+                    }
                 }
             }
             .position(x: geo.size.width / 2, y: geo.size.height - 20)  // Adjust y value to position
         }
-    }
-}
-
-
-struct SinglePostView_Previews: PreviewProvider {
-    static var previews: some View {
-        SinglePostView()
     }
 }

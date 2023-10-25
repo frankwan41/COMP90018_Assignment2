@@ -239,7 +239,7 @@ struct SinglePostPreview: View {
                 }
             }
             .padding()
-            NavigationLink(destination: SinglePostView().navigationBarBackButtonHidden(true)) {
+            NavigationLink(destination: SinglePostView(post: $post).navigationBarBackButtonHidden(true)) {
                 EmptyView()
             }
             .opacity(0)  // Making the NavigationLink invisible
