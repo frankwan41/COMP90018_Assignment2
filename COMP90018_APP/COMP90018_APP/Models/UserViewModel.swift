@@ -166,6 +166,28 @@ class UserViewModel: ObservableObject{
         
     }
     
+    func updateUserCommentsLikes(newLikedCommentsIDs: [String]){
+        
+        // Cherck whether the user has logined
+        // uid = Auth.auth().currentUser?.uid
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
+            print("Unable to get the uid of the user, check the login state.")
+            return
+        }
+        
+        let updatedData = [
+            "likedcommentsids": newLikedCommentsIDs
+        ] as [String: Any]
+        
+        FirebaseManager.shared.firestore
+            .collection("users")
+            .document(uid)
+            .updateData(updatedData)
+        
+        print("Successfully updated the details of user \(uid).")
+        
+    }
+    
     
     func resetPassword(email: String) {
         FirebaseManager.shared.auth.sendPasswordReset(withEmail: email){error in

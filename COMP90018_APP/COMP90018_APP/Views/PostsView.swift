@@ -13,8 +13,6 @@ struct PostsView: View {
     @State private var searchCategory: String = ""
     @FocusState private var isSearchFocused: Bool
     
-    @State private var heartScale: CGFloat = 1.0
-    
     @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
     @AppStorage("shakeResult") var shakeResult = ""
     
@@ -22,7 +20,6 @@ struct PostsView: View {
 
     @StateObject var postsViewModel = PostsViewModel()
   
-    @State private var showLoginSheet = false
     @State private var shouldShowProfile = false
     
     var body: some View {
@@ -57,9 +54,7 @@ struct PostsView: View {
                     }
                     Text("Here is your shake result: \(shakeResult)")
                     AllPostsView(
-                        heartScale: $heartScale,
                         isLoggedIn: $userViewModel.isLoggedIn,
-                        showLoginSheet: $showLoginSheet,
                         posts: $postsViewModel.posts
                     )
                 }
@@ -102,14 +97,14 @@ struct PostsView: View {
 // MARK: COMPONENTS
 
 struct LikeButton: View {
-
-    @Binding var heartScale: CGFloat
-    @Binding var isLoggedIn: Bool
-    @Binding var showLoginSheet: Bool
-    @State private var showLoginAlert = false
     
+    @Binding var isLoggedIn: Bool
     @Binding var post: Post
     @State var user: User? = nil
+
+    @State var heartScale: CGFloat = 1.0
+    @State var showLoginSheet: Bool = false
+    @State private var showLoginAlert = false
     
     @State var isLiked: Bool = false
     
@@ -182,10 +177,10 @@ struct LikeButton: View {
 }
 
 struct SinglePostPreview: View {
+    
     @State var post: Post
-    @Binding var heartScale: CGFloat
+
     @Binding var isLoggedIn: Bool
-    @Binding var showLoginSheet: Bool
     
     @State var user: User? = nil
     @State var profileImageURL: String? = nil
@@ -230,9 +225,7 @@ struct SinglePostPreview: View {
                     Text(post.userName).font(.subheadline)
                     Spacer()
                     LikeButton(
-                        heartScale: $heartScale,
                         isLoggedIn: $isLoggedIn,
-                        showLoginSheet: $showLoginSheet,
                         post: $post
                     )
                     Text(String(post.likes)).font(.subheadline)
@@ -260,19 +253,13 @@ struct SinglePostPreview: View {
 }
 
 struct AllPostsView: View {
-    @Binding var heartScale: CGFloat
+
     @Binding var isLoggedIn: Bool
-    @Binding var showLoginSheet: Bool
     @Binding var posts: [Post]
     
     var body: some View {
         ForEach(Array(posts.enumerated()), id: \.element.id) { (index, post) in
-            SinglePostPreview(
-                post: post,
-                heartScale: $heartScale,
-                isLoggedIn: $isLoggedIn,
-                showLoginSheet: $showLoginSheet
-            )
+            SinglePostPreview(post: post, isLoggedIn: $isLoggedIn)
         }
     }
 }

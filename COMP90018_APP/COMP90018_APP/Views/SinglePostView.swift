@@ -14,9 +14,6 @@ struct SinglePostView: View {
     
     @Binding var post: Post
     
-    @State private var postLikeState = false
-    @State private var postNumLikeState =  32
-    
     @State private var isTextFieldVisible = false
     @FocusState private var autoFocused: Bool
     @State private var commentText: String = ""
@@ -450,11 +447,7 @@ struct SingleComment: View {
                     .padding(.bottom)
             }
             VStack {
-//               LikeButton(likeStates: $commentLikeStates,
-//                           heartScale: $heartScale,
-//                           numLikeStates: $commentNumLikeStates,
-//                           isLoggedIn: $userViewModel.isLoggedIn,
-//                           showLoginSheet:$showLoginSheet)
+                LikeButtonComment(isLoggedIn: $userViewModel.isLoggedIn, comment: $comment)
 //                Text("\(commentNumLikeStates[index])")
 //                    .font(.footnote)
 //                    .foregroundColor(.gray)
@@ -508,6 +501,86 @@ struct PostPhotoView: View {
                 }
             }
             .position(x: geo.size.width / 2, y: geo.size.height - 20)  // Adjust y value to position
+        }
+    }
+}
+
+struct LikeButtonComment: View {
+    
+    @Binding var isLoggedIn: Bool
+    @Binding var comment: Comment
+    @State var user: User? = nil
+
+    @State var heartScale: CGFloat = 1.0
+    @State var showLoginSheet: Bool = false
+    @State private var showLoginAlert = false
+    
+    @State var isLiked: Bool = false
+    
+    @StateObject var userViewModel = UserViewModel()
+    @StateObject var singlePostViewModel = SinglePostViewModel()
+    
+    var body: some View {
+        Button {
+            if isLoggedIn {
+                withAnimation {
+                    // Slightly increase the size for a moment
+                    heartScale = 1.5
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    withAnimation {
+                        heartScale = 1.0 // Return to normal size
+                    }
+                }
+                toggleLikes()
+            } else {
+                showLoginAlert = true
+            }
+        } label: {
+            Image(systemName: isLiked ? "heart.fill" : "heart")
+                .scaleEffect(heartScale)
+                .foregroundColor(isLiked ? .red : .gray)
+        }
+        .alert(isPresented: $showLoginAlert) {
+            Alert(
+                title: Text("Login Required"),
+                message: Text("You need to be logged in to like posts."),
+                dismissButton: .default(Text("OK"), action: {
+                    showLoginSheet = true
+                })
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
+        .onAppear {
+            userViewModel.getCurrentUser { user in
+                if let user = user {
+                    self.user = user
+                    isLiked = user.likedCommentsIDs.contains(comment.commentID)
+                }
+            }
+        }
+        // TODO: detect login information with .onChange()
+        .onChange(of: userViewModel.isLoggedIn, perform: { newValue in
+            if !newValue {
+                isLiked = false
+            }
+        })
+    }
+    
+    // Toggle number of likes, +1 / -1
+    func toggleLikes() {
+        if var currentUser = user {
+            isLiked.toggle()
+            if isLiked {
+                currentUser.likedCommentsIDs.append(comment.commentID)
+                comment.likes += 1
+            } else {
+                currentUser.likedCommentsIDs.removeAll { $0 == comment.commentID }
+                comment.likes -= 1
+            }
+            userViewModel.updateUserCommentsLikes(newLikedCommentsIDs: currentUser.likedCommentsIDs)
+            singlePostViewModel.updateCommentLikes(commentID: comment.commentID, newLikes: comment.likes)
+            user = currentUser
         }
     }
 }

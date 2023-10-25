@@ -37,4 +37,17 @@ class SinglePostViewModel: ObservableObject {
         
     }
     
+    func updateCommentLikes(commentID: String, newLikes: Int) {
+        let updatedData = [
+            "likes": newLikes
+        ] as [String: Any]
+        
+        FirebaseManager.shared.firestore
+            .collection("comments")
+            .document(commentID)
+            .updateData(updatedData)
+        
+        print("Successfully updated the details of comment \(commentID).")
+    }
+    
 }
