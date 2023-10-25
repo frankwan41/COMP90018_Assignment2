@@ -20,7 +20,7 @@ struct PostsView: View {
     
     @StateObject var userViewModel = UserViewModel()
 
-    @StateObject var postViewModel = PostsViewModel()
+    @StateObject var postsViewModel = PostsViewModel()
   
     @State private var showLoginSheet = false
     @State private var shouldShowProfile = false
@@ -30,19 +30,22 @@ struct PostsView: View {
             VStack {
                 List {
                     HStack {
-                        TextField("Search tag...", text: $searchCategory, onEditingChanged: { isEditing in
-                            isSearchFocused = isEditing
-                            
-                            // when user press return will call this function
-                            if (isSearchFocused == true){
-                                processUserInput()
+                        TextField(
+                            "Search tag...",
+                            text: $searchCategory,
+                            onEditingChanged: { isEditing in
+                                isSearchFocused = isEditing
+                                // when user press return will call this function
+                                if (isSearchFocused == true){
+                                    processUserInput()
+                                }
                             }
-                        })
-                            .focused($isSearchFocused)
+                        )
+                        .focused($isSearchFocused)
                         
-                            .padding(10)
-                            .background(Color.gray.opacity(0.2))
-                            .cornerRadius(8)
+                        .padding(10)
+                        .background(Color.gray.opacity(0.2))
+                        .cornerRadius(8)
                         
                         if isSearchFocused || !searchCategory.isEmpty{
                             Button("Cancel") {
@@ -57,7 +60,7 @@ struct PostsView: View {
                         heartScale: $heartScale,
                         isLoggedIn: $userViewModel.isLoggedIn,
                         showLoginSheet: $showLoginSheet,
-                        posts: $postViewModel.posts
+                        posts: $postsViewModel.posts
                     )
                 }
                 .listStyle(.plain)
@@ -77,13 +80,22 @@ struct PostsView: View {
                 EmptyView()
             }
         }
+        .refreshable {
+            // Refresh code
+            if searchCategory != "" {
+                postsViewModel.fetchPostsByTag(tag: searchCategory)
+            } else {
+                postsViewModel.fetchAllPosts()
+            }
+        }
     }
     
     // when user press return, search the tag
     func processUserInput() {
-        let userInput = searchCategory
         // Now you can use userInput to perform any operations you need
-        print("User input is: \(userInput)")
+        if searchCategory != "" {
+            postsViewModel.fetchPostsByTag(tag: searchCategory)
+        }
     }
 }
 
