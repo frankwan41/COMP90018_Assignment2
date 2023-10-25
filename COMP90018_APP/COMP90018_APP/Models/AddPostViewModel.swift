@@ -35,37 +35,43 @@ class AddPostViewModel{
                 let data = documentSnapshot?.data()
                 let user = User(data: data!)
                 userName = user.userName
+                
+                // Create the reference of the new post in collection
+                let ref = Firestore.firestore().collection("posts").document()
+                
+                // Put data into the reference
+                ref.setData([
+                    "id": ref.documentID as String,
+                    "title": postTitle,
+                    "timestamp": date,
+                    "useruid": uid,
+                    "username": userName,
+                    "longitude": longitude,
+                    "latitude": latitude,
+                    "content": content,
+                    "tags": tags,
+                    "comments": comments,
+                    "likes": likes,
+                    "location": location
+                ])
+                
+                print("Successfully uploaded the post \(ref.documentID)")
+               
+                // save the image of the post to the storage
+                self.savePostImage(images: images, documentID: ref.documentID as String){ imageURLs in
+                    Firestore.firestore()
+                        .collection("posts")
+                        .document(ref.documentID)
+                        .setData(["imageurls": imageURLs], merge: true)
+                    print("Successfully saved the images in the post \(ref.documentID)")
+                }
+                
+                // Upload the tags of the post to the collection of the tags
+                self.uploadTagsInPost(tags: tags)
             }
                 
                 
-        // Create the reference of the new post in collection
-        let ref = Firestore.firestore().collection("posts").document()
         
-        
-                
-        // Put data into the reference
-        ref.setData([
-            "id": ref.documentID as String,
-            "title": postTitle,
-            "timestamp": date,
-            "useruid": uid,
-            "username": userName,
-            "longitude": longitude,
-            "latitude": latitude,
-            "content": content,
-            "tags": tags,
-            "comments": comments,
-            "likes": likes,
-            "location": location
-        ])
-        
-        print("Successfully uploaded the post \(ref.documentID)")
-       
-        // save the image of the post to the storage
-        self.savePostImage(images: images, documentID: ref.documentID as String)
-        
-        // Upload the tags of the post to the collection of the tags
-        self.uploadTagsInPost(tags: tags)
                 
             
         
@@ -77,19 +83,24 @@ class AddPostViewModel{
      
      */
     // TODO: Change to save mulitple images. (Done)
-    func savePostImage(images: [UIImage], documentID: String){
+    func savePostImage(images: [UIImage], documentID: String, completion: @escaping ([String]) -> Void){
         
         var imageURLs = [String]()
         let numberImages = images.count
         
-        var numberProcessed = 0
-        
+        let dispatchGroup = DispatchGroup()
         
         
         for idx in 0...(numberImages - 1){
             let imageReference = documentID + String(idx)
             let image = images[idx]
+            dispatchGroup.enter()
             self.saveSingleImage(image: image, documentID: imageReference){ imageURL in
+                defer{
+                    dispatchGroup.leave()
+                }
+                
+                
                 if let imageURL = imageURL{
                     imageURLs.append(imageURL)
                     print("Successfully uploaded the image \(imageURL) of the post \(documentID)")
@@ -97,22 +108,16 @@ class AddPostViewModel{
                 }else{
                     print("Failed to upload one image of the post \(documentID)")
                 }
-                numberProcessed += 1
             }
         }
         
-//        while (numberProcessed < numberImages){
-//            continue
-//        }
-        
-        Firestore.firestore()
-            .collection("posts")
-            .document(documentID)
-            .setData(["imageurls": imageURLs], merge: true)
-        
-        print("Successfully saved the images in the post \(documentID)")
+
+        dispatchGroup.notify(queue: .global()) {
+                completion(imageURLs)
+            }
         
     }
+    
     
     
     func saveSingleImage(image: UIImage, documentID: String, completion: @escaping (String?) -> Void){
