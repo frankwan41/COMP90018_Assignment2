@@ -13,17 +13,15 @@ struct PostsView: View {
     @State private var searchCategory: String = ""
     @FocusState private var isSearchFocused: Bool
     
-    @State private var likeStates: [Bool] = Array(repeating: false, count: 20)
     @State private var heartScale: CGFloat = 1.0
-    @State private var numLikeStates: [Int] = Array(repeating: 32, count: 20)
     
     @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
     @AppStorage("shakeResult") var shakeResult = ""
     
-    @StateObject var userViewModel = UserViewModel() // <-- Add this line
-    @State private var showLoginSheet = false       // <-- Add this line
-    @State private var shouldShowProfile = false
+    @StateObject var userViewModel = UserViewModel()
     @StateObject var postViewModel = PostsViewModel()
+    @State private var showLoginSheet = false
+    @State private var shouldShowProfile = false
     
     var body: some View {
         NavigationView {
@@ -89,6 +87,7 @@ struct LikeButton: View {
     @State var isLiked: Bool = false
     
     @StateObject var userViewModel = UserViewModel()
+    @StateObject var postsViewModel = PostsViewModel()
     
     var body: some View {
         Button {
@@ -122,7 +121,7 @@ struct LikeButton: View {
         }
         .buttonStyle(PlainButtonStyle())
         .onAppear {
-            getCurrentUser { user in
+            userViewModel.getCurrentUser { user in
                 if let user = user {
                     self.user = user
                     isLiked = user.likedPostsIDs.contains(post.id)
@@ -148,8 +147,8 @@ struct LikeButton: View {
                 currentUser.likedPostsIDs.removeAll { $0 == post.id }
                 post.likes -= 1
             }
-            updateUserInformation(newLikedPostsIDs: currentUser.likedPostsIDs)
-            updatePostInformation(postID: post.id, newLikes: post.likes)
+            userViewModel.updateUserLikes(newLikedPostsIDs: currentUser.likedPostsIDs)
+            postsViewModel.updatePostLikes(postID: post.id, newLikes: post.likes)
             user = currentUser
         }
     }
@@ -163,6 +162,8 @@ struct SinglePostPreview: View {
     
     @State var user: User? = nil
     @State var profileImageURL: String? = nil
+    
+    @StateObject var userViewModel = UserViewModel()
     
     var body: some View {
         ZStack {
@@ -218,7 +219,7 @@ struct SinglePostPreview: View {
             .allowsHitTesting(false)
         }
         .onAppear {
-            getUser(userUID: post.userUID) { user in
+            userViewModel.getUser(userUID: post.userUID) { user in
                 if let user = user {
                     self.user = user
                     profileImageURL = user.profileImageURL
@@ -248,72 +249,6 @@ struct AllPostsView: View {
         }
     }
 }
-
-// MARK: Functions
-private func getUser(userUID: String, completion: @escaping (User?) -> Void) {
-    FirebaseManager.shared.firestore
-        .collection("users")
-        .document(userUID)
-        .getDocument { documentSnapshot, error in
-            if let error = error {
-                print("Unable to fetch the details of the user \(userUID), \(error.localizedDescription)")
-                completion(nil)
-            } else if let documentSnapshot = documentSnapshot, let data = documentSnapshot.data() {
-                let user = User(data: data)
-                print("Successfully fetched the user \(userUID)")
-                completion(user)
-            } else {
-                completion(nil)
-            }
-    }
-}
-
-private func getCurrentUser(completion: @escaping (User?) -> Void) {
-    guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
-        completion(nil)
-        return
-    }
-    
-    getUser(userUID: uid) { user in
-        completion(user)
-    }
-}
-
-private func updateUserInformation(newLikedPostsIDs: [String]){
-    
-    // Cherck whether the user has logined
-    // uid = Auth.auth().currentUser?.uid
-    guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
-        print("Unable to get the uid of the user, check the login state.")
-        return
-    }
-    
-    let updatedData = [
-        "likedpostsids": newLikedPostsIDs
-    ] as [String: Any]
-    
-    FirebaseManager.shared.firestore
-        .collection("users")
-        .document(uid)
-        .updateData(updatedData)
-    
-    print("Successfully updated the details of user \(uid).")
-    
-}
-
-private func updatePostInformation(postID: String, newLikes: Int) {
-    let updatedData = [
-        "likes": newLikes
-    ] as [String: Any]
-    
-    FirebaseManager.shared.firestore
-        .collection("posts")
-        .document(postID)
-        .updateData(updatedData)
-    
-    print("Successfully updated the details of post \(postID).")
-}
-
 
 struct PostsView_Previews: PreviewProvider {
     static var previews: some View {

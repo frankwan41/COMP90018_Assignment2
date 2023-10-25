@@ -103,4 +103,17 @@ class PostsViewModel: ObservableObject{
         
     }
     
+    func updatePostLikes(postID: String, newLikes: Int) {
+        let updatedData = [
+            "likes": newLikes
+        ] as [String: Any]
+        
+        FirebaseManager.shared.firestore
+            .collection("posts")
+            .document(postID)
+            .updateData(updatedData)
+        
+        print("Successfully updated the details of post \(postID).")
+    }
+    
 }
