@@ -12,7 +12,8 @@ import Kingfisher
 
 struct SinglePostView: View {
     
-    @Binding var post: Post
+    @State var post: Post
+    @State var comments: [Comment] = []
     
     @State private var isTextFieldVisible = false
     @FocusState private var autoFocused: Bool
@@ -57,7 +58,7 @@ struct SinglePostView: View {
                         }
                         Divider()
                         
-                        CommentsSection(comments: $singlePostViewModel.comments)
+                        CommentsSection(comments: $comments)
                     }
                     .padding(.horizontal)
                 }
@@ -133,12 +134,21 @@ struct SinglePostView: View {
                     }
                 }
 
-                if isTextFieldVisible{
+                if isTextFieldVisible {
                     CommentTextField(
+                        post: $post,
                         commentText: $commentText,
                         isTextFieldVisible: $isTextFieldVisible,
                         autoFocused: $autoFocused
                     )
+                    .onDisappear {
+                        // Update post
+                        singlePostViewModel.getPostComments(postID: post.id) { comments in
+                            if let comments = comments {
+                                self.comments = comments
+                            }
+                        }
+                    }
                 } else {
                     BottomBar
                 }
@@ -157,7 +167,20 @@ struct SinglePostView: View {
                     profileImageURL = nil
                 }
             }
-            singlePostViewModel.fetchAllComments(commentIDs: post.comments)
+            singlePostViewModel.getPostComments(postID: post.id) { comments in
+                if let comments = comments {
+                    self.comments = comments
+                }
+            }
+        }
+        .refreshable {
+            singlePostViewModel.getPostComments(postID: post.id) { comments in
+                if let comments = comments {
+                    print(comments)
+                    self.comments = comments
+                    print(self.comments)
+                }
+            }
         }
         
     }
@@ -187,7 +210,9 @@ extension SinglePostView {
                 Spacer()
                 Spacer()
                 HStack {
-                    SinglePostCommentBtn(
+                    SinglePostCommentButton(
+                        post: $post,
+                        comments: $comments,
                         isTextFieldVisible: $isTextFieldVisible,
                         commentText: $commentText,
                         autoFocused: $autoFocused
@@ -218,7 +243,10 @@ extension SinglePostView {
     
 }
 
-struct SinglePostCommentBtn: View {
+struct SinglePostCommentButton: View {
+    
+    @Binding var post: Post
+    @Binding var comments: [Comment]
     @Binding var isTextFieldVisible: Bool
     @Binding var commentText: String
     @FocusState.Binding var autoFocused: Bool
@@ -228,7 +256,7 @@ struct SinglePostCommentBtn: View {
     var body: some View {
         Button(action: {
             // Handle message button action
-            if(userViewModel.isLoggedIn){
+            if (userViewModel.isLoggedIn){
                 isTextFieldVisible = true
                 autoFocused = true
             }
@@ -256,6 +284,8 @@ struct SinglePostCommentBtn: View {
 
 
 struct CommentTextField: View {
+    
+    @Binding var post: Post
     @Binding var commentText: String
     @Binding var isTextFieldVisible: Bool
     @FocusState.Binding var autoFocused: Bool
@@ -264,7 +294,10 @@ struct CommentTextField: View {
     let maxCharactersPerLine: Int = 55 // Measured
     @State private var editorHeight: CGFloat
     
-    init(commentText: Binding<String>, isTextFieldVisible: Binding<Bool>, autoFocused: FocusState<Bool>.Binding) {
+    @StateObject private var singlePostViewModel = SinglePostViewModel()
+    
+    init(post: Binding<Post>, commentText: Binding<String>, isTextFieldVisible: Binding<Bool>, autoFocused: FocusState<Bool>.Binding) {
+        self._post = post
         self._commentText = commentText
         self._isTextFieldVisible = isTextFieldVisible
         self._autoFocused = autoFocused
@@ -280,25 +313,28 @@ struct CommentTextField: View {
         VStack {
             Spacer()
             HStack {
-                    TextEditor(text: $commentText)
-                        .onChange(of: commentText) { value in
-                            editorHeight = Self.calculateEditorHeight(value: value, maxCharactersPerLine: maxCharactersPerLine, lineHeight: lineHeight)
-                        }
-                        .focused($autoFocused) // This is used to set the focus on the TextField
-                        .frame(height: editorHeight)
-                        .scrollContentBackground(.hidden)
-                        .background(.gray.opacity(0.04))
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
-                        .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.gray, lineWidth: 0.5))
+                TextEditor(text: $commentText)
+                    .onChange(of: commentText) { value in
+                        editorHeight = Self.calculateEditorHeight(
+                            value: value,
+                            maxCharactersPerLine: maxCharactersPerLine,
+                            lineHeight: lineHeight
+                        )
+                    }
+                    .focused($autoFocused) // This is used to set the focus on the TextField
+                    .frame(height: editorHeight)
+                    .scrollContentBackground(.hidden)
+                    .background(.gray.opacity(0.04))
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.gray, lineWidth: 0.5))
                     .padding()
-                
                 
                 Button {
                     // Send the comment
+                    singlePostViewModel.addComment(postID: post.id, content: commentText)
                     commentText = ""
                     isTextFieldVisible = false
                     autoFocused = false
-                    print("button clicked")
                 } label: {
                     Text("Send")
                         .padding(.all, 10)
@@ -338,8 +374,8 @@ struct CommentsSection: View {
             }.padding(.bottom)
             
             if comments.count > 0 {
-                ForEach(0 ..< comments.count) { index in
-                    SingleComment(comment: $comments[index]).padding()
+                ForEach($comments, id: \.commentID) { comment in
+                    SingleComment(comment: comment).padding()
                     Divider()
                 }
             }

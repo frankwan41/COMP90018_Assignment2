@@ -111,7 +111,7 @@ struct LikeButton: View {
     @State var isLiked: Bool = false
     
     @StateObject var userViewModel = UserViewModel()
-    @StateObject var postsViewModel = PostsViewModel()
+    @StateObject var singlePostViewModel = SinglePostViewModel()
     
     var body: some View {
         Button {
@@ -181,7 +181,7 @@ struct LikeButton: View {
                 post.likes -= 1
             }
             userViewModel.clickPostLikeButton(postID: post.id)
-            postsViewModel.updatePostLikes(postID: post.id, newLikes: post.likes)
+            singlePostViewModel.updatePostLikes(postID: post.id, newLikes: post.likes)
         }
     }
 }
@@ -243,7 +243,7 @@ struct SinglePostPreview: View {
                 }
             }
             .padding()
-            NavigationLink(destination: SinglePostView(post: $post).navigationBarBackButtonHidden(true)) {
+            NavigationLink(destination: SinglePostView(post: post).navigationBarBackButtonHidden(true)) {
                 EmptyView()
             }
             .opacity(0)  // Making the NavigationLink invisible
