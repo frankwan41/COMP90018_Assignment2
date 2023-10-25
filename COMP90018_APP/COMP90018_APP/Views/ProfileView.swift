@@ -141,25 +141,23 @@ extension ProfileView {
             List {
                 if selectedTab == .posts {
                     AllPostsView(
-                        likeStates: $likeStates,
                         heartScale: $heartScale,
-                        numLikeStates: $numLikeStates,
                         isLoggedIn: $userViewModel.isLoggedIn,
-                        showLoginSheet: $showLoginSheet
+                        showLoginSheet: $showLoginSheet,
+                        posts: $profileViewModel.posts
                     )
                 } else if selectedTab == .liked {
                     // Replace with your LikedPostsView or a modified AllPostsView
                     // that displays liked posts.
                     AllPostsView(
-                        likeStates: $likeStates,
                         heartScale: $heartScale,
-                        numLikeStates: $numLikeStates,
                         isLoggedIn: $userViewModel.isLoggedIn,
-                        showLoginSheet: $showLoginSheet
+                        showLoginSheet: $showLoginSheet,
+                        posts: $profileViewModel.posts
                     )
-                    Text("Liked Posts View")
                 }
             }.listStyle(.plain)
+
         }
     }
 

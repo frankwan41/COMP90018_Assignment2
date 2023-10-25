@@ -390,11 +390,11 @@ struct SingleComment: View {
             }
             // End section: contains like button and number of likes
             VStack{
-                LikeButton(index: index, likeStates: $commentLikeStates,
-                           heartScale: $heartScale,
-                           numLikeStates: $commentNumLikeStates,
-                           isLoggedIn: $userViewModel.isLoggedIn,
-                           showLoginSheet:$showLoginSheet)
+//                LikeButton(index: index, likeStates: $commentLikeStates,
+//                           heartScale: $heartScale,
+//                           numLikeStates: $commentNumLikeStates,
+//                           isLoggedIn: $userViewModel.isLoggedIn,
+//                           showLoginSheet:$showLoginSheet)
                 Text("\(commentNumLikeStates[index])")
                     .font(.footnote)
                     .foregroundColor(.gray)

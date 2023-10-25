@@ -144,6 +144,29 @@ class UserViewModel: ObservableObject{
     }
     
     
+    func updateUserLikes(newLikedPostsIDs: [String]){
+        
+        // Cherck whether the user has logined
+        // uid = Auth.auth().currentUser?.uid
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
+            print("Unable to get the uid of the user, check the login state.")
+            return
+        }
+        
+        let updatedData = [
+            "likedpostsids": newLikedPostsIDs
+        ] as [String: Any]
+        
+        FirebaseManager.shared.firestore
+            .collection("users")
+            .document(uid)
+            .updateData(updatedData)
+        
+        print("Successfully updated the details of user \(uid).")
+        
+    }
+    
+    
     func resetPassword(email: String) {
         FirebaseManager.shared.auth.sendPasswordReset(withEmail: email){error in
             if let error = error {
@@ -167,6 +190,35 @@ class UserViewModel: ObservableObject{
             print("Successfully signed out")
         }catch{
             print("Error signed out: \(error)")
+        }
+    }
+    
+    func getUser(userUID: String, completion: @escaping (User?) -> Void) {
+        FirebaseManager.shared.firestore
+            .collection("users")
+            .document(userUID)
+            .getDocument { documentSnapshot, error in
+                if let error = error {
+                    print("Unable to fetch the details of the user \(userUID), \(error.localizedDescription)")
+                    completion(nil)
+                } else if let documentSnapshot = documentSnapshot, let data = documentSnapshot.data() {
+                    let user = User(data: data)
+                    print("Successfully fetched the user \(userUID)")
+                    completion(user)
+                } else {
+                    completion(nil)
+                }
+        }
+    }
+
+    func getCurrentUser(completion: @escaping (User?) -> Void) {
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
+            completion(nil)
+            return
+        }
+        
+        getUser(userUID: uid) { user in
+            completion(user)
         }
     }
 }
