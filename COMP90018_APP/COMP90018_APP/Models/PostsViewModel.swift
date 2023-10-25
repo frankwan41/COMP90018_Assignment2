@@ -49,6 +49,32 @@ class PostsViewModel: ObservableObject{
     }
     
     /**
+     This function will fetch all posts that has the tag and order them by the timestamp descendingly
+     */
+    
+    func fetchPostsByTag(tag: String) {
+        // Remove all existing posts
+        self.posts.removeAll()
+        
+        FirebaseManager.shared.firestore
+            .collection("posts")
+            .whereField("tags", arrayContains: tag)
+            .getDocuments { documentsSnapshot, error in
+                if let error = error{
+                    print("Failed to fetch all posts \(error)")
+                    return
+                }
+                
+                documentsSnapshot?.documents.forEach({ snapshot in
+                    let data = snapshot.data()
+                    let post = Post(data: data)
+                    self.posts.append(post)
+                    self.posts.sort{$0.timestamp > $1.timestamp}
+                })
+            }
+    }
+    
+    /**
      Inputs: userUID
      This function will retrieve the image of user profile.
      */

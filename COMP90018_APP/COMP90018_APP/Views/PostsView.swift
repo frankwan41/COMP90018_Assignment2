@@ -28,13 +28,15 @@ struct PostsView: View {
             VStack {
                 List {
                     HStack {
-                        TextField("Search tag...", text: $searchCategory, onEditingChanged: { isEditing in
-                            isSearchFocused = isEditing
-                        })
-                            .focused($isSearchFocused)
-                            .padding(10)
-                            .background(Color.gray.opacity(0.2))
-                            .cornerRadius(8)
+                        TextField(
+                            "Search tag...",
+                            text: $searchCategory,
+                            onEditingChanged: { isEditing in isSearchFocused = isEditing }
+                        )
+                        .focused($isSearchFocused)
+                        .padding(10)
+                        .background(Color.gray.opacity(0.2))
+                        .cornerRadius(8)
                         
                         if isSearchFocused || !searchCategory.isEmpty{
                             Button("Cancel") {
