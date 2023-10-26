@@ -137,18 +137,11 @@ struct SinglePostView: View {
                 if isTextFieldVisible {
                     CommentTextField(
                         post: $post,
+                        comments: $comments,
                         commentText: $commentText,
                         isTextFieldVisible: $isTextFieldVisible,
                         autoFocused: $autoFocused
                     )
-                    .onDisappear {
-                        // Update post
-                        singlePostViewModel.getPostComments(postID: post.id) { comments in
-                            if let comments = comments {
-                                self.comments = comments
-                            }
-                        }
-                    }
                 } else {
                     BottomBar
                 }
@@ -176,9 +169,7 @@ struct SinglePostView: View {
         .refreshable {
             singlePostViewModel.getPostComments(postID: post.id) { comments in
                 if let comments = comments {
-                    print(comments)
                     self.comments = comments
-                    print(self.comments)
                 }
             }
         }
@@ -217,7 +208,7 @@ extension SinglePostView {
                         commentText: $commentText,
                         autoFocused: $autoFocused
                     )
-                    Text(String(post.comments.count))
+                    Text(String(comments.count))
                 }
                 Spacer()
             }
@@ -286,6 +277,7 @@ struct SinglePostCommentButton: View {
 struct CommentTextField: View {
     
     @Binding var post: Post
+    @Binding var comments: [Comment]
     @Binding var commentText: String
     @Binding var isTextFieldVisible: Bool
     @FocusState.Binding var autoFocused: Bool
@@ -296,8 +288,9 @@ struct CommentTextField: View {
     
     @StateObject private var singlePostViewModel = SinglePostViewModel()
     
-    init(post: Binding<Post>, commentText: Binding<String>, isTextFieldVisible: Binding<Bool>, autoFocused: FocusState<Bool>.Binding) {
+    init(post: Binding<Post>, comments: Binding<[Comment]>, commentText: Binding<String>, isTextFieldVisible: Binding<Bool>, autoFocused: FocusState<Bool>.Binding) {
         self._post = post
+        self._comments = comments
         self._commentText = commentText
         self._isTextFieldVisible = isTextFieldVisible
         self._autoFocused = autoFocused

@@ -103,19 +103,28 @@ class SinglePostViewModel: ObservableObject {
                     var comments: [Comment] = []
                     let post = Post(data: data)
                     print("Successfully fetched the post \(postID)")
+                    
+                    let dispatchGroup = DispatchGroup()
+                    
                     for commentID in post.comments {
+                        dispatchGroup.enter()
                         self.getComment(commentID: commentID) { comment in
                             if let comment = comment {
                                 comments.append(comment)
                             }
+                            dispatchGroup.leave()
                         }
                     }
-                    completion(comments)
+                    
+                    dispatchGroup.notify(queue: .main) {
+                        completion(comments)
+                    }
                 } else {
                     completion(nil)
                 }
         }
     }
+
     
     func getComment(commentID: String, completion: @escaping (Comment?) -> Void) {
         FirebaseManager.shared.firestore
