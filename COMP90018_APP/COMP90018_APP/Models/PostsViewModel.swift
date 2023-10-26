@@ -18,7 +18,7 @@ class PostsViewModel: ObservableObject{
     init(){
         // fetch a number of posts when the model is initialized
         // fetchNPosts(number: defaultPostsNumber)
-        fetchAllPosts()
+        // fetchAllPosts()
         
     }
     
