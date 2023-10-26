@@ -17,7 +17,8 @@ class PostsViewModel: ObservableObject{
     
     init(){
         // fetch a number of posts when the model is initialized
-        fetchNPosts(number: defaultPostsNumber)
+        // fetchNPosts(number: defaultPostsNumber)
+        // fetchAllPosts()
         
     }
     
@@ -27,7 +28,7 @@ class PostsViewModel: ObservableObject{
     func fetchAllPosts(){
         
         // Remove all existing posts
-        self.posts.removeAll()
+        // self.posts.removeAll()
         
         
         FirebaseManager.shared.firestore
@@ -37,13 +38,14 @@ class PostsViewModel: ObservableObject{
                     print("Failed to fetch all posts \(error)")
                     return
                 }
-                
+                var newPosts = [Post]()
                 documentsSnapshot?.documents.forEach({ snapshot in
                     let data = snapshot.data()
                     let post = Post(data: data)
-                    self.posts.append(post)
-                    self.posts.sort{$0.timestamp > $1.timestamp}
+                    newPosts.append(post)
+                    newPosts.sort{$0.timestamp > $1.timestamp}
                 })
+                self.posts = newPosts
             }
         
     }

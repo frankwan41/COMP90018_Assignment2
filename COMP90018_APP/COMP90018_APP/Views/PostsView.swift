@@ -22,52 +22,71 @@ struct PostsView: View {
   
     @State private var shouldShowProfile = false
     
+//    let gradientStart = Color.orange.opacity(0.5)
+//    let gradientEnd = Color.orange
+    let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.5), Color.orange]), startPoint: .top, endPoint: .bottom)
+    
     var body: some View {
+       
+        
         NavigationView {
-            VStack {
-                List {
-                    HStack {
-                        TextField(
-                            "Search tag...",
-                            text: $searchCategory,
-                            onEditingChanged: { isEditing in
-                                isSearchFocused = isEditing
-                                // when user press return will call this function
-                                if (isSearchFocused == true){
+            ZStack{
+                gradientBackground.edgesIgnoringSafeArea(.all)
+                
+                VStack {
+                    List {
+                        HStack {
+                            TextField(
+                                "Search tag...",
+                                text: $searchCategory,
+                                onEditingChanged: { isEditing in
+                                    isSearchFocused = isEditing
+                                    // when user press return will call this function
+                                    if (isSearchFocused == true){
+                                        processUserInput()
+                                        shakeResult = searchCategory
+                                    }
+                                }
+                            )
+                            .focused($isSearchFocused)
+                            
+                            .padding(10)
+                            .background(Color.white.opacity(0.5))
+                            .cornerRadius(20)
+                            
+                            if isSearchFocused || !searchCategory.isEmpty{
+                                Button("Cancel") {
+                                    searchCategory = ""
+                                    shakeResult = ""
+                                    isSearchFocused = false
                                     processUserInput()
                                 }
+                                .padding(.trailing)
                             }
+                        }
+                        .listRowBackground(gradientBackground)
+                        
+                        
+                        if !shakeResult.isEmpty{
+                            Text("Tag chosen: \(shakeResult)")
+                                
+                        }
+                        
+                        AllPostsView(
+                          isLoggedIn: $userViewModel.isLoggedIn,
+                          posts: $postsViewModel.posts
                         )
-                        .focused($isSearchFocused)
-                        
-                        .padding(10)
-                        .background(Color.gray.opacity(0.2))
-                        .cornerRadius(8)
-                        
-                        if isSearchFocused || !searchCategory.isEmpty{
-                            Button("Cancel") {
-                                searchCategory = ""
-                                isSearchFocused = false
-                            }
-                            .padding(.trailing)
-                        }
                     }
-                    Text("Here is your shake result: \(shakeResult)")
-                    AllPostsView(
-                        isLoggedIn: $userViewModel.isLoggedIn,
-                        posts: $postsViewModel.posts
-                    )
-                }
-                .listStyle(.plain)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            viewSwitcher = viewPage.shake
-                        } label: {
-                            Image(systemName: "dice")
+                    .listStyle(.plain)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button {
+                                viewSwitcher = viewPage.shake
+                            } label: {
+                                Image(systemName: "dice")
+                            }
+                            
                         }
-                        
-                        
                     }
                 }
             }
@@ -83,6 +102,12 @@ struct PostsView: View {
                 postsViewModel.fetchAllPosts()
             }
         }
+        .task{
+            
+            searchCategory = shakeResult
+            processUserInput()
+            
+        }
     }
     
     // when user press return, search the tag
@@ -90,6 +115,8 @@ struct PostsView: View {
         // Now you can use userInput to perform any operations you need
         if searchCategory != "" {
             postsViewModel.fetchPostsByTag(tag: searchCategory)
+        }else{
+            postsViewModel.fetchAllPosts()
         }
     }
 }
@@ -267,11 +294,14 @@ struct AllPostsView: View {
 
     @Binding var isLoggedIn: Bool
     @Binding var posts: [Post]
+    var gradientBackground: LinearGradient
     
     var body: some View {
         ForEach(Array(posts.enumerated()), id: \.element.id) { (index, post) in
             SinglePostPreview(post: post, isLoggedIn: $isLoggedIn)
         }
+        .background(.white)
+        .clipShape(RoundedRectangle(cornerRadius: 25))
     }
 }
 

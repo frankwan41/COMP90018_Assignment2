@@ -20,11 +20,12 @@ struct ProfileView: View {
     @State private var showLoginSheet = false
     
     @State private var selectedTab: TabSelection = .posts
+    
+//    let gradientStart = Color.orange.opacity(0.5)
+//    let gradientEnd = Color.orange
+    let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.5), Color.orange]), startPoint: .top, endPoint: .bottom)
 
     var body: some View {
-        let gradientStart = Color.orange.opacity(0.5)
-        let gradientEnd = Color.orange
-        let gradientBackground = LinearGradient(gradient: Gradient(colors: [gradientStart, gradientEnd]), startPoint: .top, endPoint: .bottom)
 
         NavigationView {
             ZStack {
@@ -35,10 +36,16 @@ struct ProfileView: View {
                         guestView
                     } else {
                         loggedInView
+                            .refreshable {
+                                profileViewModel.getUserInformation()
+                                profileViewModel.getUserPosts()
+                            }
+                            
                     }
                 }
                 .padding(.horizontal)
                 .navigationBarItems(trailing: userViewModel.isLoggedIn ? logoutButton : nil)
+                
             }
             .onAppear {
                 if !userViewModel.isLoggedIn {
@@ -112,13 +119,17 @@ extension ProfileView {
                         .shadow(radius: 10)
                 } else {
                     ProgressView()
+                        .scaledToFit()
+                        .frame(width: 150, height: 150)
+                        .clipShape(Circle())
+                        .shadow(radius: 10)
                 }
                 VStack{
                     Text(profileViewModel.user.userName)
                         .font(.largeTitle)
                         .bold()
                     
-                    NavigationLink(destination: ProfileSetttingView(profileSettingViewModel: ProfileSettingViewModel())) {
+                    NavigationLink(destination: ProfileSetttingView(profileSettingViewModel: ProfileSettingViewModel(), profileViewModel: profileViewModel)) {
                         Text("Modify Profile Details")
                             .font(.caption)
                             .foregroundColor(.white)
@@ -126,6 +137,7 @@ extension ProfileView {
                             .background(Color.orange)
                             .cornerRadius(20)
                     }
+                    
                 }
             }
             Divider()
@@ -138,21 +150,25 @@ extension ProfileView {
                         .pickerStyle(SegmentedPickerStyle())
                         .padding()
             
-            List {
-                if selectedTab == .posts {
+            
+            if selectedTab == .posts {
+                List{
                     AllPostsView(
                         isLoggedIn: $userViewModel.isLoggedIn,
                         posts: $profileViewModel.posts
                     )
-                } else if selectedTab == .liked {
-                    // Replace with your LikedPostsView or a modified AllPostsView
-                    // that displays liked posts.
+                }.listStyle(.plain)
+            } else if selectedTab == .liked {
+                // Replace with your LikedPostsView or a modified AllPostsView
+                // that displays liked posts.
+                List{
                     AllPostsView(
                         isLoggedIn: $userViewModel.isLoggedIn,
                         posts: $profileViewModel.posts
                     )
-                }
-            }.listStyle(.plain)
+                }.listStyle(.plain)
+            }
+            
 
         }
     }
