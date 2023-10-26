@@ -101,19 +101,20 @@ struct SinglePostView: View {
                             
                         }
                     }
-//                    ToolbarItem(placement: .navigationBarTrailing) {
-//                        Button {
-//                            // Follow
-//                        } label: {
-//                            Text("Follow")
-//                                .font(.subheadline)
-//                                .fontWeight(.bold)
-//                                .foregroundColor(Color.pink)
-//                                .padding(.horizontal, 15)
-//                                .padding(.vertical, 5)
-//                                .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
-//                        }
-//                    }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            let apiKey = "95e381fda50cae025af8d88dde3f5c5c"
+                            getWeather(latitude: post.latitude, longitude: post.longitude, apiKey: apiKey)
+                        } label: {
+                            Text("Follow")
+                                .font(.subheadline)
+                                .fontWeight(.bold)
+                                .foregroundColor(Color.pink)
+                                .padding(.horizontal, 15)
+                                .padding(.vertical, 5)
+                                .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
+                        }
+                    }
 //                    ToolbarItem(placement: .navigationBarTrailing) {
 //                        Button{
 //                            // Share / Other manipulations
@@ -174,6 +175,32 @@ struct SinglePostView: View {
             }
         }
         
+    }
+    struct WeatherData: Codable {
+        let main: Main
+        struct Main: Codable {
+            let temp: Double
+        }
+    }
+    
+    func getWeather(latitude: Double, longitude: Double, apiKey: String){
+        let urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longitude)&appid=\(apiKey)&units=metric"
+        if let url = URL(string: urlString) {
+                let task = URLSession.shared.dataTask(with: url) { data, response, error in
+                    if let data = data {
+                        do {
+                            let decoder = JSONDecoder()
+                            let weatherData = try decoder.decode(WeatherData.self, from: data)
+                            print("Temperature: \(weatherData.main.temp)°C")
+                        } catch {
+                            print("Error decoding the data: \(error.localizedDescription)")
+                        }
+                    } else if let error = error {
+                        print("Error fetching data: \(error.localizedDescription)")
+                    }
+                }
+                task.resume()
+            }
     }
     
 }
