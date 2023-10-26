@@ -328,6 +328,15 @@ struct CommentTextField: View {
                     commentText = ""
                     isTextFieldVisible = false
                     autoFocused = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        singlePostViewModel.getPostComments(postID: post.id) { comments in
+                            if let fetchedComments = comments {
+                                print(fetchedComments)
+                                self.comments = fetchedComments
+                            }
+                        }
+                    }
+                    
                 } label: {
                     Text("Send")
                         .padding(.all, 10)

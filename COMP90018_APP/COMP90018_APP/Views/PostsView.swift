@@ -74,7 +74,7 @@ struct PostsView: View {
                         
                         AllPostsView(
                           isLoggedIn: $userViewModel.isLoggedIn,
-                          posts: $postsViewModel.posts
+                          posts: $postsViewModel.posts, gradientBackground: gradientBackground
                         )
                     }
                     .listStyle(.plain)
@@ -299,6 +299,7 @@ struct AllPostsView: View {
     var body: some View {
         ForEach(Array(posts.enumerated()), id: \.element.id) { (index, post) in
             SinglePostPreview(post: post, isLoggedIn: $isLoggedIn)
+                .listRowBackground(gradientBackground)
         }
         .background(.white)
         .clipShape(RoundedRectangle(cornerRadius: 25))

@@ -155,7 +155,7 @@ extension ProfileView {
                 List{
                     AllPostsView(
                         isLoggedIn: $userViewModel.isLoggedIn,
-                        posts: $profileViewModel.posts
+                        posts: $profileViewModel.posts, gradientBackground: gradientBackground
                     )
                 }.listStyle(.plain)
             } else if selectedTab == .liked {
@@ -164,7 +164,7 @@ extension ProfileView {
                 List{
                     AllPostsView(
                         isLoggedIn: $userViewModel.isLoggedIn,
-                        posts: $profileViewModel.posts
+                        posts: $profileViewModel.posts, gradientBackground: gradientBackground
                     )
                 }.listStyle(.plain)
             }
