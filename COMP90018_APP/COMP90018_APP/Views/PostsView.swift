@@ -54,8 +54,8 @@ struct PostsView: View {
                             .focused($isSearchFocused)
                             
                             .padding(10)
-                            .background(Color.gray.opacity(0.2))
-                            .cornerRadius(8)
+                            .background(Color.white.opacity(0.5))
+                            .cornerRadius(20)
                             
                             if isSearchFocused || !searchCategory.isEmpty{
                                 Button("Cancel") {
@@ -67,6 +67,7 @@ struct PostsView: View {
                                 .padding(.trailing)
                             }
                         }
+                        .listRowBackground(gradientBackground)
                         
                         
                         if !shakeResult.isEmpty{
@@ -304,6 +305,8 @@ struct AllPostsView: View {
             )
             .listRowBackground(gradientBackground)
         }
+        .background(.white)
+        .clipShape(RoundedRectangle(cornerRadius: 25))
     }
 }
 
