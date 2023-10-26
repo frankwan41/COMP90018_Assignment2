@@ -43,7 +43,7 @@ class UserViewModel: ObservableObject{
      Inputs: email and password of the user as well as the image
      This function takes the email and password of the user to create an account in the firebase database and associates it with the image of the user.
      */
-    func signUpUser(email: String, password: String, userName: String, gender: String, age: String, phoneNumber: String, likedPostsIDs: [String] = []){
+    func signUpUser(email: String, password: String, userName: String, gender: String, age: String, phoneNumber: String, likedPostsIDs: [String] = [], likedCommentsIDs: [String] = []){
         FirebaseManager.shared.auth.createUser(withEmail: email, password: password) {[self] result, error in
             if let error = error {
                 print("Failed to sign up user \(error)")
@@ -55,7 +55,7 @@ class UserViewModel: ObservableObject{
             print("After signed up: Successfully signed in as user \(result!.user.uid)")
             
             // Save basic information of the user
-            self.saveUserTextInformation(userName: userName, gender: gender, email: email, age: age, phoneNumber: phoneNumber, likedPostsIDs: likedPostsIDs)
+            self.saveUserTextInformation(userName: userName, gender: gender, email: email, age: age, phoneNumber: phoneNumber, likedPostsIDs: likedPostsIDs, likedCommentsIDs: likedCommentsIDs)
             
         }
     }
@@ -64,7 +64,7 @@ class UserViewModel: ObservableObject{
      Inputs: Basic information of user
      Save them and the uid into the collection.
      */
-    func saveUserTextInformation(userName: String, gender: String, email: String, age: String, phoneNumber: String, likedPostsIDs: [String]){
+    func saveUserTextInformation(userName: String, gender: String, email: String, age: String, phoneNumber: String, likedPostsIDs: [String], likedCommentsIDs: [String]){
         // Check whether the user has logined
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else{
             return
@@ -76,7 +76,8 @@ class UserViewModel: ObservableObject{
             "email": email,
             "age": age,
             "phonenumber": phoneNumber,
-            "likedpostsids": likedPostsIDs
+            "likedpostsids": likedPostsIDs,
+            "likedcommentsids": likedCommentsIDs
         ] as [String: Any]
         
         FirebaseManager.shared.firestore
@@ -143,8 +144,7 @@ class UserViewModel: ObservableObject{
         }
     }
     
-    
-    func updateUserLikes(newLikedPostsIDs: [String]){
+    func clickPostLikeButton(postID: String) {
         
         // Cherck whether the user has logined
         // uid = Auth.auth().currentUser?.uid
@@ -153,19 +153,68 @@ class UserViewModel: ObservableObject{
             return
         }
         
-        let updatedData = [
-            "likedpostsids": newLikedPostsIDs
-        ] as [String: Any]
-        
-        FirebaseManager.shared.firestore
-            .collection("users")
-            .document(uid)
-            .updateData(updatedData)
-        
-        print("Successfully updated the details of user \(uid).")
+        getCurrentUser { user in
+            if let user = user {
+                var updatedData = [
+                    "likedpostsids": user.likedPostsIDs
+                ] as [String: Any]
+                if let likedPostsIDs = updatedData["likedpostsids"] as? [String] {
+                    if likedPostsIDs.contains(postID) {
+                        // Unlike
+                        updatedData["likedpostsids"] = likedPostsIDs.filter { $0 != postID }
+                    } else {
+                        // Like
+                        var newLikedPostsIDs = likedPostsIDs
+                        newLikedPostsIDs.append(postID)
+                        updatedData["likedpostsids"] = newLikedPostsIDs
+                    }
+                }
+                FirebaseManager.shared.firestore
+                    .collection("users")
+                    .document(uid)
+                    .updateData(updatedData)
+                
+                print("Successfully updated the details of user \(uid).")
+            }
+        }
         
     }
     
+    func clickCommentLikeButton(commentID: String) {
+        
+        // Cherck whether the user has logined
+        // uid = Auth.auth().currentUser?.uid
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
+            print("Unable to get the uid of the user, check the login state.")
+            return
+        }
+        
+        getCurrentUser { user in
+            if let user = user {
+                var updatedData = [
+                    "likedcommentsids": user.likedCommentsIDs
+                ] as [String: Any]
+                if let likedCommentsIDs = updatedData["likedcommentsids"] as? [String] {
+                    if likedCommentsIDs.contains(commentID) {
+                        // Unlike
+                        updatedData["likedcommentsids"] = likedCommentsIDs.filter { $0 != commentID }
+                    } else {
+                        // Like
+                        var newLikedCommentsIDs = likedCommentsIDs
+                        newLikedCommentsIDs.append(commentID)
+                        updatedData["likedcommentsids"] = newLikedCommentsIDs
+                    }
+                }
+                FirebaseManager.shared.firestore
+                    .collection("users")
+                    .document(uid)
+                    .updateData(updatedData)
+                
+                print("Successfully updated the details of user \(uid).")
+            }
+        }
+        
+    }
     
     func resetPassword(email: String) {
         FirebaseManager.shared.auth.sendPasswordReset(withEmail: email){error in

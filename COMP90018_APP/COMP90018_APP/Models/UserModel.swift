@@ -16,6 +16,7 @@ struct User: Decodable {
     var age: String
     var phoneNumber: String
     var likedPostsIDs: [String]
+    var likedCommentsIDs: [String]
     
     init(data: [String: Any]){
         self.userName = data["username"] as? String ?? ""
@@ -25,6 +26,7 @@ struct User: Decodable {
         self.age = data["age"] as? String ?? ""
         self.phoneNumber = data["phonenumber"] as? String ?? ""
         self.likedPostsIDs = data["likedpostsids"] as? [String] ?? [""]
+        self.likedCommentsIDs = data["likedcommentsids"] as? [String] ?? [""]
     }
     
 }

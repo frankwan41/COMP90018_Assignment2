@@ -13,8 +13,6 @@ struct PostsView: View {
     @State private var searchCategory: String = ""
     @FocusState private var isSearchFocused: Bool
     
-    @State private var heartScale: CGFloat = 1.0
-    
     @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
     @AppStorage("shakeResult") var shakeResult = ""
     
@@ -22,7 +20,6 @@ struct PostsView: View {
 
     @StateObject var postsViewModel = PostsViewModel()
   
-    @State private var showLoginSheet = false
     @State private var shouldShowProfile = false
     
 //    let gradientStart = Color.orange.opacity(0.5)
@@ -76,11 +73,8 @@ struct PostsView: View {
                         }
                         
                         AllPostsView(
-                            heartScale: $heartScale,
-                            isLoggedIn: $userViewModel.isLoggedIn,
-                            showLoginSheet: $showLoginSheet,
-                            posts: $postsViewModel.posts,
-                            gradientBackground: gradientBackground
+                          isLoggedIn: $userViewModel.isLoggedIn,
+                          posts: $postsViewModel.posts
                         )
                     }
                     .listStyle(.plain)
@@ -91,7 +85,6 @@ struct PostsView: View {
                             } label: {
                                 Image(systemName: "dice")
                             }
-                            
                             
                         }
                     }
@@ -131,19 +124,21 @@ struct PostsView: View {
 // MARK: COMPONENTS
 
 struct LikeButton: View {
-
-    @Binding var heartScale: CGFloat
-    @Binding var isLoggedIn: Bool
-    @Binding var showLoginSheet: Bool
-    @State private var showLoginAlert = false
     
+    let isSinglePostView: Bool
+    
+    @Binding var isLoggedIn: Bool
     @Binding var post: Post
     @State var user: User? = nil
+
+    @State var heartScale: CGFloat = 1.0
+    @State var showLoginSheet: Bool = false
+    @State private var showLoginAlert = false
     
     @State var isLiked: Bool = false
     
     @StateObject var userViewModel = UserViewModel()
-    @StateObject var postsViewModel = PostsViewModel()
+    @StateObject var singlePostViewModel = SinglePostViewModel()
     
     var body: some View {
         Button {
@@ -162,9 +157,18 @@ struct LikeButton: View {
                 showLoginAlert = true
             }
         } label: {
-            Image(systemName: isLiked ? "heart.fill" : "heart")
-                .scaleEffect(heartScale)
-                .foregroundColor(isLiked ? .red : .gray)
+            if isSinglePostView {
+                Image(systemName: isLiked ? "heart.fill" : "heart")
+                    .resizable()
+                    .frame(width: 30, height: 25)
+                    .scaleEffect(heartScale)
+                    .foregroundColor(isLiked ? .red : .black)
+                    .padding(.vertical)
+            } else {
+                Image(systemName: isLiked ? "heart.fill" : "heart")
+                    .scaleEffect(heartScale)
+                    .foregroundColor(isLiked ? .red : .gray)
+            }
         }
         .alert(isPresented: $showLoginAlert) {
             Alert(
@@ -203,18 +207,17 @@ struct LikeButton: View {
                 currentUser.likedPostsIDs.removeAll { $0 == post.id }
                 post.likes -= 1
             }
-            userViewModel.updateUserLikes(newLikedPostsIDs: currentUser.likedPostsIDs)
-            postsViewModel.updatePostLikes(postID: post.id, newLikes: post.likes)
-            user = currentUser
+            userViewModel.clickPostLikeButton(postID: post.id)
+            singlePostViewModel.updatePostLikes(postID: post.id, newLikes: post.likes)
         }
     }
 }
 
 struct SinglePostPreview: View {
+    
     @State var post: Post
-    @Binding var heartScale: CGFloat
+
     @Binding var isLoggedIn: Bool
-    @Binding var showLoginSheet: Bool
     
     @State var user: User? = nil
     @State var profileImageURL: String? = nil
@@ -259,16 +262,15 @@ struct SinglePostPreview: View {
                     Text(post.userName).font(.subheadline)
                     Spacer()
                     LikeButton(
-                        heartScale: $heartScale,
+                        isSinglePostView: false,
                         isLoggedIn: $isLoggedIn,
-                        showLoginSheet: $showLoginSheet,
                         post: $post
                     )
                     Text(String(post.likes)).font(.subheadline)
                 }
             }
             .padding()
-            NavigationLink(destination: SinglePostView( ).navigationBarBackButtonHidden(true)) {
+            NavigationLink(destination: SinglePostView(post: post).navigationBarBackButtonHidden(true)) {
                 EmptyView()
             }
             .opacity(0)  // Making the NavigationLink invisible
@@ -289,21 +291,14 @@ struct SinglePostPreview: View {
 }
 
 struct AllPostsView: View {
-    @Binding var heartScale: CGFloat
+
     @Binding var isLoggedIn: Bool
-    @Binding var showLoginSheet: Bool
     @Binding var posts: [Post]
     var gradientBackground: LinearGradient
     
     var body: some View {
         ForEach(Array(posts.enumerated()), id: \.element.id) { (index, post) in
-            SinglePostPreview(
-                post: post,
-                heartScale: $heartScale,
-                isLoggedIn: $isLoggedIn,
-                showLoginSheet: $showLoginSheet
-            )
-            .listRowBackground(gradientBackground)
+            SinglePostPreview(post: post, isLoggedIn: $isLoggedIn)
         }
         .background(.white)
         .clipShape(RoundedRectangle(cornerRadius: 25))
