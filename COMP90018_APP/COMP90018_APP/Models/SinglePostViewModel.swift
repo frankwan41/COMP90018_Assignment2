@@ -37,6 +37,19 @@ class SinglePostViewModel: ObservableObject {
         print("Successfully updated the details of comment \(commentID).")
     }
     
+    func removeComment(commentID: String) {
+        FirebaseManager.shared.firestore
+            .collection("comments")
+            .document(commentID)
+            .delete() { err in
+                if let err = err {
+                    print("Error removing comment \(err)")
+                } else {
+                    print("Successfully removed comment \(commentID)")
+                }
+            }
+    }
+    
     func addComment(postID: String, content: String) {
         
         // Confirm the status of login and obtain the userUID

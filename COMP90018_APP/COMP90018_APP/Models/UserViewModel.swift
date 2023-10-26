@@ -21,6 +21,13 @@ class UserViewModel: ObservableObject{
         //isLoggedIn = FirebaseManager.shared.auth.currentUser?.uid == nil 不知道是哪个写的，每次都要重新登录。
     }
     
+    func getUserUID() -> String? {
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
+            return nil
+        }
+        return uid
+    }
+    
     
     /**
      Inputs: email and password
@@ -255,6 +262,7 @@ class UserViewModel: ObservableObject{
                     print("Successfully fetched the user \(userUID)")
                     completion(user)
                 } else {
+                    completion(nil)
                     completion(nil)
                 }
         }

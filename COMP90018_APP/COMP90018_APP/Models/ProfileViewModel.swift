@@ -120,7 +120,6 @@ class ProfileViewModel: ObservableObject{
                 self.getUserLikedPosts()
             }
         
-        
     }
     
 }

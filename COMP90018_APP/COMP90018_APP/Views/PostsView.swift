@@ -74,7 +74,9 @@ struct PostsView: View {
                         
                         AllPostsView(
                           isLoggedIn: $userViewModel.isLoggedIn,
-                          posts: $postsViewModel.posts, gradientBackground: gradientBackground
+                          posts: $postsViewModel.posts,
+                          postsViewModel: postsViewModel,
+                          gradientBackground: gradientBackground
                         )
                     }
                     .listStyle(.plain)
@@ -220,9 +222,11 @@ struct SinglePostPreview: View {
     @Binding var isLoggedIn: Bool
     
     @State var user: User? = nil
+    @State var currentUser: User? = nil
     @State var profileImageURL: String? = nil
     
     @StateObject var userViewModel = UserViewModel()
+    @ObservedObject var postsViewModel: PostsViewModel
     
     var body: some View {
         ZStack {
@@ -261,6 +265,11 @@ struct SinglePostPreview: View {
                     }
                     Text(post.userName).font(.subheadline)
                     Spacer()
+                    if let currentUser = currentUser {
+                        if post.userUID == userViewModel.getUserUID() {
+                            DeleteButton(post: $post, postsViewModel: postsViewModel)
+                        }
+                    }
                     LikeButton(
                         isSinglePostView: false,
                         isLoggedIn: $isLoggedIn,
@@ -285,6 +294,11 @@ struct SinglePostPreview: View {
                     profileImageURL = nil
                 }
             }
+            userViewModel.getCurrentUser() { user in
+                if let user = user {
+                    self.currentUser = user
+                }
+            }
         }
     }
     
@@ -294,11 +308,13 @@ struct AllPostsView: View {
 
     @Binding var isLoggedIn: Bool
     @Binding var posts: [Post]
+    @StateObject var postsViewModel = PostsViewModel()
+    
     var gradientBackground: LinearGradient
     
     var body: some View {
         ForEach(Array(posts.enumerated()), id: \.element.id) { (index, post) in
-            SinglePostPreview(post: post, isLoggedIn: $isLoggedIn)
+            SinglePostPreview(post: post, isLoggedIn: $isLoggedIn, postsViewModel: postsViewModel)
                 .listRowBackground(gradientBackground)
         }
         .background(.white)
@@ -306,7 +322,37 @@ struct AllPostsView: View {
     }
 }
 
+struct DeleteButton: View {
+    
+    @Binding var post: Post
+    @ObservedObject var postsViewModel: PostsViewModel
 
+    @State var deleteScale: CGFloat = 1.0
+    
+    var body: some View {
+        Button {
+            withAnimation {
+                // Slightly increase the size for a moment
+                deleteScale = 1.5
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                withAnimation {
+                    deleteScale = 1.0 // Return to normal size
+                }
+            }
+            postsViewModel.removePost(postID: post.id)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                postsViewModel.fetchAllPosts()
+            }
+        } label: {
+            Image(systemName: "trash")
+                .scaleEffect(deleteScale)
+                .foregroundColor(.gray)
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+    
+}
 
 struct PostsView_Previews: PreviewProvider {
     static var previews: some View {

@@ -11,6 +11,7 @@ struct ProfileView: View {
 
     @StateObject var userViewModel = UserViewModel()
     @StateObject var profileViewModel = ProfileViewModel()
+    @StateObject var postsViewModel = PostsViewModel()
     @State private var showLoginAlert = false
     @State private var wantsLogin = false
     
@@ -155,7 +156,9 @@ extension ProfileView {
                 List{
                     AllPostsView(
                         isLoggedIn: $userViewModel.isLoggedIn,
-                        posts: $profileViewModel.posts, gradientBackground: gradientBackground
+                        posts: $profileViewModel.posts,
+                        postsViewModel: postsViewModel,
+                        gradientBackground: gradientBackground
                     )
                 }.listStyle(.plain)
             } else if selectedTab == .liked {
@@ -164,7 +167,8 @@ extension ProfileView {
                 List{
                     AllPostsView(
                         isLoggedIn: $userViewModel.isLoggedIn,
-                        posts: $profileViewModel.posts, gradientBackground: gradientBackground
+                        posts: $profileViewModel.posts,
+                        gradientBackground: gradientBackground
                     )
                 }.listStyle(.plain)
             }
