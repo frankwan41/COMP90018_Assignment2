@@ -150,8 +150,9 @@ extension ProfileView {
                         .pickerStyle(SegmentedPickerStyle())
                         .padding()
             
-            List {
-                if selectedTab == .posts {
+            
+            if selectedTab == .posts {
+                List{
                     AllPostsView(
                         heartScale: $heartScale,
                         isLoggedIn: $userViewModel.isLoggedIn,
@@ -159,9 +160,11 @@ extension ProfileView {
                         posts: $profileViewModel.posts,
                         gradientBackground: gradientBackground
                     )
-                } else if selectedTab == .liked {
-                    // Replace with your LikedPostsView or a modified AllPostsView
-                    // that displays liked posts.
+                }.listStyle(.plain)
+            } else if selectedTab == .liked {
+                // Replace with your LikedPostsView or a modified AllPostsView
+                // that displays liked posts.
+                List{
                     AllPostsView(
                         heartScale: $heartScale,
                         isLoggedIn: $userViewModel.isLoggedIn,
@@ -169,8 +172,9 @@ extension ProfileView {
                         posts: $profileViewModel.likedPosts,
                         gradientBackground: gradientBackground
                     )
-                }
-            }.listStyle(.plain)
+                }.listStyle(.plain)
+            }
+            
 
         }
     }

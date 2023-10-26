@@ -14,11 +14,9 @@ class ProfileViewModel: ObservableObject{
     @Published var likedPosts = [Post]()
    
     
-    
-    
     init(){
-            getUserPosts()
-            getUserInformation()
+            //getUserPosts()
+            //getUserInformation()
     }
     
     /**
@@ -30,8 +28,8 @@ class ProfileViewModel: ObservableObject{
         guard let uid = Auth.auth().currentUser?.uid else{return}
         
         // Remove the current posts
-        self.posts.removeAll()
-        self.likedPosts.removeAll()
+        // self.posts.removeAll()
+        
         
         FirebaseManager.shared.firestore
             .collection("posts")
@@ -41,15 +39,29 @@ class ProfileViewModel: ObservableObject{
                     print("Failed to fetch posts of the user \(uid), \(error.localizedDescription)")
                     return
                 }
-                
+                var newPosts = [Post]()
                 documentsSnapshot?.documents.forEach({ snapshot in
                     let data = snapshot.data()
                     let post = Post(data: data)
-                    self.posts.append(post)
-                    self.posts.sort{ $0.timestamp > $1.timestamp}
+                    // self.posts.append(post)
+                    // self.posts.sort{ $0.timestamp > $1.timestamp}
+                    
+                    newPosts.append(post)
+                    newPosts.sort{ $0.timestamp > $1.timestamp}
                 })
                 
+                self.posts = newPosts
+                
             }
+        
+        self.getUserLikedPosts()
+        
+    }
+    
+    
+    func getUserLikedPosts(){
+        
+        self.likedPosts.removeAll()
         
         for likedPostID in user.likedPostsIDs{
             FirebaseManager.shared.firestore
@@ -64,12 +76,23 @@ class ProfileViewModel: ObservableObject{
                     documentsSnapshot?.documents.forEach({ snapshot in
                         let data = snapshot.data()
                         let post = Post(data: data)
-                        self.likedPosts.append(post)
-                        self.likedPosts.sort{$0.timestamp > $1.timestamp}
+                        if !self.likedPosts.contains(where: { postLiked in
+                            postLiked.id == post.id
+                        }){
+                            self.likedPosts.append(post)
+                            self.likedPosts.sort{$0.timestamp > $1.timestamp}
+                        }
                     })
                     
                 }
         }
+        
+    }
+    
+    
+    func getAllLikedPosts(completion: @escaping ([Post]) -> Void){
+        var likedPosts = [Post]()
+        
     }
     
     /**
@@ -93,7 +116,11 @@ class ProfileViewModel: ObservableObject{
                 let data = documentSnapshot?.data()
                 let user = User(data: data!)
                 self.user = user
+                
+                self.getUserLikedPosts()
             }
+        
+        
     }
     
 }
