@@ -25,10 +25,12 @@ struct PostsView: View {
     @State private var showLoginSheet = false
     @State private var shouldShowProfile = false
     
+//    let gradientStart = Color.orange.opacity(0.5)
+//    let gradientEnd = Color.orange
+    let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.5), Color.orange]), startPoint: .top, endPoint: .bottom)
+    
     var body: some View {
-        let gradientStart = Color.orange.opacity(0.5)
-        let gradientEnd = Color.orange
-        let gradientBackground = LinearGradient(gradient: Gradient(colors: [gradientStart, gradientEnd]), startPoint: .top, endPoint: .bottom)
+       
         
         NavigationView {
             ZStack{
@@ -76,7 +78,8 @@ struct PostsView: View {
                             heartScale: $heartScale,
                             isLoggedIn: $userViewModel.isLoggedIn,
                             showLoginSheet: $showLoginSheet,
-                            posts: $postsViewModel.posts
+                            posts: $postsViewModel.posts,
+                            gradientBackground: gradientBackground
                         )
                     }
                     .listStyle(.plain)
@@ -264,7 +267,7 @@ struct SinglePostPreview: View {
                 }
             }
             .padding()
-            NavigationLink(destination: SinglePostView().navigationBarBackButtonHidden(true)) {
+            NavigationLink(destination: SinglePostView( ).navigationBarBackButtonHidden(true)) {
                 EmptyView()
             }
             .opacity(0)  // Making the NavigationLink invisible
@@ -289,6 +292,7 @@ struct AllPostsView: View {
     @Binding var isLoggedIn: Bool
     @Binding var showLoginSheet: Bool
     @Binding var posts: [Post]
+    var gradientBackground: LinearGradient
     
     var body: some View {
         ForEach(Array(posts.enumerated()), id: \.element.id) { (index, post) in
@@ -298,6 +302,7 @@ struct AllPostsView: View {
                 isLoggedIn: $isLoggedIn,
                 showLoginSheet: $showLoginSheet
             )
+            .listRowBackground(gradientBackground)
         }
     }
 }

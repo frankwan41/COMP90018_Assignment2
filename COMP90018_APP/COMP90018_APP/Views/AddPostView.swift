@@ -25,6 +25,10 @@ struct AddPostView: View {
     @State private var latitude = Double(0)
     @State private var images: [UIImage] = []
     @State private var tags: [String] = []
+    @State private var existingTag: String? = nil
+
+    
+    
     @State private var showImagePicker = false
     @State private var showImageCamera = false
     @State private var showActionSheet = false
@@ -58,9 +62,9 @@ struct AddPostView: View {
                     Divider()
                     .padding(.bottom)
                     
-                    PostTagsView(tags: $tags)
+                    PostTagsView(tags: $tags, existingTag: $existingTag)
                         .padding(.bottom)
-                    AddPostTagsView(tags: $tags)
+                    AddPostTagsView(tags: $tags, existingTag: $existingTag)
                     
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -230,6 +234,7 @@ struct AddPhotoView: View {
 
 struct PostTagsView: View {
     @Binding var tags: [String]
+    @Binding var existingTag: String?
     
     var body: some View {
         // Flow layout enable different number of columns in each row
@@ -254,6 +259,8 @@ struct PostTagsView: View {
                             .offset(x: 5, y: -5)
                     }
                 }
+                .scaleEffect(existingTag == tags[index] ? 1.2 : 1.0)
+                .animation(.linear(duration: 0.3), value: existingTag)
             }
         }
     }
@@ -263,9 +270,12 @@ struct AddPostTagsView: View {
     
     @State private var addPostViewModel = AddPostViewModel()
     @Binding var tags: [String]
+    @Binding var existingTag: String?
     @State private var tagsExsiting: [String] = []
     @State private var searchText: String = ""
     @State private var showDropdown: Bool = false
+    
+    
     var matchingTags: [String] { tagsExsiting.filter { $0.lowercased().contains(searchText.lowercased()) && !searchText.isEmpty }}
     
     var body: some View {
@@ -276,10 +286,15 @@ struct AddPostTagsView: View {
                     .padding(.trailing)
                 Button(action: {
                     if !searchText.isEmpty{
-                        if !tags.contains(searchText){
-                            tags.append(searchText)
+                        let processedString = searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+                        if !tags.contains(processedString){
+                            tags.append(processedString)
                             searchText = ""
                         }else{
+                            existingTag = processedString
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                existingTag = nil
+                            }
                             searchText = ""
                         }
                     }
@@ -302,6 +317,10 @@ struct AddPostTagsView: View {
                                     tags.append(matchingTags[index])
                                     searchText = ""
                                 }else{
+                                    existingTag = matchingTags[index]
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                        existingTag = nil
+                                    }
                                     searchText = ""
                                 }
                                 

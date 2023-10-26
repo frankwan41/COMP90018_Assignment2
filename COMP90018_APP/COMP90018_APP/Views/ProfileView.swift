@@ -20,11 +20,12 @@ struct ProfileView: View {
     @State private var showLoginSheet = false
     
     @State private var selectedTab: TabSelection = .posts
+    
+//    let gradientStart = Color.orange.opacity(0.5)
+//    let gradientEnd = Color.orange
+    let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.5), Color.orange]), startPoint: .top, endPoint: .bottom)
 
     var body: some View {
-        let gradientStart = Color.orange.opacity(0.5)
-        let gradientEnd = Color.orange
-        let gradientBackground = LinearGradient(gradient: Gradient(colors: [gradientStart, gradientEnd]), startPoint: .top, endPoint: .bottom)
 
         NavigationView {
             ZStack {
@@ -155,7 +156,8 @@ extension ProfileView {
                         heartScale: $heartScale,
                         isLoggedIn: $userViewModel.isLoggedIn,
                         showLoginSheet: $showLoginSheet,
-                        posts: $profileViewModel.posts
+                        posts: $profileViewModel.posts,
+                        gradientBackground: gradientBackground
                     )
                 } else if selectedTab == .liked {
                     // Replace with your LikedPostsView or a modified AllPostsView
@@ -164,7 +166,8 @@ extension ProfileView {
                         heartScale: $heartScale,
                         isLoggedIn: $userViewModel.isLoggedIn,
                         showLoginSheet: $showLoginSheet,
-                        posts: $profileViewModel.likedPosts
+                        posts: $profileViewModel.likedPosts,
+                        gradientBackground: gradientBackground
                     )
                 }
             }.listStyle(.plain)
