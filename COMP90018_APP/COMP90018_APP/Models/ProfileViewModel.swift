@@ -54,7 +54,7 @@ class ProfileViewModel: ObservableObject{
                 
             }
         
-        self.getUserLikedPosts()
+        self.getUserInformation()
         
     }
     
@@ -62,6 +62,7 @@ class ProfileViewModel: ObservableObject{
     func getUserLikedPosts(){
         
         self.likedPosts.removeAll()
+        
         
         for likedPostID in user.likedPostsIDs{
             FirebaseManager.shared.firestore
@@ -90,10 +91,6 @@ class ProfileViewModel: ObservableObject{
     }
     
     
-    func getAllLikedPosts(completion: @escaping ([Post]) -> Void){
-        var likedPosts = [Post]()
-        
-    }
     
     /**
      This function will fetch the information of the user.

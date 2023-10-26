@@ -171,6 +171,10 @@ extension ProfileView {
             
 
         }
+        .onChange(of: selectedTab, perform: { value in
+            profileViewModel.getUserInformation()
+            profileViewModel.getUserPosts()
+        })
     }
 
     private var logoutButton: some View {
