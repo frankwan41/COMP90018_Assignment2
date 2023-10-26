@@ -275,9 +275,13 @@ struct AddPostTagsView: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.trailing)
                 Button(action: {
-                    if !searchText.isEmpty && !tags.contains(searchText) {
-                        tags.append(searchText)
-                        searchText = ""
+                    if !searchText.isEmpty{
+                        if !tags.contains(searchText){
+                            tags.append(searchText)
+                            searchText = ""
+                        }else{
+                            searchText = ""
+                        }
                     }
                 }) {
                     Text("Add")
@@ -294,8 +298,10 @@ struct AddPostTagsView: View {
                     VStack(alignment: .leading) {
                         ForEach(matchingTags.indices, id: \.self) {index in
                             Button(action: {
-                                if !tags.contains(searchText) {
+                                if !tags.contains(matchingTags[index]) {
                                     tags.append(matchingTags[index])
+                                    searchText = ""
+                                }else{
                                     searchText = ""
                                 }
                                 
