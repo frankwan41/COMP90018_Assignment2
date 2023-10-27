@@ -117,6 +117,7 @@ struct PostsView: View {
                         )
                     }
                     .listStyle(.plain)
+                    
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
@@ -272,8 +273,11 @@ struct SinglePostPreview: View {
     @StateObject var userViewModel = UserViewModel()
     @StateObject var singlePostPreviewModel = SinglePostPreviewCompoModel()
     
+    let postGradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.85), Color.white.opacity(0.1)]), startPoint: .top, endPoint: .bottom)
+    
     var body: some View {
         ZStack {
+            postGradientBackground.edgesIgnoringSafeArea(.all)
             VStack(spacing: 10){
                 if let urlString = post.imageURLs.first {
                     if urlString.isEmpty{
