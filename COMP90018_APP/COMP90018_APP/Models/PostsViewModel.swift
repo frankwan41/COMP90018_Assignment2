@@ -131,4 +131,17 @@ class PostsViewModel: ObservableObject{
         
     }
     
+    func removePost(postID: String) {
+        FirebaseManager.shared.firestore
+            .collection("posts")
+            .document(postID)
+            .delete() { err in
+                if let err = err {
+                    print("Error removing post \(err)")
+                } else {
+                    print("Successfully removed post \(postID)")
+                }
+            }
+    }
+    
 }

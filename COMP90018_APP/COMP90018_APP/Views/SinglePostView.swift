@@ -14,6 +14,7 @@ struct SinglePostView: View {
     
     @State var post: Post
     @State var comments: [Comment] = []
+    @State var currentUser: User? = nil
     
     @State private var isTextFieldVisible = false
     @FocusState private var autoFocused: Bool
@@ -58,7 +59,7 @@ struct SinglePostView: View {
                         }
                         Divider()
                         
-                        CommentsSection(comments: $comments)
+                        CommentsSection(post: $post, comments: $comments)
                     }
                     .padding(.horizontal)
                 }
@@ -151,6 +152,11 @@ struct SinglePostView: View {
         }
         .onAppear {
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            userViewModel.getCurrentUser { user in
+                if let user = user {
+                    self.currentUser = user
+                }
+            }
             userViewModel.getUser(userUID: post.userUID) { user in
                 if let user = user {
                     authorUsername = user.userName
@@ -328,10 +334,9 @@ struct CommentTextField: View {
                     commentText = ""
                     isTextFieldVisible = false
                     autoFocused = false
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                         singlePostViewModel.getPostComments(postID: post.id) { comments in
                             if let fetchedComments = comments {
-                                print(fetchedComments)
                                 self.comments = fetchedComments
                             }
                         }
@@ -363,6 +368,7 @@ struct CommentTextField: View {
 
 struct CommentsSection: View {
     
+    @Binding var post: Post
     @Binding var comments: [Comment]
     
     var body: some View {
@@ -377,7 +383,7 @@ struct CommentsSection: View {
             
             if comments.count > 0 {
                 ForEach($comments, id: \.commentID) { comment in
-                    SingleComment(comment: comment).padding()
+                    SingleComment(post: $post, comment: comment, comments: $comments).padding()
                     Divider()
                 }
             }
@@ -387,12 +393,16 @@ struct CommentsSection: View {
 
 struct SingleComment: View {
     
+    @Binding var post: Post
+    
     @Binding var comment: Comment
+    @Binding var comments: [Comment]
     
     @State private var showLoginSheet = false
     
     @State var profileImageURL: String?
     @State var authorUsername: String?
+    @State var userID: String?
     
     @StateObject var userViewModel = UserViewModel()
     
@@ -430,6 +440,15 @@ struct SingleComment: View {
             // End section: contains like button and number of likes
             Spacer() // Aligns the following UI to the right
             VStack {
+                if userID == comment.userID {
+                    DeleteButtonComment(
+                        post: $post,
+                        comments: $comments,
+                        comment: $comment
+                    )
+                }
+            }
+            VStack {
                 LikeButtonComment(isLoggedIn: $userViewModel.isLoggedIn, comment: $comment)
                 Text(String(comment.likes))
                     .font(.footnote)
@@ -438,6 +457,7 @@ struct SingleComment: View {
             
         }
         .onAppear {
+            userID = userViewModel.getUserUID()
             userViewModel.getUser(userUID: comment.userID) { user in
                 if let user = user {
                     authorUsername = user.userName
@@ -565,4 +585,56 @@ struct LikeButtonComment: View {
             singlePostViewModel.updateCommentLikes(commentID: comment.commentID, newLikes: comment.likes)
         }
     }
+}
+
+struct DeleteButtonComment: View {
+    
+    @Binding var post: Post
+    @Binding var comments: [Comment]
+    
+    @Binding var comment: Comment
+
+    @State var deleteScale: CGFloat = 1.0
+    @State var showAlert: Bool = false
+    
+    @StateObject var singlePostViewModel = SinglePostViewModel()
+    
+    var body: some View {
+        Button {
+            withAnimation {
+                // Slightly increase the size for a moment
+                deleteScale = 1.5
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                withAnimation {
+                    deleteScale = 1.0 // Return to normal size
+                }
+            }
+            showAlert = true
+        } label: {
+            Image(systemName: "trash")
+                .scaleEffect(deleteScale)
+                .foregroundColor(.gray)
+        }
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("Delete Confirmation"),
+                message: Text("Are you sure you want to delete this comment?"),
+                primaryButton: .destructive(Text("Delete"), action: {
+                    singlePostViewModel.removeComment(commentID: comment.commentID)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                        singlePostViewModel.getPostComments(postID: post.id) { comments in
+                            if let fetchedComments = comments {
+                                print(fetchedComments)
+                                self.comments = fetchedComments
+                            }
+                        }
+                    }
+                }),
+                secondaryButton: .cancel()
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+    
 }
