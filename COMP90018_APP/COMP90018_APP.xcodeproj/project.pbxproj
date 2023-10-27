@@ -44,6 +44,7 @@
 		A20A9FD02AB81927003833AA /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A9FCF2AB81927003833AA /* UserViewModel.swift */; };
 		A219E3DC2AE510B20082F991 /* ProfileSettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219E3DB2AE510B20082F991 /* ProfileSettingViewModel.swift */; };
 		A219E3E22AE51B850082F991 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A219E3E12AE51B850082F991 /* GoogleService-Info.plist */; };
+		A288F8132AEB359700EA648C /* LikeButtuonCompoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A288F8122AEB359700EA648C /* LikeButtuonCompoModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,6 +78,7 @@
 		A20A9FCF2AB81927003833AA /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
 		A219E3DB2AE510B20082F991 /* ProfileSettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSettingViewModel.swift; sourceTree = "<group>"; };
 		A219E3E12AE51B850082F991 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		A288F8122AEB359700EA648C /* LikeButtuonCompoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeButtuonCompoModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,6 +180,7 @@
 				A219E3DB2AE510B20082F991 /* ProfileSettingViewModel.swift */,
 				474617932AE8EF2B003145A2 /* SinglePostViewModel.swift */,
 				2DD346A92AE913F7001F6A57 /* LocationViewModel.swift */,
+				A288F8122AEB359700EA648C /* LikeButtuonCompoModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -293,6 +296,7 @@
 				2DE1A5B92AB2C25D000A2551 /* PostsView.swift in Sources */,
 				A2027C9C2AB304A100BA5391 /* UserModel.swift in Sources */,
 				A2027CD12AB7035500BA5391 /* AddPostViewModel.swift in Sources */,
+				A288F8132AEB359700EA648C /* LikeButtuonCompoModel.swift in Sources */,
 				2D1890F42AE5F51000B63D8F /* KeyboardSpacer.swift in Sources */,
 				A2027C982AB2FE1B00BA5391 /* LocationManager.swift in Sources */,
 			);

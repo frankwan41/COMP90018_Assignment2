@@ -164,7 +164,7 @@ extension ProfileView {
                 List{
                     AllPostsView(
                         isLoggedIn: $userViewModel.isLoggedIn,
-                        posts: $profileViewModel.posts, gradientBackground: gradientBackground
+                        posts: $profileViewModel.likedPosts, gradientBackground: gradientBackground
                     )
                 }.listStyle(.plain)
             }

@@ -9,11 +9,17 @@ import SwiftUI
 
 struct TabMainView: View {
     @State var shakeResult: String = ""
+    @State var searchCategory: String = ""
     
     @State private var isActive: Bool = false
     @State private var selectedTab: Int = 0
+    
+    
     @StateObject var userViewModel = UserViewModel()
+    @StateObject var postsViewModel = PostsViewModel()
+    
     @State private var showLoginAlert = false
+    
     
     var body: some View {
         let gradientStart = Color.orange.opacity(0.5)
@@ -22,7 +28,7 @@ struct TabMainView: View {
         
         NavigationStack{
             TabView{
-                PostsView()
+                PostsView(searchCategory: $searchCategory, postsViewModel: postsViewModel)
                     .navigationBarBackButtonHidden(true)
                     .tabItem {
                         Image(systemName: "fork.knife")

@@ -10,7 +10,7 @@ import Kingfisher
 
 struct PostsView: View {
 //    @State var shakeResult: String  = ""
-    @State private var searchCategory: String = ""
+    @Binding var searchCategory: String
     @FocusState private var isSearchFocused: Bool
     
     @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
@@ -18,7 +18,7 @@ struct PostsView: View {
     
     @StateObject var userViewModel = UserViewModel()
 
-    @StateObject var postsViewModel = PostsViewModel()
+    @ObservedObject var postsViewModel: PostsViewModel
   
     @State private var shouldShowProfile = false
     
@@ -94,6 +94,14 @@ struct PostsView: View {
                 EmptyView()
             }
         }
+        .onAppear{
+            // Refresh code
+            if searchCategory != "" {
+                postsViewModel.fetchPostsByTag(tag: searchCategory)
+            } else {
+                postsViewModel.fetchAllPosts()
+            }
+        }
         .refreshable {
             // Refresh code
             if searchCategory != "" {
@@ -130,6 +138,7 @@ struct LikeButton: View {
     @Binding var isLoggedIn: Bool
     @Binding var post: Post
     @State var user: User? = nil
+    
 
     @State var heartScale: CGFloat = 1.0
     @State var showLoginSheet: Bool = false
@@ -137,8 +146,10 @@ struct LikeButton: View {
     
     @State var isLiked: Bool = false
     
+    
     @StateObject var userViewModel = UserViewModel()
     @StateObject var singlePostViewModel = SinglePostViewModel()
+    @StateObject var likeButtonCompoModel = LikeButtuonCompoModel()
     
     var body: some View {
         Button {
@@ -186,6 +197,10 @@ struct LikeButton: View {
                     self.user = user
                     isLiked = user.likedPostsIDs.contains(post.id)
                 }
+            }
+            
+            likeButtonCompoModel.getPost(postID: post.id) { postNew in
+                post.likes = postNew?.likes ?? post.likes
             }
         }
         // TODO: detect login information with .onChange()
@@ -308,8 +323,8 @@ struct AllPostsView: View {
 
 
 
-struct PostsView_Previews: PreviewProvider {
-    static var previews: some View {
-        PostsView()
-    }
-}
+//struct PostsView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        PostsView()
+//    }
+//}
