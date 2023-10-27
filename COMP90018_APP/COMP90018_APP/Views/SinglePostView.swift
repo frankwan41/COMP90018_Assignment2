@@ -12,6 +12,11 @@ import Kingfisher
 
 struct SinglePostView: View {
     
+    @State private var showAlert: Bool = false
+    @State private var temperature: Int = 0
+    @State private var cityName: String = ""
+    @State private var weatherDescription: String = ""
+    
     @State var post: Post
     @State var comments: [Comment] = []
     @State var currentUser: User? = nil
@@ -102,19 +107,26 @@ struct SinglePostView: View {
                             
                         }
                     }
-//                    ToolbarItem(placement: .navigationBarTrailing) {
-//                        Button {
-//                            // Follow
-//                        } label: {
-//                            Text("Follow")
-//                                .font(.subheadline)
-//                                .fontWeight(.bold)
-//                                .foregroundColor(Color.pink)
-//                                .padding(.horizontal, 15)
-//                                .padding(.vertical, 5)
-//                                .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
-//                        }
-//                    }
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                            Button {
+                                let apiKey = "95e381fda50cae025af8d88dde3f5c5c"
+                                getWeather(latitude: post.latitude, longitude: post.longitude, apiKey: apiKey)
+                            } label: {
+                                Text("Weather tip")
+                                    .font(.subheadline)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color.pink)
+                                    .padding(.horizontal, 15)
+                                    .padding(.vertical, 5)
+                                    .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
+                            }
+                        
+                            .alert(isPresented: $showAlert) {
+                                Alert(title: Text("Weather Info for \(cityName)"),
+                                      message: Text("Temperature: \(temperature)°C, Condition: \(weatherDescription)"),
+                                      dismissButton: .default(Text("Got it!")))
+                            }
+                        }
 //                    ToolbarItem(placement: .navigationBarTrailing) {
 //                        Button{
 //                            // Share / Other manipulations
@@ -180,6 +192,49 @@ struct SinglePostView: View {
             }
         }
         
+    }
+    struct WeatherData: Codable {
+        let main: Main
+        let weather: [Weather]
+        let name: String
+        
+        struct Main: Codable {
+            let temp: Double
+        }
+        
+        struct Weather: Codable {
+            let description: String
+        }
+    }
+    
+    func getWeather(latitude: Double, longitude: Double, apiKey: String){
+        let urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longitude)&appid=\(apiKey)&units=metric"
+        if let url = URL(string: urlString) {
+                let task = URLSession.shared.dataTask(with: url) { data, response, error in
+                    if let data = data {
+                        do {
+                            let decoder = JSONDecoder()
+                            let weatherData = try decoder.decode(WeatherData.self, from: data)
+                            DispatchQueue.main.async {
+                                self.temperature = Int(weatherData.main.temp)
+                                if let weatherDescription = weatherData.weather.first?.description {
+                                    self.weatherDescription = weatherDescription
+                                }
+                                self.showAlert = true
+                                self.cityName = weatherData.name
+                                if(self.cityName == "" || self.cityName == "Globe" || self.cityName.isEmpty){
+                                    self.cityName = "your destination"
+                                }
+                            }
+                        } catch {
+                            print("Error decoding the data: \(error.localizedDescription)")
+                        }
+                    } else if let error = error {
+                        print("Error fetching data: \(error.localizedDescription)")
+                    }
+                }
+                task.resume()
+            }
     }
     
 }
