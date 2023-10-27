@@ -53,10 +53,15 @@ struct welcomeMainView: View {
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
                                     )
-            VStack(spacing: 150){
-                Text("Do you know what to eat today?")
+            VStack(spacing: 80){
+                Text("🩷Do you know🩷\nwhat to eat today?")
                     .font(.largeTitle)
                     .multilineTextAlignment(.center)
+                    .bold()
+                Text("🌭🍔🍟🍕🥪\n🥙🧆🌮🌯🫔\n🥗🥘🫕🍝🍜")
+                    .multilineTextAlignment(.center)
+                    .font(.largeTitle)
+                    .padding(.horizontal)
                 HStack(spacing: 100){
                     
                     Button {
