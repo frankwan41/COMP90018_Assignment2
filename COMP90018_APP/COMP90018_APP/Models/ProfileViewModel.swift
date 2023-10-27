@@ -61,7 +61,15 @@ class ProfileViewModel: ObservableObject{
     
     func getUserLikedPosts(){
         
-        self.likedPosts.removeAll()
+        // self.likedPosts.removeAll()
+        
+        // Remove the posts that are not in the user liked list
+        self.likedPosts.removeAll { postCurrentlyLiked in
+            // Check whether the post is in the liked list
+            !user.likedPostsIDs.contains { postIDToUpdate in
+                postIDToUpdate == postCurrentlyLiked.id
+            }
+        }
         
         
         for likedPostID in user.likedPostsIDs{
@@ -77,12 +85,21 @@ class ProfileViewModel: ObservableObject{
                     documentsSnapshot?.documents.forEach({ snapshot in
                         let data = snapshot.data()
                         let post = Post(data: data)
+                        
+                        // If the post is not in the current likedPosts
                         if !self.likedPosts.contains(where: { postLiked in
                             postLiked.id == post.id
                         }){
                             self.likedPosts.append(post)
                             self.likedPosts.sort{$0.timestamp > $1.timestamp}
+                        }else{
+                            // If the post is currently in the likedPosts, update the post
+                            if let postIndex = self.likedPosts.firstIndex(where: {$0.id == post.id}){
+                                self.likedPosts[postIndex] = post
+                            }
+                            
                         }
+                        
                     })
                     
                 }
