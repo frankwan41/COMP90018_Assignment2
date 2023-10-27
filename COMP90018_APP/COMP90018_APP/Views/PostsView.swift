@@ -48,44 +48,46 @@ struct PostsView: View {
                             .padding(.bottom, 2)
                     }
                     
-                    List {
-                        HStack {
-                            TextField(
-                                "Search tag...",
-                                text: $searchCategory,
-                                onEditingChanged: { isEditing in
-                                    isSearchFocused = isEditing
-                                    // when user press return will call this function
-                                    if (isSearchFocused == true){
-                                        processUserInput()
-                                        searchCategory = searchCategory.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-                                        shakeResult = searchCategory
-                                    }
-                                }
-                            )
-                            .focused($isSearchFocused)
-                            
-                            .padding(10)
-                            .background(Color.white.opacity(0.5))
-                            .cornerRadius(20)
-                            
-                            if isSearchFocused || !searchCategory.isEmpty{
-                                Button("Cancel") {
-                                    searchCategory = ""
-                                    shakeResult = ""
-                                    isSearchFocused = false
+                    HStack {
+                        TextField(
+                            "Search tag...",
+                            text: $searchCategory,
+                            onEditingChanged: { isEditing in
+                                isSearchFocused = isEditing
+                                // when user press return will call this function
+                                if (isSearchFocused == true){
                                     processUserInput()
+                                    searchCategory = searchCategory.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+                                    shakeResult = searchCategory
                                 }
-                                .padding(.trailing)
                             }
-                        }
-                        .listRowBackground(postGradientBackground)
+                        )
+                        .focused($isSearchFocused)
                         
+                        .padding(10)
+                        .background(Color.white.opacity(0.5))
+                        .cornerRadius(20)
                         
-                        if !shakeResult.isEmpty{
-                            Text("Tag chosen: \(shakeResult)")
-                                
+                        if isSearchFocused || !searchCategory.isEmpty{
+                            Button("Cancel") {
+                                searchCategory = ""
+                                shakeResult = ""
+                                isSearchFocused = false
+                                processUserInput()
+                            }
+                            .padding(.trailing)
                         }
+                    }
+                    .listRowBackground(postGradientBackground)
+                    
+                    
+                    if !shakeResult.isEmpty{
+                        Text("Tag chosen: \(shakeResult)")
+                            
+                    }
+                    
+                    List {
+                        
                         
                         
                         AllPostsView(
@@ -109,6 +111,7 @@ struct PostsView: View {
                     
                     
                 }
+                .padding(.horizontal, 5)
             }
             NavigationLink(destination: ProfileView(), isActive: $shouldShowProfile) {
                 EmptyView()
