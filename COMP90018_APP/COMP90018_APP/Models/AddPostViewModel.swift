@@ -91,23 +91,24 @@ class AddPostViewModel{
         
         let dispatchGroup = DispatchGroup()
         
-        
-        for idx in 0...(numberImages - 1){
-            let imageReference = documentID + String(idx)
-            let image = images[idx]
-            dispatchGroup.enter()
-            self.saveSingleImage(image: image, documentID: imageReference){ imageURL in
-                defer{
-                    dispatchGroup.leave()
-                }
-                
-                
-                if let imageURL = imageURL{
-                    imageURLs.append(imageURL)
-                    print("Successfully uploaded the image \(imageURL) of the post \(documentID)")
+        if numberImages != 0 {
+            for idx in 0...(numberImages - 1){
+                let imageReference = documentID + String(idx)
+                let image = images[idx]
+                dispatchGroup.enter()
+                self.saveSingleImage(image: image, documentID: imageReference){ imageURL in
+                    defer{
+                        dispatchGroup.leave()
+                    }
                     
-                }else{
-                    print("Failed to upload one image of the post \(documentID)")
+                    
+                    if let imageURL = imageURL{
+                        imageURLs.append(imageURL)
+                        print("Successfully uploaded the image \(imageURL) of the post \(documentID)")
+                        
+                    }else{
+                        print("Failed to upload one image of the post \(documentID)")
+                    }
                 }
             }
         }
