@@ -24,7 +24,15 @@ struct PostsView: View {
     
 //    let gradientStart = Color.orange.opacity(0.5)
 //    let gradientEnd = Color.orange
-    let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.5), Color.orange]), startPoint: .top, endPoint: .bottom)
+    
+    // Before Modification
+//    let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.5), Color.orange]), startPoint: .top, endPoint: .bottom)
+    
+    let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange, Color.white]), startPoint: .top, endPoint: .bottom)
+    
+    let postGradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.1), Color.orange.opacity(0.1)]), startPoint: .top, endPoint: .bottom)
+    
+    
     
     var body: some View {
        
@@ -71,7 +79,7 @@ struct PostsView: View {
                                 .padding(.trailing)
                             }
                         }
-                        .listRowBackground(gradientBackground)
+                        .listRowBackground(postGradientBackground)
                         
                         
                         if !shakeResult.isEmpty{
@@ -82,7 +90,7 @@ struct PostsView: View {
                         
                         AllPostsView(
                           isLoggedIn: $userViewModel.isLoggedIn,
-                          posts: $postsViewModel.posts, gradientBackground: gradientBackground
+                          posts: $postsViewModel.posts, gradientBackground: postGradientBackground
                         )
                     }
                     .listStyle(.plain)

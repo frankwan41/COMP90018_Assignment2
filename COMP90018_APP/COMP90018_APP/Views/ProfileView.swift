@@ -23,7 +23,13 @@ struct ProfileView: View {
     
 //    let gradientStart = Color.orange.opacity(0.5)
 //    let gradientEnd = Color.orange
-    let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.5), Color.orange]), startPoint: .top, endPoint: .bottom)
+    
+    // Before Modification
+//    let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.5), Color.orange]), startPoint: .top, endPoint: .bottom)
+    
+    let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange, Color.white]), startPoint: .top, endPoint: .bottom)
+    
+    let postGradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.1), Color.orange.opacity(0.1)]), startPoint: .top, endPoint: .bottom)
 
     var body: some View {
 
@@ -161,7 +167,7 @@ extension ProfileView {
                 List{
                     AllPostsView(
                         isLoggedIn: $userViewModel.isLoggedIn,
-                        posts: $profileViewModel.posts, gradientBackground: gradientBackground
+                        posts: $profileViewModel.posts, gradientBackground: postGradientBackground
                     )
                 }.listStyle(.plain)
             } else if selectedTab == .liked {
@@ -178,7 +184,7 @@ extension ProfileView {
                 List{
                     AllPostsView(
                         isLoggedIn: $userViewModel.isLoggedIn,
-                        posts: $profileViewModel.likedPosts, gradientBackground: gradientBackground
+                        posts: $profileViewModel.likedPosts, gradientBackground: postGradientBackground
                     )
                 }.listStyle(.plain)
             }
