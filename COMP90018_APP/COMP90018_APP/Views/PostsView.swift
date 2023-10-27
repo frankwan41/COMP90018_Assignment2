@@ -44,8 +44,17 @@ struct PostsView: View {
                 VStack {
                     
                     if postsViewModel.posts.isEmpty{
-                        ProgressView()
-                            .padding(.bottom, 2)
+                        if searchCategory.isEmpty{
+                            ProgressView()
+                                .padding(.bottom, 2)
+                        }else{
+                            if !isSearchFocused{
+                                Text("💔Sorry, No Post About \(searchCategory)")
+                                    .frame(alignment: .center)
+                                    .bold()
+                            }
+                        }
+                        
                     }
                     
                     HStack {
@@ -56,9 +65,9 @@ struct PostsView: View {
                                 isSearchFocused = isEditing
                                 // when user press return will call this function
                                 if (isSearchFocused == true){
-                                    processUserInput()
                                     searchCategory = searchCategory.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
                                     shakeResult = searchCategory
+                                    processUserInput()
                                 }
                             }
                         )
