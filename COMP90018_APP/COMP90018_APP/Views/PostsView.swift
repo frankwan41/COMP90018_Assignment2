@@ -274,14 +274,16 @@ struct SinglePostPreview: View {
     
     var body: some View {
         ZStack {
-            VStack(alignment:.leading, spacing: 10){
+            VStack(spacing: 10){
                 if let urlString = post.imageURLs.first {
                     if urlString.isEmpty{
-                        Image(systemName: "photo.stack")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .font(.largeTitle)
-                            .frame(maxWidth: 600, maxHeight: 400)
+                        //Image(systemName: "photo.stack")
+                        //.resizable()
+                        ProgressView("Loading...")
+                            .controlSize(.large)
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 300, height: 200, alignment: .center)
+                            .tint(.orange)
                     }else{
                         let url = URL(string: urlString)
                         KFImage(url)
@@ -291,39 +293,45 @@ struct SinglePostPreview: View {
                             .frame(maxWidth: 600, maxHeight: 400)
                     }
                 } else {
-                    Image(systemName: "photo.stack")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .font(.largeTitle)
-                        .frame(maxWidth: 600, maxHeight: 400)
+//                    Image(systemName: "photo.stack")
+//                        .resizable()
+//                        .aspectRatio(contentMode: .fit)
+//                        .font(.largeTitle)
+//                        .frame(maxWidth: 600, maxHeight: 400)
                 }
-                Text(post.postTitle).font(.headline)
-                HStack(spacing: 4){
-                    if let urlString = profileImageURL {
-                        let url = URL(string: urlString)
-                        KFImage(url)
-                            .resizable()
-                            .frame(maxWidth: 30, maxHeight: 30)
-                            .clipped()
-                            .cornerRadius(50)
-                            .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label), lineWidth: 1))
-                    } else {
-                        Image(systemName: "person.circle")
-                            .resizable()
-                            .frame(maxWidth: 30, maxHeight: 30)
-                            .clipped()
-                            .cornerRadius(50)
-                            .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label), lineWidth: 1))
+                
+                VStack(alignment: .leading){
+                    Text(post.postTitle).font(.headline)
+                    HStack(spacing: 4){
+                        if let urlString = profileImageURL {
+                            let url = URL(string: urlString)
+                            KFImage(url)
+                                .resizable()
+                                .frame(maxWidth: 30, maxHeight: 30)
+                                .clipped()
+                                .cornerRadius(50)
+                                .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label), lineWidth: 1))
+                        } else {
+                            Image(systemName: "person.circle")
+                                .resizable()
+                                .frame(maxWidth: 30, maxHeight: 30)
+                                .clipped()
+                                .cornerRadius(50)
+                                .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label), lineWidth: 1))
+                        }
+                        Text(post.userName).font(.subheadline)
+                        Spacer()
+                        LikeButton(
+                            isSinglePostView: false,
+                            isLoggedIn: $isLoggedIn,
+                            post: $post
+                        )
+                        Text(String(post.likes)).font(.subheadline)
                     }
-                    Text(post.userName).font(.subheadline)
-                    Spacer()
-                    LikeButton(
-                        isSinglePostView: false,
-                        isLoggedIn: $isLoggedIn,
-                        post: $post
-                    )
-                    Text(String(post.likes)).font(.subheadline)
+                    
                 }
+                
+                
             }
             .padding()
             NavigationLink(destination: SinglePostView(post: post).navigationBarBackButtonHidden(true)) {
