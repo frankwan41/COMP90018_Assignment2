@@ -33,7 +33,6 @@ struct AddPostView: View {
     @State private var showImageCamera = false
     @State private var showActionSheet = false
     
-    @State private var showLocationAlert = false
     @State private var showLocationSearchSheet = false
     @State private var showLocationRequestAlert = false
     
@@ -71,15 +70,6 @@ struct AddPostView: View {
                 .padding(.leading)
                 .padding()
             }
-            .alert(isPresented: $showLocationAlert, content: {
-                Alert(
-                    title: Text("You have to enable location service in the device settings"),
-                    dismissButton: .cancel({
-                        locationEnable = false
-                    })
-                    
-                )
-            })
             .alert(isPresented: $showLocationRequestAlert, content: {
                 Alert(
                 title: Text("Location Permission Denied"),

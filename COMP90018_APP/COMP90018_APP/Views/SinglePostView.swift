@@ -8,14 +8,19 @@
 import SwiftUI
 import Flow
 import Kingfisher
+import CoreLocation
 
 
 struct SinglePostView: View {
     
     @State private var showAlert: Bool = false
+    @State private var showLocationRequestAlert: Bool = false
+    @State private var showLocationDistance: Bool = false
     @State private var temperature: Int = 0
     @State private var cityName: String = ""
     @State private var weatherDescription: String = ""
+    
+    @StateObject var locationManager = LocationManager()
     
     @State var post: Post
     @State var comments: [Comment] = []
@@ -107,6 +112,61 @@ struct SinglePostView: View {
                             
                         }
                     }
+                    if (post.longitude != 0 && post.latitude != 0) {
+                        if showLocationDistance {
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                let userLatitude = locationManager.location?.latitude ?? 0
+                                let userLontitude = locationManager.location?.longitude ?? 0
+                                
+                                let postCoordinate = CLLocation(latitude: post.latitude, longitude: post.longitude)
+                                let userCoordniate  = CLLocation(latitude: userLatitude, longitude: userLontitude)
+                                
+                                let distance = userCoordniate.distance(from: postCoordinate).rounded()
+      
+                                if distance < 1000 {
+                                            // If less than 1000 meters, show in meters
+                                            Text("\(String(format: "%.0f", distance)) m")
+                                } else {
+                                    // If 1 km or more, convert to kilometers and show one decimal place
+                                    let distanceInKilometers = distance / 1000
+                                    Text("\(String(format: "%.0f", distanceInKilometers)) km")
+                                }
+                            }
+                        }else{
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                
+                                
+                                Button {
+                                    locationManager.requestPermission { authorized in
+                                        if authorized {
+                                            showLocationDistance = true
+                                        } else {
+                                            showLocationRequestAlert = true
+                                        }
+                                        
+                                    }
+                                } label: {
+                                    Text("Distance tip")
+                                        .font(.subheadline)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Color.pink)
+                                        .padding(.horizontal, 15)
+                                        .padding(.vertical, 5)
+                                        .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
+                                }
+                                
+                                .alert(isPresented: $showLocationRequestAlert, content: {
+                                    Alert(
+                                        title: Text("Location Permission Denied"),
+                                        message: Text("The App requires location permission"),
+                                        primaryButton: .default(Text("Go Settings"), action: openAppSettings),
+                                        secondaryButton: .cancel(Text("Reject"))
+                                    )
+                                })
+                            }
+                        }
+                    }
+                    
                     ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
                                 let apiKey = "95e381fda50cae025af8d88dde3f5c5c"
@@ -181,6 +241,12 @@ struct SinglePostView: View {
             singlePostViewModel.getPostComments(postID: post.id) { comments in
                 if let comments = comments {
                     self.comments = comments
+                }
+            }  
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+                if locationManager.status == Status.success {
+                    showLocationDistance = true
                 }
             }
         }
