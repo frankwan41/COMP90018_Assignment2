@@ -125,11 +125,11 @@ struct SinglePostView: View {
       
                                 if distance < 1000 {
                                             // If less than 1000 meters, show in meters
-                                            Text("\(String(format: "%.0f", distance)) m")
+                                    Text("\(String(format: "%.0f", distance)) m").fontWeight(.bold).font(.callout)
                                 } else {
                                     // If 1 km or more, convert to kilometers and show one decimal place
                                     let distanceInKilometers = distance / 1000
-                                    Text("\(String(format: "%.0f", distanceInKilometers)) km")
+                                    Text("\(String(format: "%.0f", distanceInKilometers)) km").fontWeight(.bold).font(.callout)
                                 }
                             }
                         }else{
