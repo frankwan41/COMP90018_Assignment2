@@ -74,19 +74,32 @@ struct ProfileSetttingView: View {
                     }
                 } label: {
                     VStack{
-                        Image(uiImage: profileImage ?? UIImage(systemName: "person.circle")!)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width:200, height: 200)
-                            .clipped()
-                            .cornerRadius(50)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 44)
-                                    .stroke(Color(.label), lineWidth:1)
-                                
-                            )
-                            .padding(.vertical, 20)
-                            .shadow(radius: 10)
+                        
+                        if let profileImage = profileImage{
+                            Image(uiImage: profileImage).resizable()
+                                .scaledToFill()
+                                .frame(width:200, height: 200)
+                                .clipped()
+                                .cornerRadius(50)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 44)
+                                        .stroke(Color(.label), lineWidth:1)
+                                    
+                                )
+                                .padding(.vertical, 20)
+                                .shadow(radius: 10)
+                            
+                        }else{
+                            Image(systemName: "person.circle").resizable()
+                                .scaledToFill()
+                                .frame(width:200, height: 200)
+                                .clipped()
+                                .cornerRadius(50)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 44)
+                                        .stroke(Color(.label), lineWidth:1)
+                                    )}
+                            
                         
                         if isEditing{
                             Text("Choose the Image")

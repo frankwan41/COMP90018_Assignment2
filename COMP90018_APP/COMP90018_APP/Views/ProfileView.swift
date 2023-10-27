@@ -125,7 +125,7 @@ extension ProfileView {
                         .clipShape(Circle())
                         .shadow(radius: 10)
                 } else {
-                    ProgressView()
+                    Image(systemName: "person.circle")
                         .scaledToFit()
                         .frame(width: 150, height: 150)
                         .clipShape(Circle())
