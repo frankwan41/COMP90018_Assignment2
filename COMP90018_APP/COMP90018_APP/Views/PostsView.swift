@@ -392,6 +392,7 @@ struct DeleteButton: View {
     @ObservedObject var postsViewModel: PostsViewModel
 
     @State var deleteScale: CGFloat = 1.0
+    @State private var showAlert: Bool = false
     
     var body: some View {
         Button {
@@ -404,14 +405,24 @@ struct DeleteButton: View {
                     deleteScale = 1.0 // Return to normal size
                 }
             }
-            postsViewModel.removePost(postID: post.id)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                postsViewModel.fetchAllPosts()
-            }
+            showAlert = true
         } label: {
             Image(systemName: "trash")
                 .scaleEffect(deleteScale)
                 .foregroundColor(.gray)
+        }
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("Delete Confirmation"),
+                message: Text("Are you sure you want to delete this post?"),
+                primaryButton: .destructive(Text("Delete"), action: {
+                    postsViewModel.removePost(postID: post.id)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                        postsViewModel.fetchAllPosts()
+                    }
+                }),
+                secondaryButton: .cancel()
+            )
         }
         .buttonStyle(PlainButtonStyle())
     }

@@ -595,6 +595,7 @@ struct DeleteButtonComment: View {
     @Binding var comment: Comment
 
     @State var deleteScale: CGFloat = 1.0
+    @State var showAlert: Bool = false
     
     @StateObject var singlePostViewModel = SinglePostViewModel()
     
@@ -609,19 +610,29 @@ struct DeleteButtonComment: View {
                     deleteScale = 1.0 // Return to normal size
                 }
             }
-            singlePostViewModel.removeComment(commentID: comment.commentID)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                singlePostViewModel.getPostComments(postID: post.id) { comments in
-                    if let fetchedComments = comments {
-                        print(fetchedComments)
-                        self.comments = fetchedComments
-                    }
-                }
-            }
+            showAlert = true
         } label: {
             Image(systemName: "trash")
                 .scaleEffect(deleteScale)
                 .foregroundColor(.gray)
+        }
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("Delete Confirmation"),
+                message: Text("Are you sure you want to delete this comment?"),
+                primaryButton: .destructive(Text("Delete"), action: {
+                    singlePostViewModel.removeComment(commentID: comment.commentID)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                        singlePostViewModel.getPostComments(postID: post.id) { comments in
+                            if let fetchedComments = comments {
+                                print(fetchedComments)
+                                self.comments = fetchedComments
+                            }
+                        }
+                    }
+                }),
+                secondaryButton: .cancel()
+            )
         }
         .buttonStyle(PlainButtonStyle())
     }
