@@ -29,7 +29,7 @@ struct ProfileView: View {
     
     let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange, Color.white]), startPoint: .top, endPoint: .bottom)
     
-    let postGradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.1), Color.orange.opacity(0.1)]), startPoint: .top, endPoint: .bottom)
+    let postGradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.01), Color.orange.opacity(0.01)]), startPoint: .top, endPoint: .bottom)
 
     var body: some View {
 
