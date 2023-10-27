@@ -44,6 +44,7 @@ struct PostsView: View {
                                     // when user press return will call this function
                                     if (isSearchFocused == true){
                                         processUserInput()
+                                        searchCategory = searchCategory.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
                                         shakeResult = searchCategory
                                     }
                                 }
@@ -95,20 +96,11 @@ struct PostsView: View {
             }
         }
         .onAppear{
-            // Refresh code
-            if searchCategory != "" {
-                postsViewModel.fetchPostsByTag(tag: searchCategory)
-            } else {
-                postsViewModel.fetchAllPosts()
-            }
+            processUserInput()
         }
         .refreshable {
             // Refresh code
-            if searchCategory != "" {
-                postsViewModel.fetchPostsByTag(tag: searchCategory)
-            } else {
-                postsViewModel.fetchAllPosts()
-            }
+            processUserInput()
         }
         .task{
             
@@ -122,7 +114,7 @@ struct PostsView: View {
     func processUserInput() {
         // Now you can use userInput to perform any operations you need
         if searchCategory != "" {
-            postsViewModel.fetchPostsByTag(tag: searchCategory)
+            postsViewModel.fetchPostsByTag(tag: searchCategory.trimmingCharacters(in: .whitespacesAndNewlines).lowercased())
         }else{
             postsViewModel.fetchAllPosts()
         }
