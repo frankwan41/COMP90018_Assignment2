@@ -222,7 +222,6 @@ struct SinglePostPreview: View {
     @Binding var isLoggedIn: Bool
     
     @State var user: User? = nil
-    @State var currentUser: User? = nil
     @State var profileImageURL: String? = nil
     
     @StateObject var userViewModel = UserViewModel()
@@ -265,10 +264,8 @@ struct SinglePostPreview: View {
                     }
                     Text(post.userName).font(.subheadline)
                     Spacer()
-                    if let currentUser = currentUser {
-                        if post.userUID == userViewModel.getUserUID() {
-                            DeleteButton(post: $post, postsViewModel: postsViewModel)
-                        }
+                    if post.userUID == userViewModel.getUserUID() {
+                        DeleteButton(post: $post, postsViewModel: postsViewModel)
                     }
                     LikeButton(
                         isSinglePostView: false,
@@ -292,11 +289,6 @@ struct SinglePostPreview: View {
                     profileImageURL = user.profileImageURL
                 } else {
                     profileImageURL = nil
-                }
-            }
-            userViewModel.getCurrentUser() { user in
-                if let user = user {
-                    self.currentUser = user
                 }
             }
         }
