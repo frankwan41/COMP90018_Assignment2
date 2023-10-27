@@ -7,6 +7,8 @@
 
 import Foundation
 import Firebase
+import UIKit
+import FirebaseFirestore
 
 class AddPostViewModel{
     /**

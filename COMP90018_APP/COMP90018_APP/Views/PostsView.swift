@@ -149,7 +149,7 @@ struct LikeButton: View {
     
     @StateObject var userViewModel = UserViewModel()
     @StateObject var singlePostViewModel = SinglePostViewModel()
-    @StateObject var likeButtonCompoModel = LikeButtuonCompoModel()
+    @StateObject var likeButtonCompoModel = SinglePostPreviewCompoModel()
     
     var body: some View {
         Button {
@@ -238,6 +238,7 @@ struct SinglePostPreview: View {
     @State var profileImageURL: String? = nil
     
     @StateObject var userViewModel = UserViewModel()
+    @StateObject var singlePostPreviewModel = SinglePostPreviewCompoModel()
     
     var body: some View {
         ZStack {
@@ -307,6 +308,10 @@ struct SinglePostPreview: View {
                 } else {
                     profileImageURL = nil
                 }
+            }
+            
+            singlePostPreviewModel.getPost(postID: post.id) { newPost in
+                post.imageURLs = newPost?.imageURLs ?? post.imageURLs
             }
         }
     }

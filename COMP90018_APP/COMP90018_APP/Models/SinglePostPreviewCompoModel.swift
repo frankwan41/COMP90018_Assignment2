@@ -9,7 +9,7 @@ import Foundation
 import Firebase
 
 
-class LikeButtuonCompoModel: ObservableObject{
+class SinglePostPreviewCompoModel: ObservableObject{
     
     func getPost(postID: String, completion: @escaping (Post?)-> Void){
         FirebaseManager.shared.firestore
