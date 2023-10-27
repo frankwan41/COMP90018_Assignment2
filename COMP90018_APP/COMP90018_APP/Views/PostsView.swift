@@ -34,6 +34,12 @@ struct PostsView: View {
                 gradientBackground.edgesIgnoringSafeArea(.all)
                 
                 VStack {
+                    
+                    if postsViewModel.posts.isEmpty{
+                        ProgressView()
+                            .padding(.bottom, 2)
+                    }
+                    
                     List {
                         HStack {
                             TextField(
@@ -73,6 +79,7 @@ struct PostsView: View {
                                 
                         }
                         
+                        
                         AllPostsView(
                           isLoggedIn: $userViewModel.isLoggedIn,
                           posts: $postsViewModel.posts, gradientBackground: gradientBackground
@@ -89,6 +96,10 @@ struct PostsView: View {
                             
                         }
                     }
+                    
+                    
+                    
+                    
                 }
             }
             NavigationLink(destination: ProfileView(), isActive: $shouldShowProfile) {

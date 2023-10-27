@@ -152,6 +152,12 @@ extension ProfileView {
             
             
             if selectedTab == .posts {
+                
+                if profileViewModel.posts.isEmpty{
+                    ProgressView()
+                        .padding(.top, 2)
+                        .padding(.bottom, 2)
+                }
                 List{
                     AllPostsView(
                         isLoggedIn: $userViewModel.isLoggedIn,
@@ -161,6 +167,14 @@ extension ProfileView {
             } else if selectedTab == .liked {
                 // Replace with your LikedPostsView or a modified AllPostsView
                 // that displays liked posts.
+                
+                if profileViewModel.likedPosts.isEmpty{
+                    ProgressView()
+                        .padding(.top, 2)
+                        .padding(.bottom, 2)
+                }
+                
+                
                 List{
                     AllPostsView(
                         isLoggedIn: $userViewModel.isLoggedIn,
