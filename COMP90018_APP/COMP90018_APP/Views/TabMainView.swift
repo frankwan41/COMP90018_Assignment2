@@ -58,7 +58,7 @@ struct TabMainView: View {
                     Image(systemName: "plus.app.fill")
                         .resizable()
                         .frame(width: 45, height: 40)
-                        .foregroundColor(.pink)
+                        .foregroundColor(.orange)
                         .cornerRadius(10)
                 }
                     .alert(isPresented: $showLoginAlert) {
