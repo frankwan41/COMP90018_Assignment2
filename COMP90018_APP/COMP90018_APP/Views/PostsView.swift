@@ -47,12 +47,6 @@ struct PostsView: View {
                         if searchCategory.isEmpty{
                             ProgressView()
                                 .padding(.bottom, 2)
-                        }else{
-                            if !isSearchFocused{
-                                Text("💔Sorry, No Post About \(searchCategory)")
-                                    .frame(alignment: .center)
-                                    .bold()
-                            }
                         }
                         
                     }
@@ -91,9 +85,27 @@ struct PostsView: View {
                     
                     
                     if !shakeResult.isEmpty{
-                        Text("Tag chosen: \(shakeResult)")
+                        if postsViewModel.posts.isEmpty{
+                            Text("💔Sorry, No Post About \(shakeResult)")
+                                .frame(alignment: .center)
+                                .bold()
+                                .font(.headline)
+                                .opacity(0.8)
+                                .padding(.vertical, 5)
+                        }else{
+                            Text("💝Posts For \(shakeResult)")
+                                .frame(alignment: .center)
+                                .bold()
+                                .font(.headline)
+                                .opacity(0.8)
+                                .padding(.vertical, 5)
                             
+                        }
                     }
+                    
+                        if !isSearchFocused{
+                            
+                        }
                     
                     List {
                         
