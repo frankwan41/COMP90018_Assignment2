@@ -95,9 +95,6 @@ struct PostsView: View {
                 EmptyView()
             }
         }
-        .onAppear{
-            processUserInput()
-        }
         .refreshable {
             // Refresh code
             processUserInput()
