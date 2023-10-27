@@ -73,6 +73,14 @@ struct TabMainView: View {
                     .fullScreenCover(isPresented: $isActive, content: {
                         // Your destination view goes here
                         AddPostView()
+                            .onDisappear{
+                                // Refresh code
+                                if searchCategory != "" {
+                                    postsViewModel.fetchPostsByTag(tag: searchCategory)
+                                } else {
+                                    postsViewModel.fetchAllPosts()
+                                }
+                            }
                     })
             )
         }

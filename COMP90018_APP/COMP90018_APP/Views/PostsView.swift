@@ -243,14 +243,22 @@ struct SinglePostPreview: View {
         ZStack {
             VStack(alignment:.leading, spacing: 10){
                 if let urlString = post.imageURLs.first {
-                    let url = URL(string: urlString)
-                    KFImage(url)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .font(.largeTitle)
-                        .frame(maxWidth: 600, maxHeight: 400)
+                    if urlString.isEmpty{
+                        Image(systemName: "photo.stack")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .font(.largeTitle)
+                            .frame(maxWidth: 600, maxHeight: 400)
+                    }else{
+                        let url = URL(string: urlString)
+                        KFImage(url)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .font(.largeTitle)
+                            .frame(maxWidth: 600, maxHeight: 400)
+                    }
                 } else {
-                    Image(systemName: "photo")
+                    Image(systemName: "photo.stack")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .font(.largeTitle)
