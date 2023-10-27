@@ -24,7 +24,13 @@ struct ProfileView: View {
     
 //    let gradientStart = Color.orange.opacity(0.5)
 //    let gradientEnd = Color.orange
-    let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.5), Color.orange]), startPoint: .top, endPoint: .bottom)
+    
+    // Before Modification
+//    let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.5), Color.orange]), startPoint: .top, endPoint: .bottom)
+    
+    let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange, Color.white]), startPoint: .top, endPoint: .bottom)
+    
+    let postGradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.01), Color.orange.opacity(0.01)]), startPoint: .top, endPoint: .bottom)
 
     var body: some View {
 
@@ -153,28 +159,46 @@ extension ProfileView {
             
             
             if selectedTab == .posts {
+                
+                if profileViewModel.posts.isEmpty{
+                    ProgressView()
+                        .padding(.top, 2)
+                        .padding(.bottom, 2)
+                }
                 List{
                     AllPostsView(
                         isLoggedIn: $userViewModel.isLoggedIn,
                         posts: $profileViewModel.posts,
                         postsViewModel: postsViewModel,
-                        gradientBackground: gradientBackground
+                        gradientBackground: postGradientBackground
                     )
                 }.listStyle(.plain)
             } else if selectedTab == .liked {
                 // Replace with your LikedPostsView or a modified AllPostsView
                 // that displays liked posts.
+                
+                if profileViewModel.likedPosts.isEmpty{
+                    ProgressView()
+                        .padding(.top, 2)
+                        .padding(.bottom, 2)
+                }
+                
+                
                 List{
                     AllPostsView(
                         isLoggedIn: $userViewModel.isLoggedIn,
                         posts: $profileViewModel.posts,
-                        gradientBackground: gradientBackground
+                        gradientBackground: postGradientBackground
                     )
                 }.listStyle(.plain)
             }
             
 
         }
+        .onChange(of: selectedTab, perform: { value in
+            profileViewModel.getUserInformation()
+            profileViewModel.getUserPosts()
+        })
     }
 
     private var logoutButton: some View {

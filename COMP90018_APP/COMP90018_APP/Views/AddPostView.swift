@@ -314,7 +314,8 @@ struct AddPostTagsView: View {
                         ForEach(matchingTags.indices, id: \.self) {index in
                             Button(action: {
                                 if !tags.contains(matchingTags[index]) {
-                                    tags.append(matchingTags[index])
+                                    
+                                    tags.append(matchingTags[index].trimmingCharacters(in: .whitespacesAndNewlines).lowercased())
                                     searchText = ""
                                 }else{
                                     existingTag = matchingTags[index]

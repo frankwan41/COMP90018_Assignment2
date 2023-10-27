@@ -89,7 +89,12 @@ extension ShakeView {
                 print(categoryName ?? "")
                 if hasShaked{
                     viewSwitcher = viewPage.tab
-                    shakeResult = categoryName ?? ""
+                    
+                    if let categoryName = categoryName{
+                        shakeResult = categoryName.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+                    }else{
+                        shakeResult = ""
+                    }
                 }
             }
         //            .navigationDestination(isPresented: $navigatePosts) {

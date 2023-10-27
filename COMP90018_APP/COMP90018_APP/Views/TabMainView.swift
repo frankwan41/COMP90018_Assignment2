@@ -9,11 +9,17 @@ import SwiftUI
 
 struct TabMainView: View {
     @State var shakeResult: String = ""
+    @State var searchCategory: String = ""
     
     @State private var isActive: Bool = false
     @State private var selectedTab: Int = 0
+    
+    
     @StateObject var userViewModel = UserViewModel()
+    @StateObject var postsViewModel = PostsViewModel()
+    
     @State private var showLoginAlert = false
+    
     
     var body: some View {
         let gradientStart = Color.orange.opacity(0.5)
@@ -22,7 +28,7 @@ struct TabMainView: View {
         
         NavigationStack{
             TabView{
-                PostsView()
+                PostsView(searchCategory: $searchCategory, postsViewModel: postsViewModel)
                     .navigationBarBackButtonHidden(true)
                     .tabItem {
                         Image(systemName: "fork.knife")
@@ -52,7 +58,7 @@ struct TabMainView: View {
                     Image(systemName: "plus.app.fill")
                         .resizable()
                         .frame(width: 45, height: 40)
-                        .foregroundColor(.pink)
+                        .foregroundColor(.orange)
                         .cornerRadius(10)
                 }
                     .alert(isPresented: $showLoginAlert) {
@@ -63,10 +69,18 @@ struct TabMainView: View {
                             
                         )
                     }
-                    .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height - UIScreen.main.bounds.height * 0.125)
+                    .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height - UIScreen.main.bounds.height * 0.138)
                     .fullScreenCover(isPresented: $isActive, content: {
                         // Your destination view goes here
                         AddPostView()
+                            .onDisappear{
+                                // Refresh code
+                                if searchCategory != "" {
+                                    postsViewModel.fetchPostsByTag(tag: searchCategory)
+                                } else {
+                                    postsViewModel.fetchAllPosts()
+                                }
+                            }
                     })
             )
         }

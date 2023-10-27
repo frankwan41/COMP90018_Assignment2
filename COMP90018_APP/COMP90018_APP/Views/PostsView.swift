@@ -10,7 +10,7 @@ import Kingfisher
 
 struct PostsView: View {
 //    @State var shakeResult: String  = ""
-    @State private var searchCategory: String = ""
+    @Binding var searchCategory: String
     @FocusState private var isSearchFocused: Bool
     
     @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
@@ -18,13 +18,21 @@ struct PostsView: View {
     
     @StateObject var userViewModel = UserViewModel()
 
-    @StateObject var postsViewModel = PostsViewModel()
+    @ObservedObject var postsViewModel: PostsViewModel
   
     @State private var shouldShowProfile = false
     
 //    let gradientStart = Color.orange.opacity(0.5)
 //    let gradientEnd = Color.orange
-    let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.5), Color.orange]), startPoint: .top, endPoint: .bottom)
+    
+    // Before Modification
+//    let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.5), Color.orange]), startPoint: .top, endPoint: .bottom)
+    
+    let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange, Color.white]), startPoint: .top, endPoint: .bottom)
+    
+    let postGradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.1), Color.orange.opacity(0.1)]), startPoint: .top, endPoint: .bottom)
+    
+    
     
     var body: some View {
        
@@ -34,52 +42,84 @@ struct PostsView: View {
                 gradientBackground.edgesIgnoringSafeArea(.all)
                 
                 VStack {
-                    List {
-                        HStack {
-                            TextField(
-                                "Search tag...",
-                                text: $searchCategory,
-                                onEditingChanged: { isEditing in
-                                    isSearchFocused = isEditing
-                                    // when user press return will call this function
-                                    if (isSearchFocused == true){
-                                        processUserInput()
-                                        shakeResult = searchCategory
-                                    }
-                                }
-                            )
-                            .focused($isSearchFocused)
-                            
-                            .padding(10)
-                            .background(Color.white.opacity(0.5))
-                            .cornerRadius(20)
-                            
-                            if isSearchFocused || !searchCategory.isEmpty{
-                                Button("Cancel") {
-                                    searchCategory = ""
-                                    shakeResult = ""
-                                    isSearchFocused = false
+                    
+                    if postsViewModel.posts.isEmpty{
+                        if searchCategory.isEmpty{
+                            ProgressView()
+                                .padding(.bottom, 2)
+                        }
+                        
+                    }
+                    
+                    HStack {
+                        TextField(
+                            "Search tag...",
+                            text: $searchCategory,
+                            onEditingChanged: { isEditing in
+                                isSearchFocused = isEditing
+                                // when user press return will call this function
+                                if (isSearchFocused == true){
+                                    searchCategory = searchCategory.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+                                    shakeResult = searchCategory
                                     processUserInput()
                                 }
-                                .padding(.trailing)
                             }
+                        )
+                        .focused($isSearchFocused)
+                        
+                        .padding(10)
+                        .background(Color.white.opacity(0.5))
+                        .cornerRadius(20)
+                        
+                        if isSearchFocused || !searchCategory.isEmpty{
+                            Button("Cancel") {
+                                searchCategory = ""
+                                shakeResult = ""
+                                isSearchFocused = false
+                                processUserInput()
+                            }
+                            .padding(.trailing)
                         }
-                        .listRowBackground(gradientBackground)
+                    }
+                    .listRowBackground(postGradientBackground)
+                    
+                    
+                    if !shakeResult.isEmpty{
+                        if postsViewModel.posts.isEmpty{
+                            Text("💔Sorry, No Post About \(shakeResult)")
+                                .frame(alignment: .center)
+                                .bold()
+                                .font(.headline)
+                                .opacity(0.8)
+                                .padding(.vertical, 5)
+                        }else{
+                            Text("💝Posts For \(shakeResult)")
+                                .frame(alignment: .center)
+                                .bold()
+                                .font(.headline)
+                                .opacity(0.8)
+                                .padding(.vertical, 5)
+                            
+                        }
+                    }
+                    
+                        if !isSearchFocused{
+                            
+                        }
+                    
+                    List {
                         
                         
-                        if !shakeResult.isEmpty{
-                            Text("Tag chosen: \(shakeResult)")
-                                
-                        }
                         
                         AllPostsView(
                           isLoggedIn: $userViewModel.isLoggedIn,
                           posts: $postsViewModel.posts,
                           postsViewModel: postsViewModel,
-                          gradientBackground: gradientBackground
+                          gradientBackground: postGradientBackground
                         )
                     }
                     .listStyle(.plain)
+                    
                     .toolbar {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
@@ -90,7 +130,12 @@ struct PostsView: View {
                             
                         }
                     }
+                    
+                    
+                    
+                    
                 }
+                .padding(.horizontal, 5)
             }
             NavigationLink(destination: ProfileView(), isActive: $shouldShowProfile) {
                 EmptyView()
@@ -98,11 +143,7 @@ struct PostsView: View {
         }
         .refreshable {
             // Refresh code
-            if searchCategory != "" {
-                postsViewModel.fetchPostsByTag(tag: searchCategory)
-            } else {
-                postsViewModel.fetchAllPosts()
-            }
+            processUserInput()
         }
         .task{
             
@@ -116,7 +157,7 @@ struct PostsView: View {
     func processUserInput() {
         // Now you can use userInput to perform any operations you need
         if searchCategory != "" {
-            postsViewModel.fetchPostsByTag(tag: searchCategory)
+            postsViewModel.fetchPostsByTag(tag: searchCategory.trimmingCharacters(in: .whitespacesAndNewlines).lowercased())
         }else{
             postsViewModel.fetchAllPosts()
         }
@@ -132,6 +173,7 @@ struct LikeButton: View {
     @Binding var isLoggedIn: Bool
     @Binding var post: Post
     @State var user: User? = nil
+    
 
     @State var heartScale: CGFloat = 1.0
     @State var showLoginSheet: Bool = false
@@ -139,8 +181,10 @@ struct LikeButton: View {
     
     @State var isLiked: Bool = false
     
+    
     @StateObject var userViewModel = UserViewModel()
     @StateObject var singlePostViewModel = SinglePostViewModel()
+    @StateObject var likeButtonCompoModel = SinglePostPreviewCompoModel()
     
     var body: some View {
         Button {
@@ -189,6 +233,10 @@ struct LikeButton: View {
                     isLiked = user.likedPostsIDs.contains(post.id)
                 }
             }
+            
+            likeButtonCompoModel.getPost(postID: post.id) { postNew in
+                post.likes = postNew?.likes ?? post.likes
+            }
         }
         // TODO: detect login information with .onChange()
         .onChange(of: userViewModel.isLoggedIn, perform: { newValue in
@@ -226,54 +274,74 @@ struct SinglePostPreview: View {
     
     @StateObject var userViewModel = UserViewModel()
     @ObservedObject var postsViewModel: PostsViewModel
+    @StateObject var singlePostPreviewModel = SinglePostPreviewCompoModel()
+    
+    let postGradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.85), Color.white.opacity(0.1)]), startPoint: .top, endPoint: .bottom)
     
     var body: some View {
         ZStack {
-            VStack(alignment:.leading, spacing: 10){
+            postGradientBackground.edgesIgnoringSafeArea(.all)
+            VStack(spacing: 10){
                 if let urlString = post.imageURLs.first {
-                    let url = URL(string: urlString)
-                    KFImage(url)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .font(.largeTitle)
-                        .frame(maxWidth: 600, maxHeight: 400)
-                } else {
-                    Image(systemName: "photo")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .font(.largeTitle)
-                        .frame(maxWidth: 600, maxHeight: 400)
-                }
-                Text(post.postTitle).font(.headline)
-                HStack(spacing: 4){
-                    if let urlString = profileImageURL {
+                    if urlString.isEmpty{
+                        //Image(systemName: "photo.stack")
+                        //.resizable()
+                        ProgressView("Loading...")
+                            .controlSize(.large)
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 300, height: 200, alignment: .center)
+                            .tint(.orange)
+                    }else{
                         let url = URL(string: urlString)
                         KFImage(url)
                             .resizable()
-                            .frame(maxWidth: 30, maxHeight: 30)
-                            .clipped()
-                            .cornerRadius(50)
-                            .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label), lineWidth: 1))
-                    } else {
-                        Image(systemName: "person.circle")
-                            .resizable()
-                            .frame(maxWidth: 30, maxHeight: 30)
-                            .clipped()
-                            .cornerRadius(50)
-                            .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label), lineWidth: 1))
+                            .aspectRatio(contentMode: .fit)
+                            .font(.largeTitle)
+                            .frame(maxWidth: 600, maxHeight: 400)
                     }
-                    Text(post.userName).font(.subheadline)
-                    Spacer()
-                    if post.userUID == userViewModel.getUserUID() {
-                        DeleteButton(post: $post, postsViewModel: postsViewModel)
-                    }
-                    LikeButton(
-                        isSinglePostView: false,
-                        isLoggedIn: $isLoggedIn,
-                        post: $post
-                    )
-                    Text(String(post.likes)).font(.subheadline)
+                } else {
+//                    Image(systemName: "photo.stack")
+//                        .resizable()
+//                        .aspectRatio(contentMode: .fit)
+//                        .font(.largeTitle)
+//                        .frame(maxWidth: 600, maxHeight: 400)
                 }
+                
+                VStack(alignment: .leading){
+                    Text(post.postTitle).font(.headline)
+                    HStack(spacing: 4){
+                        if let urlString = profileImageURL {
+                            let url = URL(string: urlString)
+                            KFImage(url)
+                                .resizable()
+                                .frame(maxWidth: 30, maxHeight: 30)
+                                .clipped()
+                                .cornerRadius(50)
+                                .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label), lineWidth: 1))
+                        } else {
+                            Image(systemName: "person.circle")
+                                .resizable()
+                                .frame(maxWidth: 30, maxHeight: 30)
+                                .clipped()
+                                .cornerRadius(50)
+                                .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label), lineWidth: 1))
+                        }
+                        Text(post.userName).font(.subheadline)
+                        Spacer()
+                        if post.userUID == userViewModel.getUserUID() {
+                            DeleteButton(post: $post, postsViewModel: postsViewModel)
+                        }
+                        LikeButton(
+                            isSinglePostView: false,
+                            isLoggedIn: $isLoggedIn,
+                            post: $post
+                        )
+                        Text(String(post.likes)).font(.subheadline)
+                    }
+                    
+                }
+                
+                
             }
             .padding()
             NavigationLink(destination: SinglePostView(post: post).navigationBarBackButtonHidden(true)) {
@@ -290,6 +358,10 @@ struct SinglePostPreview: View {
                 } else {
                     profileImageURL = nil
                 }
+            }
+            
+            singlePostPreviewModel.getPost(postID: post.id) { newPost in
+                post.imageURLs = newPost?.imageURLs ?? post.imageURLs
             }
         }
     }
@@ -346,8 +418,8 @@ struct DeleteButton: View {
     
 }
 
-struct PostsView_Previews: PreviewProvider {
-    static var previews: some View {
-        PostsView()
-    }
-}
+//struct PostsView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        PostsView()
+//    }
+//}
