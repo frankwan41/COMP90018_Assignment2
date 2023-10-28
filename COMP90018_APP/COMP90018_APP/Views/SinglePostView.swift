@@ -35,10 +35,14 @@ struct SinglePostView: View {
     @StateObject private var userViewModel = UserViewModel()
     @StateObject private var singlePostViewModel = SinglePostViewModel()
     
+    @EnvironmentObject var speechRecognizer: SpeechRecognizerViewModel
+    
     @State var authorUsername: String?
     @State var profileImageURL: String?
     
     private let dateFormatter = DateFormatter()
+    
+    var openMapCommand: String = "open map"
     
     @Environment(\.presentationMode) var presentationMode
 
@@ -250,6 +254,13 @@ struct SinglePostView: View {
                 }
             }
         }
+//        .onChange(of: speechRecognizer.commandText, perform: { speech in
+//            if speechRecognizer.commandText.lowercased().contains(openMapCommand) {
+//                DispatchQueue.main.async {
+//                    self.commandText =
+//                }
+//            }
+//        })
         .refreshable {
             singlePostViewModel.getPostComments(postID: post.id) { comments in
                 if let comments = comments {

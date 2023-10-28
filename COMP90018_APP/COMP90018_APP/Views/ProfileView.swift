@@ -12,6 +12,7 @@ struct ProfileView: View {
     @ObservedObject var userViewModel: UserViewModel
     @StateObject var profileViewModel = ProfileViewModel()
     @StateObject var postsViewModel = PostsViewModel()
+    @EnvironmentObject var speechRecognizer: SpeechRecognizerViewModel
     @State private var showLoginAlert = false
     @State private var wantsLogin = false
     
@@ -144,7 +145,29 @@ extension ProfileView {
                             .background(Color.orange)
                             .cornerRadius(20)
                     }
-                    
+                    Button(action: {
+                        if speechRecognizer.isListening {
+                            speechRecognizer.stopListening()
+                        } else {
+                            speechRecognizer.checkAndStartListening()
+                        }
+                    }, label: {
+                        Text("Enable Voice Control: \(speechRecognizer.isListening ? "ON" : "OFF")")
+                            .font(.caption)
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.orange)
+                            .cornerRadius(20)
+                    })
+                    .alert(isPresented: $speechRecognizer.showingPermissionAlert) {
+                        Alert(
+                            title: Text("Permissions Required"),
+                            message: Text("This app requires access to the microphone and speech recognition. Please enable permissions in settings."),
+                            primaryButton: .default(Text("Go settings"), action: openAppSettings),
+                            secondaryButton: .cancel(Text("Reject"))
+                        )
+                    }
+                    Text(speechRecognizer.speechText)
                 }
             }
             Divider()
