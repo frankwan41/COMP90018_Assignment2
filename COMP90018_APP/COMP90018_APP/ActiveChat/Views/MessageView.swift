@@ -35,7 +35,7 @@ struct MessageView: View {
                             proxy.scrollTo("bottom", anchor: .bottom)
                         }
                     }
-                    .onAppear{
+                    .onChange(of: viewModel.messages.count) { newValue in
                         withAnimation(.easeOut(duration: 0.5)) {
                             proxy.scrollTo("bottom", anchor: .bottom)
                         }
