@@ -53,7 +53,9 @@ struct MessageView: View {
                     )
                 
                 Button {
-                    viewModel.sendNewMessage()
+                    if !viewModel.newMessageText.isEmpty{
+                        viewModel.sendNewMessage()
+                    }
                 } label: {
                     Text("Send")
                         .padding(.trailing)

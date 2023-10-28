@@ -28,10 +28,15 @@ class MessageViewModel: ObservableObject {
         
         guard let selectedUserUid = user?.uid else { return }
         
+        
+        let messageTextToSend = self.newMessageText
+        self.newMessageText = ""
+        
+        
         let newMessageData = [
             "fromId": currentUser.uid,
             "toId": selectedUserUid,
-            "text": newMessageText,
+            "text": messageTextToSend,//newMessageText,
             "timestamp": Timestamp()
         ] as [String : Any]
         
@@ -51,10 +56,10 @@ class MessageViewModel: ObservableObject {
                     toUid: selectedUserUid,
                     username: self.user?.userName ?? "",
                     profileImageUrl: self.user?.profileImageURL ?? "",
-                    text: self.newMessageText,
+                    text: messageTextToSend,//self.newMessageText,
                     timestamp: Timestamp()
                 )
-                self.newMessageText = ""
+                // self.newMessageText = ""
                 self.count += 1
             }
         
