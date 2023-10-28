@@ -16,7 +16,7 @@ struct PostsView: View {
     @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
     @AppStorage("shakeResult") var shakeResult = ""
     
-    @StateObject var userViewModel = UserViewModel()
+    @ObservedObject var userViewModel: UserViewModel
 
     @ObservedObject var postsViewModel: PostsViewModel
   
@@ -121,6 +121,27 @@ struct PostsView: View {
                     .listStyle(.plain)
                     
                     .toolbar {
+                        
+                        if userViewModel.isLoggedIn{
+                            ToolbarItem(placement: .topBarLeading) {
+                                HStack{
+                                    Button {
+                                        viewSwitcher = viewPage.chat
+                                    } label: {
+                                        Image(systemName: "message.circle.fill")
+                                    }
+                                    
+                                    Text("Chat")
+                                        .font(.headline)
+                                        .italic()
+                                        .bold()
+                                        .background(Color.orange.opacity(0.5))
+                                        .padding(.horizontal, 1)
+                                }
+                            }
+                        }
+                        
+                        
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
                                 viewSwitcher = viewPage.shake
@@ -137,7 +158,8 @@ struct PostsView: View {
                 }
                 .padding(.horizontal, 5)
             }
-            NavigationLink(destination: ProfileView(), isActive: $shouldShowProfile) {
+            
+            NavigationLink(destination: ProfileView(userViewModel: userViewModel), isActive: $shouldShowProfile) {
                 EmptyView()
             }
         }

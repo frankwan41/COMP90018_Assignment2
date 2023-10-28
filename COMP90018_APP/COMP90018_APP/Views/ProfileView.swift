@@ -9,7 +9,7 @@ enum TabSelection: Int, CaseIterable {
 
 struct ProfileView: View {
 
-    @StateObject var userViewModel = UserViewModel()
+    @ObservedObject var userViewModel: UserViewModel
     @StateObject var profileViewModel = ProfileViewModel()
     @StateObject var postsViewModel = PostsViewModel()
     @State private var showLoginAlert = false
@@ -222,14 +222,15 @@ extension ProfileView {
             userViewModel.signOutUser()
         }) {
             Text("Sign Out")
-                .foregroundColor(.orange)
+                .foregroundColor(.white)
+            
                 .bold()
         }
     }
 }
 
-struct ProfileView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProfileView()
-    }
-}
+//struct ProfileView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ProfileView()
+//    }
+//}

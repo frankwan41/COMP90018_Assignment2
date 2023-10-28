@@ -9,6 +9,7 @@ enum viewPage: String{
     case welcome = "welcome"
     case tab = "tab"
     case shake = "shake"
+    case chat = "chat"
 }
 
 
@@ -17,6 +18,8 @@ import SwiftUI
 struct WelcomView: View {
 
     @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
+    // @State private var currentUser: User?
+    @StateObject private var userViewModel = UserViewModel()
     
     init(){
         viewSwitcher = viewPage.welcome
@@ -24,15 +27,41 @@ struct WelcomView: View {
     
     
     var body: some View {
+        
+        
+        
+        
         VStack{
             if viewSwitcher == viewPage.welcome{
                 welcomeMainView()
             }else if viewSwitcher == viewPage.tab{
-                TabMainView()
+                TabMainView(userViewModel: userViewModel)
                 //TODO: Change the color scheme if neccessary
                     .preferredColorScheme(.light)
+                    .task {
+                        userViewModel.getCurrentUser { user in
+                            userViewModel.currentUser = user
+                        }
+                    }
             }else if viewSwitcher == viewPage.shake{
                 ShakeView()
+            }else if viewSwitcher == viewPage.chat{
+                if let currentUser = userViewModel.currentUser{
+                    ChatMainView(currentUser: currentUser)
+                }else{
+                    TabMainView(userViewModel: userViewModel)
+                        .preferredColorScheme(.light)
+                        .task {
+                            userViewModel.getCurrentUser { user in
+                                userViewModel.currentUser = user
+                            }
+                        }
+                }
+            }
+        }
+        .task {
+            userViewModel.getCurrentUser { user in
+                userViewModel.currentUser = user
             }
         }
     }
