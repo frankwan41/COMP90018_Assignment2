@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MessageView: View {
     @ObservedObject var viewModel: MessageViewModel
+    @State private var isEditing: Bool = false
     
     var body: some View {
         VStack {
@@ -20,31 +21,39 @@ struct MessageView: View {
             
             ScrollView {
                 ScrollViewReader { proxy in
-                    LazyVStack {
+                    VStack {
                         ForEach(viewModel.messages, id:\.id) { message in
                             MessageCompo(message: message, isFromCurrentUser: message.fromId == viewModel.currentUser.uid)
                                 .id(message.id)
                         }
                         
                         
-//                        HStack {
-//                            
-//                        }
-//                        .id("bottom")
+                        HStack {
+                            
+                        }
+                        .id("bottom")
                     }
 //                    .onReceive(viewModel.$count) { _ in
 //                        withAnimation(.easeOut(duration: 0.5)) {
 //                            proxy.scrollTo("bottom", anchor: .bottom)
 //                        }
 //                    }
-                    .onAppear{
-                        if viewModel.messages.count != 0 {
-                            withAnimation(.easeOut(duration: 0.5)) {
-                                proxy.scrollTo(viewModel.messages.last?.id, anchor: .bottom)
-                            }
+//                    .onAppear{
+//                        if viewModel.messages.count != 0 {
+//                            withAnimation(.easeOut(duration: 0.5)) {
+//                                //proxy.scrollTo("bottom", anchor: .bottom)
+//                                //proxy.scrollTo(viewModel.messages.last?.id, anchor: .bottom)
+//                                proxy.scrollTo(viewModel.messages.last?.id)
+//                            }
+//                        }
+//                    }
+                    .onChange(of: isEditing, perform: { _ in
+                        withAnimation(.easeOut(duration: 0.5)) {
+                            // proxy.scrollTo("bottom", anchor: .bottom)
+                            proxy.scrollTo(viewModel.messages.last?.id, anchor: .bottom)
                         }
-                    }
-                    .onChange(of: viewModel.messages.count) { newValue in
+                    })
+                    .onChange(of: viewModel.count) { newValue in
                         withAnimation(.easeOut(duration: 0.5)) {
                             // proxy.scrollTo("bottom", anchor: .bottom)
                             proxy.scrollTo(viewModel.messages.last?.id, anchor: .bottom)
@@ -56,7 +65,9 @@ struct MessageView: View {
             
             
             HStack {
-                TextField("Enter Message", text: $viewModel.newMessageText)
+                TextField("Enter Message", text: $viewModel.newMessageText, onEditingChanged:{ edit in
+                    isEditing = edit
+                })
                     .padding(.horizontal, 16)
                     .padding(.vertical, 10)
                     .background(Color.gray.opacity(0.1))
