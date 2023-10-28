@@ -6,9 +6,13 @@
 //
 import SwiftUI
 import Kingfisher
+import CoreLocation
 
 struct NewMessageCompo: View {
     var user: User
+    
+    @ObservedObject var newMessageViewModel: NewMessageViewModel
+    
     
     var body: some View {
         HStack(spacing: 16) {
@@ -38,10 +42,32 @@ struct NewMessageCompo: View {
             }
             
             Spacer()
+            
+            if let currentUser = newMessageViewModel.currentUser{
+                let distance = calculateDistance()
+                
+                if distance < 1000 {
+                            // If less than 1000 meters, show in meters
+                    Text("\(String(format: "%.0f", distance)) m").fontWeight(.bold).font(.callout)
+                } else {
+                    // If 1 km or more, convert to kilometers and show one decimal place
+                    let distanceInKilometers = distance / 1000
+                    Text("\(String(format: "%.0f", distanceInKilometers)) km").fontWeight(.bold).font(.callout)
+                }
+                
+            }
+            
         }
         .padding(16)
     }
+    
+    func calculateDistance() -> CLLocationDistance{
+        let currentUserCoordinate = CLLocation(latitude: newMessageViewModel.currentUser?.currentLatitude ?? 0, longitude: newMessageViewModel.currentUser?.currentLongitude ?? 0)
+        let selectedUserCoordinate = CLLocation(latitude: user.currentLatitude, longitude: user.currentLongitude)
+        return currentUserCoordinate.distance(from: selectedUserCoordinate).rounded()
+    }
 }
+
 
 
 //#Preview {

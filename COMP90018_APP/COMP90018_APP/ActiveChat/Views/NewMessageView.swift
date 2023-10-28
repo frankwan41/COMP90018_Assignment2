@@ -23,7 +23,7 @@ struct NewMessageView: View {
                                 dismiss()
                                 didSelectUser(user)
                             } label: {
-                                NewMessageCompo(user: user)
+                                NewMessageCompo(user: user, newMessageViewModel: viewModel)
                             }
                             
                             Divider()
