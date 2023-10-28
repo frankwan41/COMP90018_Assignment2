@@ -21,23 +21,33 @@ struct MessageView: View {
             ScrollView {
                 ScrollViewReader { proxy in
                     LazyVStack {
-                        ForEach(viewModel.messages) { message in
+                        ForEach(viewModel.messages, id:\.id) { message in
                             MessageCompo(message: message, isFromCurrentUser: message.fromId == viewModel.currentUser.uid)
+                                .id(message.id)
                         }
                         
-                        HStack {
-                            
-                        }
-                        .id("bottom")
+                        
+//                        HStack {
+//                            
+//                        }
+//                        .id("bottom")
                     }
-                    .onReceive(viewModel.$count) { _ in
-                        withAnimation(.easeOut(duration: 0.5)) {
-                            proxy.scrollTo("bottom", anchor: .bottom)
+//                    .onReceive(viewModel.$count) { _ in
+//                        withAnimation(.easeOut(duration: 0.5)) {
+//                            proxy.scrollTo("bottom", anchor: .bottom)
+//                        }
+//                    }
+                    .onAppear{
+                        if viewModel.messages.count != 0 {
+                            withAnimation(.easeOut(duration: 0.5)) {
+                                proxy.scrollTo(viewModel.messages.last?.id, anchor: .bottom)
+                            }
                         }
                     }
                     .onChange(of: viewModel.messages.count) { newValue in
                         withAnimation(.easeOut(duration: 0.5)) {
-                            proxy.scrollTo("bottom", anchor: .bottom)
+                            // proxy.scrollTo("bottom", anchor: .bottom)
+                            proxy.scrollTo(viewModel.messages.last?.id, anchor: .bottom)
                         }
                     }
                 }

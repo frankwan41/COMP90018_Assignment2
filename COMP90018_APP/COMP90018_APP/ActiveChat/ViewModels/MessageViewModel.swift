@@ -25,12 +25,14 @@ class MessageViewModel: ObservableObject {
     }
     
     func sendNewMessage() {
+        let messageTextToSend = self.newMessageText
+        self.newMessageText = ""
+        
         
         guard let selectedUserUid = user?.uid else { return }
         
         
-        let messageTextToSend = self.newMessageText
-        self.newMessageText = ""
+        
         
         
         let newMessageData = [
