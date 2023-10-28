@@ -246,7 +246,7 @@ class UserViewModel: ObservableObject {
                             updatedCommentData["likes"] = like ? likes + 1 : likes - 1
                         }
                         FirebaseManager.shared.firestore
-                            .collection("posts")
+                            .collection("comments")
                             .document(commentID)
                             .updateData(updatedCommentData)
                         print("Successfully updated comment \(commentID).")
