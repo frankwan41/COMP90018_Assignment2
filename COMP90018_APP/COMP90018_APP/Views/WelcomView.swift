@@ -20,6 +20,7 @@ struct WelcomView: View {
     @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
     // @State private var currentUser: User?
     @StateObject private var userViewModel = UserViewModel()
+    @StateObject private var locationManager = LocationManager()
     
     init(){
         viewSwitcher = viewPage.welcome
@@ -47,7 +48,8 @@ struct WelcomView: View {
                 ShakeView()
             }else if viewSwitcher == viewPage.chat{
                 if let currentUser = userViewModel.currentUser{
-                    ChatMainView(currentUser: currentUser)
+                    ChatMainView(currentUser: currentUser, locationManager: locationManager)
+                        .preferredColorScheme(.light)
                 }else{
                     TabMainView(userViewModel: userViewModel)
                         .preferredColorScheme(.light)

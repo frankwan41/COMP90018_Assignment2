@@ -21,16 +21,17 @@ struct ChatMainView: View {
     
     @StateObject var messageViewModel: MessageViewModel
     @StateObject var chatMainViewModel: ChatMainViewModel
-    @StateObject var locationManager = LocationManager()
+    @ObservedObject var locationManager : LocationManager
     
     
     @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
     
-    init(currentUser: User) {
+    init(currentUser: User, locationManager: LocationManager) {
         self.currentUser = currentUser
         showActiveButton = self.currentUser.isActive
         _messageViewModel = StateObject(wrappedValue: MessageViewModel(user: nil, currentUser: currentUser))
         _chatMainViewModel = StateObject(wrappedValue: ChatMainViewModel(currentUser: currentUser))
+        _locationManager = ObservedObject(wrappedValue: locationManager)
     }
     
     var body: some View {
@@ -167,40 +168,7 @@ struct ChatMainView: View {
                                                     action:
                                                     {
                     // Request location
-                    locationManager.requestPermission { authorized in
-                        if authorized{
-                            // Update the current location of the user
-                            if let location = locationManager.location{
-                                
-    
-                                self.chatMainViewModel.updateUserCurrentLocation(latitude: location.latitude, longitude: location.longitude) { result in
-                                    if result == nil{
-                                        showActiveButton = false
-                                    }else{
-                                        
-                                        // Update the active state of the user
-                                        self.chatMainViewModel.setUserActiveState(state: true) { info in
-                                        if info != nil{
-                                            showActiveButton = true
-                                        }else{
-                                            showActiveButton = false
-                                        }
-                                    }
-                                        
-                                    }
-                                }
-                                
-                            }else{
-                                // Unable to update the location of the user
-                                showActiveButton = false
-                            }
-                        }else{
-                            // Unable to update the location of the user
-                            showLocationRequestAlert = true
-                            showActiveButton = false
-                            
-                        }
-                    }
+                    requestAndUpdateLocationForBeingActive()
                     
                     }
                                                         ))
@@ -212,9 +180,108 @@ struct ChatMainView: View {
                     messageViewModel.fetchMessages()
                 }
             }
+            .onAppear{
+                if showActiveButton{
+                    locationManager.requestPermission { authorized in
+                        if authorized{
+                            // Update the current location of the user
+                            if let location = locationManager.location{
+                                
+
+                                self.chatMainViewModel.updateUserCurrentLocation(latitude: location.latitude, longitude: location.longitude) { result in
+                                    if result == nil{
+                                        // Unable to update the location
+                                        self.chatMainViewModel.setUserActiveState(state: false) { result in
+                                            if result == nil{
+                                                // Uable to update Active State
+                                                showActiveButton = true
+                                            }else{
+                                                showActiveButton = false
+                                            }
+                                        }
+                        
+                                    }else{
+                                        // The location has been updated
+                        
+                                    
+                                        showActiveButton = true
+                                        
+                                    }
+                                }
+                                
+                            }else{
+                                // Unable to obtain the location of the user
+                                self.chatMainViewModel.setUserActiveState(state: false) { result in
+                                    if result == nil{
+                                        // Uable to update Active State
+                                        showActiveButton = true
+                                    }else{
+                                        showActiveButton = false
+                                    }
+                                }
+                                
+                            }
+                        }else{
+                            // Unable to update the location of the user
+                            self.chatMainViewModel.setUserActiveState(state: false) { result in
+                                if result == nil{
+                                    // Uable to update Active State
+                                    showActiveButton = true
+                                    showLocationRequestAlert = true
+                                }else{
+                                    showActiveButton = false
+                                }
+                            }
+                            
+                            
+                            
+                        }
+                    }
+                    
+                    
+                }
+            }
         }
         
         
+    }
+    
+    private func requestAndUpdateLocationForBeingActive(){
+        // Request location
+        locationManager.requestPermission { authorized in
+            if authorized{
+                // Update the current location of the user
+                if let location = locationManager.location{
+                    
+
+                    self.chatMainViewModel.updateUserCurrentLocation(latitude: location.latitude, longitude: location.longitude) { result in
+                        if result == nil{
+                            showActiveButton = false
+                        }else{
+                            
+                            // Update the active state of the user
+                            self.chatMainViewModel.setUserActiveState(state: true) { info in
+                            if info != nil{
+                                showActiveButton = true
+                            }else{
+                                showActiveButton = false
+                            }
+                        }
+                            
+                        }
+                    }
+                    
+                }else{
+                    // Unable to update the location of the user
+                    showActiveButton = false
+                }
+            }else{
+                // Unable to update the location of the user
+                showLocationRequestAlert = true
+                showActiveButton = false
+                
+            }
+        }
     }
 }
 //
