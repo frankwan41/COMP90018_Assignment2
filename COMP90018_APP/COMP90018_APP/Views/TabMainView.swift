@@ -15,7 +15,7 @@ struct TabMainView: View {
     @State private var selectedTab: Int = 0
     
     
-    @StateObject var userViewModel = UserViewModel()
+    @ObservedObject var userViewModel: UserViewModel
     @StateObject var postsViewModel = PostsViewModel()
     
     @State private var showLoginAlert = false
@@ -28,14 +28,14 @@ struct TabMainView: View {
         
         NavigationStack{
             TabView{
-                PostsView(searchCategory: $searchCategory, postsViewModel: postsViewModel)
+                PostsView(searchCategory: $searchCategory, userViewModel: userViewModel, postsViewModel: postsViewModel)
                     .navigationBarBackButtonHidden(true)
                     .tabItem {
                         Image(systemName: "fork.knife")
                         Text("Posts")
                     }
                 
-                ProfileView()
+                ProfileView(userViewModel: userViewModel)
                     .navigationBarBackButtonHidden(true)
                     .tabItem {
                         Image(systemName: "person")
@@ -102,8 +102,8 @@ struct PhotoView: View {
     }
 }
 
-struct TabView_Previews: PreviewProvider {
-    static var previews: some View {
-            TabMainView()
-    }
-}
+//struct TabView_Previews: PreviewProvider {
+//    static var previews: some View {
+//            TabMainView()
+//    }
+//}

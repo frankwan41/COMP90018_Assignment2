@@ -18,7 +18,7 @@ import SwiftUI
 struct WelcomView: View {
 
     @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
-    @State private var currentUser: User?
+    // @State private var currentUser: User?
     @StateObject private var userViewModel = UserViewModel()
     
     init(){
@@ -35,25 +35,25 @@ struct WelcomView: View {
             if viewSwitcher == viewPage.welcome{
                 welcomeMainView()
             }else if viewSwitcher == viewPage.tab{
-                TabMainView()
+                TabMainView(userViewModel: userViewModel)
                 //TODO: Change the color scheme if neccessary
                     .preferredColorScheme(.light)
                     .task {
                         userViewModel.getCurrentUser { user in
-                            currentUser = user
+                            userViewModel.currentUser = user
                         }
                     }
             }else if viewSwitcher == viewPage.shake{
                 ShakeView()
             }else if viewSwitcher == viewPage.chat{
-                if let currentUser = currentUser{
+                if let currentUser = userViewModel.currentUser{
                     ChatMainView(currentUser: currentUser)
                 }else{
-                    TabMainView()
+                    TabMainView(userViewModel: userViewModel)
                         .preferredColorScheme(.light)
                         .task {
                             userViewModel.getCurrentUser { user in
-                                currentUser = user
+                                userViewModel.currentUser = user
                             }
                         }
                 }
@@ -61,7 +61,7 @@ struct WelcomView: View {
         }
         .task {
             userViewModel.getCurrentUser { user in
-                currentUser = user
+                userViewModel.currentUser = user
             }
         }
     }

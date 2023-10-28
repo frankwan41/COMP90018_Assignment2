@@ -12,6 +12,12 @@ struct MessageView: View {
     
     var body: some View {
         VStack {
+            if viewModel.user == nil{
+                Text("Loading...")
+                    .frame(alignment: .center)
+                    .tint(.orange)
+            }
+            
             ScrollView {
                 ScrollViewReader { proxy in
                     LazyVStack {

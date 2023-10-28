@@ -20,8 +20,11 @@ struct ChatMainView: View {
     @StateObject var messageViewModel: MessageViewModel
     @StateObject var chatMainViewModel: ChatMainViewModel
     
+    @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
+    
     init(currentUser: User) {
         self.currentUser = currentUser
+        showActiveButton = self.currentUser.isActive
         _messageViewModel = StateObject(wrappedValue: MessageViewModel(user: nil, currentUser: currentUser))
         _chatMainViewModel = StateObject(wrappedValue: ChatMainViewModel(currentUser: currentUser))
     }
@@ -91,9 +94,20 @@ struct ChatMainView: View {
                 NavigationLink("", destination: MessageView(viewModel: messageViewModel), isActive: $showMessageView)
             }
             .toolbar {
+                ToolbarItem(placement:.topBarLeading){
+                    Button {
+                        viewSwitcher = viewPage.tab
+                    } label: {
+                        Image(systemName: "arrowshape.turn.up.left.circle.fill")
+                            .tint(.orange)
+                            .font(.title)
+                    }
+
+                }
                 
-                ToolbarItem(placement: .topBarLeading) {
-                    Toggle("Be Active", isOn: Binding<Bool>(
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Toggle(showActiveButton ? "Be Inactive" : "Be Active", isOn: Binding<Bool>(
                         get: {
                             showActiveButton
                         }, set: { newValue in
@@ -103,7 +117,7 @@ struct ChatMainView: View {
                                 showActivateConfirmation = true
                             }else{
                                 self.chatMainViewModel.setUserActiveState(state: false) { info in
-                                    if let info = info{
+                                    if info != nil{
                                         showActiveButton = newValue
                                     }else{
                                         showActiveButton = true
@@ -114,6 +128,9 @@ struct ChatMainView: View {
                             
                         }
                     ))
+                    .font(.title2)
+                    .padding(.horizontal, 10)
+                    .tint(.orange)
                 }
                 if showActiveButton{
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -122,6 +139,8 @@ struct ChatMainView: View {
                         } label: {
                             Image(systemName: "plus")
                         }
+                        .font(.title2)
+                        .tint(.orange)
                     }
                 }
                 
@@ -133,7 +152,7 @@ struct ChatMainView: View {
                       secondaryButton: .destructive(Text("Be Active"), 
                                                     action:
                                                     {self.chatMainViewModel.setUserActiveState(state: true) { info in
-                    if let info = info{
+                    if info != nil{
                         showActiveButton = true
                     }else{
                         showActiveButton = false

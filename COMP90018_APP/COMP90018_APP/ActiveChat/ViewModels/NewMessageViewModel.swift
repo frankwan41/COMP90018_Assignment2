@@ -25,7 +25,17 @@ class NewMessageViewModel: ObservableObject {
     func fetchAllUsers() async {
         do {
             let snapshot = try await Firestore.firestore().collection("users").getDocuments()
-            let users = snapshot.documents.compactMap({ try? $0.data(as: User.self) })
+            
+//            let users = snapshot.documents.compactMap({ try? $0.data(as: User.self) })
+            var users = [User]()
+            
+            snapshot.documents.forEach { snapshot in
+                let data = snapshot.data()
+                let user = User(data:data)
+                users.append(user)
+            }
+            
+            
             
             for user in users{
                 if user.uid == Auth.auth().currentUser?.uid{
@@ -38,6 +48,7 @@ class NewMessageViewModel: ObservableObject {
             
             for user in users {
                 if user.uid != Auth.auth().currentUser?.uid {
+                    
                     
                     // TODO: Only Fetch the users who are active
                     // TODO: Sort the users based on the distance between the user and the selected 

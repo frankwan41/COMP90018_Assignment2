@@ -13,10 +13,17 @@ import UIKit
 class UserViewModel: ObservableObject{
     @Published var isLoggedIn = false
     @Published var errorMessage = ""
+    @Published var currentUser: User?
     
     init(){
         FirebaseManager.shared.auth.addStateDidChangeListener { (auth, user) in
                 self.isLoggedIn = (user != nil)
+            if self.isLoggedIn{
+                self.getCurrentUser { user in
+                    self.currentUser = user
+                }
+            }
+            
         }
         //isLoggedIn = FirebaseManager.shared.auth.currentUser?.uid == nil 不知道是哪个写的，每次都要重新登录。
     }
@@ -41,6 +48,10 @@ class UserViewModel: ObservableObject{
                 return
             }
             self.isLoggedIn = true
+            
+            self.getCurrentUser { user in
+                self.currentUser = user
+            }
             print("Successfully signed in as user: \(result!.user.uid)")
             
             // Update the uid of the user
@@ -54,6 +65,7 @@ class UserViewModel: ObservableObject{
                 .updateData(userData)
             
             print("Successfully update the uid of user \(FirebaseManager.shared.auth.currentUser?.uid ?? "")")
+            
             
         }
     }
@@ -255,6 +267,7 @@ class UserViewModel: ObservableObject{
     
     func signOutUser(){
         isLoggedIn = false
+        currentUser = nil
         do{
             try FirebaseManager.shared.auth.signOut()
             print("Successfully signed out")

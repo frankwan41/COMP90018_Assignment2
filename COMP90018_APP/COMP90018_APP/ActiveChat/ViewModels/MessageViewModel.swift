@@ -151,8 +151,15 @@ class MessageViewModel: ObservableObject {
                 .document(uid)
                 .getDocument()
             
-            guard let user = try? snapshot.data(as: User.self) else { return }
-            self.user = user
+            // guard let user = try? snapshot.data(as: User.self) else { return }
+            
+            if let data = snapshot.data() {
+                let user = User(data: data)
+                self.user = user
+            }else{
+                self.user = nil
+                print("Unable to fetch data about the user \(uid)")
+            }
             
             fetchMessages()
         } catch {
