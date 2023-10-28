@@ -9,6 +9,7 @@ import SwiftUI
 import Flow
 import Kingfisher
 import CoreLocation
+import MapKit
 
 
 struct SinglePostView: View {
@@ -16,10 +17,13 @@ struct SinglePostView: View {
     @State private var showAlert: Bool = false
     @State private var showLocationRequestAlert: Bool = false
     @State private var showLocationDistance: Bool = false
+    @State private var showDistanceFarAlert: Bool = false
+    var closeDistance: Double = 1000
+    var farDistance: Double = 50000
     @State private var temperature: Int = 0
     @State private var cityName: String = ""
     @State private var weatherDescription: String = ""
-    
+        
     @StateObject var locationManager = LocationManager()
     
     @State var post: Post
@@ -112,7 +116,9 @@ struct SinglePostView: View {
                             
                         }
                     }
+                    // Only show the distance tip/distance if the post has location
                     if (post.longitude != 0 && post.latitude != 0) {
+                        // If the location is enabled, show distance direclty, otherwise show distance tip button for enable location service
                         if showLocationDistance {
                             ToolbarItem(placement: .navigationBarTrailing) {
                                 let userLatitude = locationManager.location?.latitude ?? 0
@@ -122,15 +128,52 @@ struct SinglePostView: View {
                                 let userCoordniate  = CLLocation(latitude: userLatitude, longitude: userLontitude)
                                 
                                 let distance = userCoordniate.distance(from: postCoordinate).rounded()
-      
-                                if distance < 1000 {
+                            
+                                    Button(action: {
+                                        // If the location is less than 50 km, navigate to map
+                                        if distance <= farDistance {
+                                            // Open Map for navigation
+                                            openMapsForNavigation(toLatitude: post.latitude, longitude: post.longitude, locationName: post.location)
+                                        }else{
+                                            showDistanceFarAlert = true
+                                        }
+                                    }) {
+                                        if distance < closeDistance {
                                             // If less than 1000 meters, show in meters
-                                    Text("\(String(format: "%.0f", distance)) m").fontWeight(.bold).font(.callout)
-                                } else {
-                                    // If 1 km or more, convert to kilometers and show one decimal place
-                                    let distanceInKilometers = distance / 1000
-                                    Text("\(String(format: "%.0f", distanceInKilometers)) km").fontWeight(.bold).font(.callout)
-                                }
+                                            Text("\(String(format: "%.0f", distance)) m")
+                                                .fontWeight(.bold)
+                                                .font(.callout)
+                                                .foregroundStyle(.black)
+                                                .padding(.horizontal, 15)
+                                                .padding(.vertical, 5)
+                                                .background(RoundedRectangle(cornerRadius: 15).stroke(Color.orange))
+                                        } else {
+                                            // If 1 km or more, convert to kilometers
+                                            let distanceInKilometers = distance / closeDistance
+                                            VStack{
+                                                Text("\(String(format: "%.0f", distanceInKilometers)) km")
+                                                Text("Go Here").font(.system(size: 10))
+                                            }
+                                                .fontWeight(.bold)
+                                                .font(.callout)
+                                                .foregroundStyle(.black)
+                                                .padding(.horizontal, 15)
+                                                .padding(.vertical, 5)
+                                                .background(RoundedRectangle(cornerRadius: 15).stroke(Color.orange))
+                                        }
+                                    }
+                                    .alert(isPresented: $showDistanceFarAlert, content: {
+                                        Alert(
+                                            title: Text("Confirmation"),
+                                            message: Text("This distance is over \(String(format: "%.0f", farDistance/closeDistance))km, Are you sure you want to proceed?"),
+                                            primaryButton: .default(Text("Yes")) {
+                                                // Open Map for navigation
+                                                openMapsForNavigation(toLatitude: post.latitude, longitude: post.longitude, locationName: post.location)
+                                            },
+                                            secondaryButton: .cancel()
+                                        )
+                                    })
+                                
                             }
                         }else{
                             ToolbarItem(placement: .navigationBarTrailing) {
@@ -154,7 +197,6 @@ struct SinglePostView: View {
                                         .padding(.vertical, 5)
                                         .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
                                 }
-                                
                                 .alert(isPresented: $showLocationRequestAlert, content: {
                                     Alert(
                                         title: Text("Location Permission Denied"),
@@ -758,4 +800,12 @@ struct DeleteButtonComment: View {
         .buttonStyle(PlainButtonStyle())
     }
     
+}
+
+// MARK: UTILITIES
+func openMapsForNavigation(toLatitude latitude: CLLocationDegrees, longitude: CLLocationDegrees, locationName: String?) {
+   let destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude)))
+   destination.name = locationName ?? "Target Location"
+
+   MKMapItem.openMaps(with: [destination], launchOptions: [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving])
 }
