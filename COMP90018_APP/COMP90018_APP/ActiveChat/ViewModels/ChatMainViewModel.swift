@@ -37,14 +37,19 @@ class ChatMainViewModel: ObservableObject {
                 
                 querySnapshot?.documentChanges.forEach({ change in
                     if let rm = try? change.document.data(as: LatestMessage.self) {
+                        
+                       
                     
                         if let index = self.latestMessages.firstIndex(where: { existingRm in
-                            return existingRm.fromUid == rm.fromUid && existingRm.id == rm.id
+                            return existingRm.id == rm.id && (existingRm.fromUid == rm.fromUid || existingRm.toUid == rm.fromUid)
+                            
                         }) {
+                            
                             // Update the latest message if it exists
                             self.latestMessages[index] = rm
                         } else {
                             // Else Append it as the latest one
+                            
                             self.latestMessages.insert(rm, at: 0)
                         }
                     } else {
