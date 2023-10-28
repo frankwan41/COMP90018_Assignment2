@@ -52,6 +52,10 @@ class ChatMainViewModel: ObservableObject {
                             
                             self.latestMessages.insert(rm, at: 0)
                         }
+                        
+                        // Sort the latest messages based on the timestamp
+                        self.latestMessages.sort { $0.timestamp.dateValue() > $1.timestamp.dateValue()
+                        }
                     } else {
                         print("Failed to decode document data as recent message.")
                     }
