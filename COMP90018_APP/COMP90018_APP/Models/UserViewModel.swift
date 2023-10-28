@@ -42,6 +42,19 @@ class UserViewModel: ObservableObject{
             }
             self.isLoggedIn = true
             print("Successfully signed in as user: \(result!.user.uid)")
+            
+            // Update the uid of the user
+            let userData = [
+                "uid": result!.user.uid,
+            ] as [String: Any]
+            
+            FirebaseManager.shared.firestore
+                .collection("users")
+                .document(result!.user.uid)
+                .updateData(userData)
+            
+            print("Successfully update the uid of user \(FirebaseManager.shared.auth.currentUser?.uid ?? "")")
+            
         }
     }
     
@@ -78,6 +91,7 @@ class UserViewModel: ObservableObject{
         }
         
         let userData = [
+            "uid": uid,
             "username": userName,
             "gender": gender,
             "email": email,
@@ -90,7 +104,7 @@ class UserViewModel: ObservableObject{
         FirebaseManager.shared.firestore
             .collection("users")
             .document(uid)
-            .setData(userData)
+            .setData(userData,merge: true)
         
         print("Successfully saved the details of user \(FirebaseManager.shared.auth.currentUser?.uid ?? "")")
     }
@@ -108,7 +122,7 @@ class UserViewModel: ObservableObject{
         FirebaseManager.shared.firestore
             .collection("users")
             .document(uid)
-            .setData(userData)
+            .setData(userData, merge: true)
         print("Successfully Uploaded the link to the image of user profile to the details of the user \(FirebaseManager.shared.auth.currentUser?.uid ?? "")")
     }
     

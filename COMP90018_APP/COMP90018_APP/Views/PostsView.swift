@@ -121,6 +121,21 @@ struct PostsView: View {
                     .listStyle(.plain)
                     
                     .toolbar {
+                        
+                        ToolbarItem(placement: .topBarLeading) {
+                            HStack{
+                                Button {
+                                    viewSwitcher = viewPage.chat
+                                } label: {
+                                    Image(systemName: "message.circle.fill")
+                                }
+                                
+                                Text("Chat")
+                                    .background(.white)
+                            }
+                        }
+                        
+                        
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
                                 viewSwitcher = viewPage.shake
@@ -137,6 +152,7 @@ struct PostsView: View {
                 }
                 .padding(.horizontal, 5)
             }
+            
             NavigationLink(destination: ProfileView(), isActive: $shouldShowProfile) {
                 EmptyView()
             }

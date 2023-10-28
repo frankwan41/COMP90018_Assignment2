@@ -7,7 +7,7 @@
 
 import Foundation
 import Firebase
-
+import FirebaseFirestore
 
 struct Post: Decodable, Identifiable{
     var id: String
