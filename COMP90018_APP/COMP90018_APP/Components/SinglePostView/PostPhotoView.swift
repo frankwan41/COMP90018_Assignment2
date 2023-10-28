@@ -17,7 +17,7 @@ struct PostPhotoView: View {
         ZStack(alignment: .bottom) {
             TabView(selection: $selectedPhotoIndex) {
                 if post.imageURLs.count > 0 {
-                    ForEach (0 ..< post.imageURLs.count) { index in
+                    ForEach (0 ..< post.imageURLs.count, id: \.self) { index in
                         KFImage(URL(string: post.imageURLs[index]))
                             .resizable()
                             .aspectRatio(contentMode: .fit)

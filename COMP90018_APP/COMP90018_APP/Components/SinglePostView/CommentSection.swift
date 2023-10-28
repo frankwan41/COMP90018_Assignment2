@@ -13,14 +13,15 @@ struct CommentsSection: View {
     @Binding var comments: [Comment]
     
     var body: some View {
-        VStack(alignment:.leading){
-            HStack{
+        VStack(alignment:.leading) {
+            HStack {
                 Text("\(comments.count) Comments")
                     .font(.headline)
                     .fontWeight(.thin)
                     .padding(.horizontal)
                 Spacer()
-            }.padding(.bottom)
+            }
+            .padding(.bottom)
             
             if comments.count > 0 {
                 ForEach($comments, id: \.commentID) { comment in
