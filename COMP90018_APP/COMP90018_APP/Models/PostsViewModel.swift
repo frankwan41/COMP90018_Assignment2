@@ -8,71 +8,77 @@
 import Foundation
 import UIKit
 
-class PostsViewModel: ObservableObject{
-    // Key Component for saving the posts
-    @Published var posts = [Post]()
+class PostsViewModel: PostCollectionModel {
     
-    let defaultPostsNumber = 100
-    let maxSizeOfImage: Int = 10 * 1024 * 1024
-    
-    init(){
-        // fetch a number of posts when the model is initialized
-        // fetchNPosts(number: defaultPostsNumber)
-        // fetchAllPosts()
-        
-    }
+    static let DEFAULT_POST_COUNT = 100
+    static let MAX_IMAGE_SIZE: Int = 10 * 1024 * 1024
     
     /**
-     This function will fetch all posts from the firebase and order them by the timestamp descendingly
+     Fetch all posts and order them by timestamps descendingly
      */
-    func fetchAllPosts(){
-        
-        // Remove all existing posts
-        // self.posts.removeAll()
-        
-        
+    override func fetchPosts() {
         FirebaseManager.shared.firestore
             .collection("posts")
+            .order(by: "timestamp", descending: true)
             .getDocuments { documentsSnapshot, error in
                 if let error = error{
-                    print("Failed to fetch all posts \(error)")
+                    print("Failed to fetch posts in PostsViewModel \(error)")
                     return
                 }
                 var newPosts = [Post]()
-                documentsSnapshot?.documents.forEach({ snapshot in
+                documentsSnapshot?.documents.forEach { snapshot in
                     let data = snapshot.data()
                     let post = Post(data: data)
                     newPosts.append(post)
-                    newPosts.sort{$0.timestamp > $1.timestamp}
-                })
+                }
                 self.posts = newPosts
             }
-        
     }
     
     /**
-     This function will fetch all posts that has the tag and order them by the timestamp descendingly
+     Fetch all posts that contain a tag and order them by timestamps descendingly
      */
-    
-    func fetchPostsByTag(tag: String) {
-        // Remove all existing posts
-        self.posts.removeAll()
-        
+    func fetchPosts(tag: String) {
         FirebaseManager.shared.firestore
             .collection("posts")
             .whereField("tags", arrayContains: tag)
             .getDocuments { documentsSnapshot, error in
                 if let error = error{
-                    print("Failed to fetch all posts \(error)")
+                    print("Failed to fetch posts in PostsViewModel \(error)")
                     return
                 }
-                
-                documentsSnapshot?.documents.forEach({ snapshot in
+                var newPosts = [Post]()
+                documentsSnapshot?.documents.forEach { snapshot in
                     let data = snapshot.data()
                     let post = Post(data: data)
-                    self.posts.append(post)
-                    self.posts.sort{$0.timestamp > $1.timestamp}
-                })
+                    newPosts.append(post)
+                }
+                newPosts.sort { $0.timestamp > $1.timestamp }
+                self.posts = newPosts
+                print(self.posts)
+            }
+    }
+    
+    /**
+     Fetch a number of posts and order them by timestamps descendingly
+     */
+    func fetchPosts(postCount: Int) {
+        FirebaseManager.shared.firestore
+            .collection("posts")
+            .order(by: "timestamp", descending: true)
+            .limit(to: postCount)
+            .getDocuments { documentsSnapshot, error in
+                if let error = error{
+                    print("Failed to fetch posts in PostsViewModel \(error)")
+                    return
+                }
+                var newPosts = [Post]()
+                documentsSnapshot?.documents.forEach { snapshot in
+                    let data = snapshot.data()
+                    let post = Post(data: data)
+                    newPosts.append(post)
+                }
+                self.posts = newPosts
             }
     }
     
@@ -82,12 +88,11 @@ class PostsViewModel: ObservableObject{
      */
     func getUserProfileImage(userUID: String, completion: @escaping (UIImage?) -> Void){
         let ref = FirebaseManager.shared.storage.reference(withPath: userUID)
-        ref.getData(maxSize: Int64(maxSizeOfImage)) { data, error in
-            
+        ref.getData(maxSize: Int64(PostsViewModel.MAX_IMAGE_SIZE)) { data, error in
             if let error = error{
                 print("Unable to retrieve the image in the user profile, \(error.localizedDescription)")
                 completion(nil)
-            }else{
+            } else {
                 if let data = data{
                     let image = UIImage(data: data)
                     completion(image)
@@ -96,52 +101,6 @@ class PostsViewModel: ObservableObject{
         }
         
         
-    }
-    
-    /**
-     Input: the number of posts to be fetched
-     This function will return the first specific number of posts and order them by the timestamp descendingly
-     */
-    func fetchNPosts(number: Int){
-        
-        
-        // Remove all existing posts
-        self.posts.removeAll()
-        
-        
-        
-        FirebaseManager.shared.firestore
-            .collection("posts")
-            .order(by: "timestamp", descending: true)
-            .limit(to: number)
-            .getDocuments { documentsSnapshot, error in
-                
-                if let error = error {
-                    print("failed to fetch the first \(number) posts \(error)")
-                    return
-                }
-                
-                documentsSnapshot?.documents.forEach({ snapshot in
-                    let data = snapshot.data()
-                    let post = Post(data:data)
-                    self.posts.append(post)
-                    // self.posts.sort { $0.timestamp > $1.timestamp }
-                })
-            }
-        
-    }
-    
-    func removePost(postID: String) {
-        FirebaseManager.shared.firestore
-            .collection("posts")
-            .document(postID)
-            .delete() { err in
-                if let err = err {
-                    print("Error removing post \(err)")
-                } else {
-                    print("Successfully removed post \(postID)")
-                }
-            }
     }
     
 }

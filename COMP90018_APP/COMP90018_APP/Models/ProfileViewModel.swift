@@ -8,28 +8,18 @@
 import Foundation
 import Firebase
 
-class ProfileViewModel: ObservableObject{
-    @Published var posts = [Post]()
+class ProfileViewModel: PostCollectionModel {
+
     @Published var user = User(data: [:])
     @Published var likedPosts = [Post]()
-   
-    
-    init(){
-            //getUserPosts()
-            //getUserInformation()
-    }
     
     /**
      This function will fetch all posts of the user.
      */
-    func getUserPosts(){
+    override func fetchPosts(){
         
         // Confirm login status and retrieve the uid of the user
-        guard let uid = Auth.auth().currentUser?.uid else{return}
-        
-        // Remove the current posts
-        // self.posts.removeAll()
-        
+        guard let uid = Auth.auth().currentUser?.uid else { return }
         
         FirebaseManager.shared.firestore
             .collection("posts")
@@ -40,28 +30,20 @@ class ProfileViewModel: ObservableObject{
                     return
                 }
                 var newPosts = [Post]()
-                documentsSnapshot?.documents.forEach({ snapshot in
+                documentsSnapshot?.documents.forEach { snapshot in
                     let data = snapshot.data()
                     let post = Post(data: data)
-                    // self.posts.append(post)
-                    // self.posts.sort{ $0.timestamp > $1.timestamp}
-                    
                     newPosts.append(post)
-                    newPosts.sort{ $0.timestamp > $1.timestamp}
-                })
-                
+                }
+                newPosts.sort{ $0.timestamp > $1.timestamp}
                 self.posts = newPosts
-                
             }
         
         self.getUserInformation()
         
     }
     
-    
     func getUserLikedPosts(){
-        
-        // self.likedPosts.removeAll()
         
         // Remove the posts that are not in the user liked list
         self.likedPosts.removeAll { postCurrentlyLiked in
@@ -70,7 +52,6 @@ class ProfileViewModel: ObservableObject{
                 postIDToUpdate == postCurrentlyLiked.id
             }
         }
-        
         
         for likedPostID in user.likedPostsIDs{
             FirebaseManager.shared.firestore
@@ -106,8 +87,6 @@ class ProfileViewModel: ObservableObject{
         }
         
     }
-    
-    
     
     /**
      This function will fetch the information of the user.
