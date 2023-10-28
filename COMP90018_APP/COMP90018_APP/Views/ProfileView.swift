@@ -161,9 +161,16 @@ extension ProfileView {
             if selectedTab == .posts {
                 
                 if profileViewModel.posts.isEmpty{
-                    ProgressView()
-                        .padding(.top, 2)
-                        .padding(.bottom, 2)
+                    Text("💔Sorry, you don't have any posts yet.")
+                        .frame(alignment: .center)
+                        .bold()
+                        .font(.headline)
+                        .opacity(0.8)
+                        .padding(.vertical, 5)
+                    
+//                    ProgressView()
+//                        .padding(.top, 2)
+//                        .padding(.bottom, 2)
                 }
                 List{
                     AllPostsView(
@@ -178,16 +185,25 @@ extension ProfileView {
                 // that displays liked posts.
                 
                 if profileViewModel.likedPosts.isEmpty{
-                    ProgressView()
-                        .padding(.top, 2)
-                        .padding(.bottom, 2)
+                    
+                    Text("💔Sorry, You don't have liked posts yet.")
+                        .frame(alignment: .center)
+                        .bold()
+                        .font(.headline)
+                        .opacity(0.8)
+                        .padding(.vertical, 5)
+                    
+                    
+//                    ProgressView()
+//                        .padding(.top, 2)
+//                        .padding(.bottom, 2)
                 }
                 
                 
                 List{
                     AllPostsView(
                         isLoggedIn: $userViewModel.isLoggedIn,
-                        posts: $profileViewModel.posts,
+                        posts: $profileViewModel.likedPosts,
                         gradientBackground: postGradientBackground
                     )
                 }.listStyle(.plain)
