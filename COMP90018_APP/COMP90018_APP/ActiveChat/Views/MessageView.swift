@@ -35,8 +35,15 @@ struct MessageView: View {
                             proxy.scrollTo("bottom", anchor: .bottom)
                         }
                     }
+                    .onAppear{
+                        withAnimation(.easeOut(duration: 0.5)) {
+                            proxy.scrollTo("bottom", anchor: .bottom)
+                        }
+                    }
                 }
+                
             }
+            
             
             HStack {
                 TextField("Enter Message", text: $viewModel.newMessageText)
