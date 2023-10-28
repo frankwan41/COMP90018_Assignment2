@@ -79,5 +79,28 @@ class ChatMainViewModel: ObservableObject {
         
         completion(nil)
     }
+    
+    func updateUserCurrentLocation(latitude: Double, longitude: Double, completion: @escaping (String?) -> Void){
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else{
+            return
+        }
+        
+        let userData = [
+            "currentlatitude": latitude,
+            "currentlongitude": longitude
+        ] as [String: Any]
+        
+        FirebaseManager.shared.firestore
+            .collection("users")
+            .document(uid)
+            .updateData(userData){ error in
+                if let error = error {
+                    print("Failed to update location \(error.localizedDescription)")
+                    completion(nil)
+                }
+                completion("Success")
+                
+            }
+    }
 }
 

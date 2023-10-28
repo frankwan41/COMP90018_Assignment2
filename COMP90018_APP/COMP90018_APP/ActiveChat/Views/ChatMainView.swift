@@ -16,9 +16,13 @@ struct ChatMainView: View {
     @State private var showNewMessageView = false
     @State private var showMessageView = false
     @State private var showActiveButton = false
+    @State private var showLocationRequestAlert: Bool = false
+    
     
     @StateObject var messageViewModel: MessageViewModel
     @StateObject var chatMainViewModel: ChatMainViewModel
+    @StateObject var locationManager = LocationManager()
+    
     
     @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
     
@@ -115,6 +119,8 @@ struct ChatMainView: View {
                             if newValue{
                                 // Be active
                                 showActivateConfirmation = true
+                                
+                               
                             }else{
                                 self.chatMainViewModel.setUserActiveState(state: false) { info in
                                     if info != nil{
@@ -131,6 +137,14 @@ struct ChatMainView: View {
                     .font(.title2)
                     .padding(.horizontal, 10)
                     .tint(.orange)
+                    .alert(isPresented: $showLocationRequestAlert) {
+                        Alert(
+                            title: Text("Location Permission Denied"),
+                            message: Text("The App requires location permission"),
+                            primaryButton: .default(Text("Go Settings"), action: openAppSettings),
+                            secondaryButton: .cancel(Text("Reject"))
+                        )
+                    }
                 }
                 if showActiveButton{
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -151,13 +165,44 @@ struct ChatMainView: View {
                       primaryButton: .cancel(),
                       secondaryButton: .destructive(Text("Be Active"), 
                                                     action:
-                                                    {self.chatMainViewModel.setUserActiveState(state: true) { info in
-                    if info != nil{
-                        showActiveButton = true
-                    }else{
-                        showActiveButton = false
+                                                    {
+                    // Request location
+                    locationManager.requestPermission { authorized in
+                        if authorized{
+                            // Update the current location of the user
+                            if let location = locationManager.location{
+                                
+    
+                                self.chatMainViewModel.updateUserCurrentLocation(latitude: location.latitude, longitude: location.longitude) { result in
+                                    if result == nil{
+                                        showActiveButton = false
+                                    }else{
+                                        
+                                        // Update the active state of the user
+                                        self.chatMainViewModel.setUserActiveState(state: true) { info in
+                                        if info != nil{
+                                            showActiveButton = true
+                                        }else{
+                                            showActiveButton = false
+                                        }
+                                    }
+                                        
+                                    }
+                                }
+                                
+                            }else{
+                                // Unable to update the location of the user
+                                showActiveButton = false
+                            }
+                        }else{
+                            // Unable to update the location of the user
+                            showLocationRequestAlert = true
+                            showActiveButton = false
+                            
+                        }
                     }
-                }}
+                    
+                    }
                                                         ))
             }
             .fullScreenCover(isPresented: $showNewMessageView) {
@@ -168,6 +213,8 @@ struct ChatMainView: View {
                 }
             }
         }
+        
+        
     }
 }
 //
