@@ -13,6 +13,12 @@ struct NewMessageCompo: View {
     
     @ObservedObject var newMessageViewModel: NewMessageViewModel
     
+    var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mm a, M/d/yy"
+        return formatter
+    }
+    
     
     var body: some View {
         HStack(spacing: 16) {
@@ -44,17 +50,23 @@ struct NewMessageCompo: View {
             Spacer()
             
             if let currentUser = newMessageViewModel.currentUser{
-                let distance = calculateDistance()
                 
-                if distance < 1000 {
-                            // If less than 1000 meters, show in meters
-                    Text("\(String(format: "%.0f", distance)) m").fontWeight(.bold).font(.callout)
-                } else {
-                    // If 1 km or more, convert to kilometers and show one decimal place
-                    let distanceInKilometers = distance / 1000
-                    Text("\(String(format: "%.0f", distanceInKilometers)) km").fontWeight(.bold).font(.callout)
+                VStack{
+                    let distance = calculateDistance()
+                    
+                    if distance < 1000 {
+                        // If less than 1000 meters, show in meters
+                        Text("\(String(format: "%.0f", distance)) m").fontWeight(.bold).font(.callout).tint(.orange)
+                    } else {
+                        // If 1 km or more, convert to kilometers and show one decimal place
+                        let distanceInKilometers = distance / 1000
+                        Text("\(String(format: "%.0f", distanceInKilometers)) km").fontWeight(.bold).font(.callout).tint(.orange)
+                    }
+                    
+                    Text(dateFormatter.string(from: user.locationTimestamp.dateValue()))
+                        .font(.footnote)
+                        .foregroundColor(.gray)
                 }
-                
             }
             
         }

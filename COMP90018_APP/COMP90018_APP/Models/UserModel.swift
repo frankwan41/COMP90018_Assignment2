@@ -7,6 +7,7 @@
 
 import Foundation
 import Firebase
+import FirebaseFirestore
 
 struct User: Identifiable, Codable, Hashable {
     var id: String {
@@ -25,6 +26,7 @@ struct User: Identifiable, Codable, Hashable {
     var isActive: Bool
     var currentLatitude: Double
     var currentLongitude: Double
+    var locationTimestamp: Timestamp
 
     
     init(data: [String: Any]){
@@ -40,6 +42,9 @@ struct User: Identifiable, Codable, Hashable {
         self.isActive = data["isactive"] as? Bool ?? false
         self.currentLatitude = data["currentlatitude"] as? Double ?? 0.0
         self.currentLongitude = data["currentlongitude"] as? Double ?? 0.0
+        self.locationTimestamp = (data["locationtimestamp"] as? Timestamp ?? Timestamp(date: Date()))
+        
+        
     }
     
 }

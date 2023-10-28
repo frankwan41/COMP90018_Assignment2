@@ -87,7 +87,8 @@ class ChatMainViewModel: ObservableObject {
         
         let userData = [
             "currentlatitude": latitude,
-            "currentlongitude": longitude
+            "currentlongitude": longitude,
+            "locationtimestamp": Timestamp()
         ] as [String: Any]
         
         FirebaseManager.shared.firestore
