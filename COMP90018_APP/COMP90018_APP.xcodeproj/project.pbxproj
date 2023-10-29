@@ -59,7 +59,6 @@
 		A20A9FD02AB81927003833AA /* UserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20A9FCF2AB81927003833AA /* UserViewModel.swift */; };
 		A219E3DC2AE510B20082F991 /* ProfileSettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A219E3DB2AE510B20082F991 /* ProfileSettingViewModel.swift */; };
 		A219E3E22AE51B850082F991 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A219E3E12AE51B850082F991 /* GoogleService-Info.plist */; };
-		A288F8132AEB359700EA648C /* SinglePostPreviewCompoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A288F8122AEB359700EA648C /* SinglePostPreviewCompoModel.swift */; };
 		A2D4FAE22AEC8B51001326A8 /* MessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D4FAE12AEC8B51001326A8 /* MessageModel.swift */; };
 		A2D4FAE42AEC8B92001326A8 /* LatestMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D4FAE32AEC8B92001326A8 /* LatestMessage.swift */; };
 		A2D4FAE62AEC8BCA001326A8 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = A2D4FAE52AEC8BCA001326A8 /* FirebaseAnalytics */; };
@@ -183,7 +182,6 @@
 		A20A9FCF2AB81927003833AA /* UserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserViewModel.swift; sourceTree = "<group>"; };
 		A219E3DB2AE510B20082F991 /* ProfileSettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSettingViewModel.swift; sourceTree = "<group>"; };
 		A219E3E12AE51B850082F991 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		A288F8122AEB359700EA648C /* SinglePostPreviewCompoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SinglePostPreviewCompoModel.swift; sourceTree = "<group>"; };
 		A2D4FAE12AEC8B51001326A8 /* MessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageModel.swift; sourceTree = "<group>"; };
 		A2D4FAE32AEC8B92001326A8 /* LatestMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestMessage.swift; sourceTree = "<group>"; };
 		A2D4FB652AEC8FDC001326A8 /* NewMessageCompo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageCompo.swift; sourceTree = "<group>"; };
@@ -399,7 +397,6 @@
 				A219E3DB2AE510B20082F991 /* ProfileSettingViewModel.swift */,
 				474617932AE8EF2B003145A2 /* SinglePostViewModel.swift */,
 				2DD346A92AE913F7001F6A57 /* LocationViewModel.swift */,
-				A288F8122AEB359700EA648C /* SinglePostPreviewCompoModel.swift */,
 				2DB04A592AECF41C00270DC5 /* SpeechRecognizerViewModel.swift */,
 			);
 			path = Models;
@@ -655,7 +652,6 @@
 				A2027CD12AB7035500BA5391 /* AddPostViewModel.swift in Sources */,
 				4787E6F92AED143100025D4A /* LikeButtonPost.swift in Sources */,
 				A2D4FB792AECA67A001326A8 /* NewMessageView.swift in Sources */,
-				A288F8132AEB359700EA648C /* SinglePostPreviewCompoModel.swift in Sources */,
 				2D1890F42AE5F51000B63D8F /* KeyboardSpacer.swift in Sources */,
 				47B08A6A2AED2F4B006F32AF /* CommentTextField.swift in Sources */,
 				A2027C982AB2FE1B00BA5391 /* LocationManager.swift in Sources */,
@@ -787,7 +783,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"COMP90018_APP/Preview Content\"";
-				DEVELOPMENT_TEAM = NZ3P6V45UB;
+				DEVELOPMENT_TEAM = KR82R98Q4X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "COMP90018-APP-Info.plist";
@@ -809,7 +805,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "COMP90018.COMP90018-APP";
+				PRODUCT_BUNDLE_IDENTIFIER = "COMP90018.COMP90018-APP-BOWENFAN";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -825,7 +821,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"COMP90018_APP/Preview Content\"";
-				DEVELOPMENT_TEAM = NZ3P6V45UB;
+				DEVELOPMENT_TEAM = KR82R98Q4X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "COMP90018-APP-Info.plist";
@@ -847,7 +843,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "COMP90018.COMP90018-APP-Test2";
+				PRODUCT_BUNDLE_IDENTIFIER = "COMP90018.COMP90018-APP-BOWENFAN";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
