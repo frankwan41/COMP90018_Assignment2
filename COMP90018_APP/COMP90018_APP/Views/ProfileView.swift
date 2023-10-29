@@ -10,45 +10,40 @@ enum TabSelection: Int, CaseIterable {
 struct ProfileView: View {
 
     @ObservedObject var userViewModel: UserViewModel
-    @StateObject var profileViewModel = ProfileViewModel()
-    @StateObject var postsViewModel = PostsViewModel()
+    @StateObject var profileViewPostsModel = ProfileViewPostsModel()
+    @StateObject var profileViewLikedModel = ProfileViewLikedModel()
     @EnvironmentObject var speechRecognizer: SpeechRecognizerViewModel
+
     @State private var showLoginAlert = false
     @State private var wantsLogin = false
     
-    @State private var likeStates: [Bool] = Array(repeating: false, count: 20)
-    @State private var heartScale: CGFloat = 1.0
-    @State private var numLikeStates: [Int] = Array(repeating: 32, count: 20)
-    @State private var showLoginSheet = false
-    
     @State private var selectedTab: TabSelection = .posts
     
-//    let gradientStart = Color.orange.opacity(0.5)
-//    let gradientEnd = Color.orange
+    let gradientBackground = LinearGradient(
+        gradient: Gradient(colors: [Color.orange, Color.white]),
+        startPoint: .top,
+        endPoint: .bottom
+    )
     
-    // Before Modification
-//    let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.5), Color.orange]), startPoint: .top, endPoint: .bottom)
-    
-    let gradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange, Color.white]), startPoint: .top, endPoint: .bottom)
-    
-    let postGradientBackground = LinearGradient(gradient: Gradient(colors: [Color.orange.opacity(0.01), Color.orange.opacity(0.01)]), startPoint: .top, endPoint: .bottom)
+    let postGradientBackground = LinearGradient(
+        gradient: Gradient(colors: [Color.orange.opacity(0.01), Color.orange.opacity(0.01)]),
+        startPoint: .top,
+        endPoint: .bottom
+    )
 
     var body: some View {
 
         NavigationView {
             ZStack {
                 gradientBackground.edgesIgnoringSafeArea(.all)
-
                 VStack(spacing: 20) {
                     if !userViewModel.isLoggedIn {
                         guestView
                     } else {
                         loggedInView
                             .refreshable {
-                                profileViewModel.getUserInformation()
-                                profileViewModel.getUserPosts()
+                                refresh()
                             }
-                            
                     }
                 }
                 .padding(.horizontal)
@@ -80,14 +75,12 @@ struct ProfileView: View {
                 if !userViewModel.isLoggedIn {
                     showLoginAlert = true
                 }
-                profileViewModel.getUserInformation()
-                profileViewModel.getUserPosts()
+                refresh()
             }
             .onChange(of: userViewModel.isLoggedIn, perform: { newValue in
                 if newValue {
                     wantsLogin = false
-                    profileViewModel.getUserInformation()
-                    profileViewModel.getUserPosts()
+                    refresh()
                 }
             })
             .sheet(isPresented: $wantsLogin) {
@@ -100,6 +93,13 @@ struct ProfileView: View {
                     }
             }
         }
+    }
+    
+    func refresh() {
+        profileViewPostsModel.getUserInformation()
+        profileViewPostsModel.fetchPosts()
+        profileViewLikedModel.getUserInformation()
+        profileViewLikedModel.fetchPosts()
     }
 
     
@@ -139,7 +139,7 @@ extension ProfileView {
     private var loggedInView: some View {
         VStack(spacing: 15) {
             HStack(alignment: .top,spacing: 10){
-                if let url = URL(string: profileViewModel.user.profileImageURL) {
+                if let url = URL(string: profileViewPostsModel.user.profileImageURL) {
                     KFImage(url)
                         .resizable()
                         .scaledToFit()
@@ -154,11 +154,11 @@ extension ProfileView {
                         .shadow(radius: 10)
                 }
                 VStack{
-                    Text(profileViewModel.user.userName)
+                    Text(profileViewPostsModel.user.userName)
                         .font(.largeTitle)
                         .bold()
                     
-                    NavigationLink(destination: ProfileSetttingView(profileSettingViewModel: ProfileSettingViewModel(), profileViewModel: profileViewModel)) {
+                    NavigationLink(destination: ProfileSetttingView(profileSettingViewModel: ProfileSettingViewModel(), profileViewModel: profileViewPostsModel)) {
                         Text("Modify Profile Details")
                             .font(.caption)
                             .foregroundColor(.white)
@@ -203,7 +203,7 @@ extension ProfileView {
             
             if selectedTab == .posts {
                 
-                if profileViewModel.posts.isEmpty{
+                if profileViewPostsModel.posts.isEmpty{
                     Text("💔Sorry, you don't have any posts yet.")
                         .frame(alignment: .center)
                         .bold()
@@ -216,38 +216,27 @@ extension ProfileView {
 //                        .padding(.bottom, 2)
                 }
                 List{
-                    AllPostsView(
-                        isLoggedIn: $userViewModel.isLoggedIn,
-                        posts: $profileViewModel.posts,
-                        postsViewModel: postsViewModel,
-                        gradientBackground: postGradientBackground
+                    PostCollection(
+                        userViewModel: userViewModel,
+                        postCollectionModel: profileViewPostsModel,
+                        gradientBackground: gradientBackground
                     )
                 }.listStyle(.plain)
-            } else if selectedTab == .liked {
-                // Replace with your LikedPostsView or a modified AllPostsView
-                // that displays liked posts.
-                
-                if profileViewModel.likedPosts.isEmpty{
-                    
+            } else if selectedTab == .liked {                
+                if profileViewLikedModel.posts.isEmpty {
                     Text("💔Sorry, You don't have liked posts yet.")
                         .frame(alignment: .center)
                         .bold()
                         .font(.headline)
                         .opacity(0.8)
                         .padding(.vertical, 5)
-                    
-                    
-//                    ProgressView()
-//                        .padding(.top, 2)
-//                        .padding(.bottom, 2)
                 }
                 
-                
-                List{
-                    AllPostsView(
-                        isLoggedIn: $userViewModel.isLoggedIn,
-                        posts: $profileViewModel.likedPosts,
-                        gradientBackground: postGradientBackground
+                List {
+                    PostCollection(
+                        userViewModel: userViewModel,
+                        postCollectionModel: profileViewLikedModel,
+                        gradientBackground: gradientBackground
                     )
                 }.listStyle(.plain)
             }
@@ -255,8 +244,7 @@ extension ProfileView {
 
         }
         .onChange(of: selectedTab, perform: { value in
-            profileViewModel.getUserInformation()
-            profileViewModel.getUserPosts()
+            refresh()
         })
     }
 
@@ -266,14 +254,7 @@ extension ProfileView {
         }) {
             Text("Sign Out")
                 .foregroundColor(.white)
-            
                 .bold()
         }
     }
 }
-
-//struct ProfileView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ProfileView()
-//    }
-//}

@@ -10,22 +10,21 @@ import Firebase
 import FirebaseStorage
 import UIKit
 
-class UserViewModel: ObservableObject{
+class UserViewModel: ObservableObject {
+    
     @Published var isLoggedIn = false
     @Published var errorMessage = ""
     @Published var currentUser: User?
     
-    init(){
+    init() {
         FirebaseManager.shared.auth.addStateDidChangeListener { (auth, user) in
-                self.isLoggedIn = (user != nil)
+            self.isLoggedIn = user != nil
             if self.isLoggedIn{
                 self.getCurrentUser { user in
                     self.currentUser = user
                 }
             }
-            
         }
-        //isLoggedIn = FirebaseManager.shared.auth.currentUser?.uid == nil 不知道是哪个写的，每次都要重新登录。
     }
     
     func getUserUID() -> String? {
@@ -34,7 +33,6 @@ class UserViewModel: ObservableObject{
         }
         return uid
     }
-    
     
     /**
      Inputs: email and password
@@ -69,7 +67,6 @@ class UserViewModel: ObservableObject{
             
         }
     }
-    
     
     /**
      Inputs: email and password of the user as well as the image
@@ -179,8 +176,6 @@ class UserViewModel: ObservableObject{
     
     func clickPostLikeButton(postID: String) {
         
-        // Cherck whether the user has logined
-        // uid = Auth.auth().currentUser?.uid
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
             print("Unable to get the uid of the user, check the login state.")
             return
@@ -188,26 +183,46 @@ class UserViewModel: ObservableObject{
         
         getCurrentUser { user in
             if let user = user {
-                var updatedData = [
+                var like: Bool? = nil
+                var updatedUserData = [
                     "likedpostsids": user.likedPostsIDs
                 ] as [String: Any]
-                if let likedPostsIDs = updatedData["likedpostsids"] as? [String] {
+                
+                if let likedPostsIDs = updatedUserData["likedpostsids"] as? [String] {
                     if likedPostsIDs.contains(postID) {
                         // Unlike
-                        updatedData["likedpostsids"] = likedPostsIDs.filter { $0 != postID }
+                        updatedUserData["likedpostsids"] = likedPostsIDs.filter { $0 != postID }
+                        like = false
                     } else {
                         // Like
                         var newLikedPostsIDs = likedPostsIDs
                         newLikedPostsIDs.append(postID)
-                        updatedData["likedpostsids"] = newLikedPostsIDs
+                        updatedUserData["likedpostsids"] = newLikedPostsIDs
+                        like = true
                     }
                 }
                 FirebaseManager.shared.firestore
                     .collection("users")
                     .document(uid)
-                    .updateData(updatedData)
+                    .updateData(updatedUserData)
+                print("Successfully updated liked posts of user \(uid).")
                 
-                print("Successfully updated the details of user \(uid).")
+                self.getPost(postID: postID) { post in
+                    if let post = post {
+                        var updatedPostData = [
+                            "likes": post.likes
+                        ] as [String: Any]
+                        
+                        if let likes = updatedPostData["likes"] as? Int, let like = like {
+                            updatedPostData["likes"] = like ? likes + 1 : likes - 1
+                        }
+                        FirebaseManager.shared.firestore
+                            .collection("posts")
+                            .document(postID)
+                            .updateData(updatedPostData)
+                        print("Successfully updated post \(postID).")
+                    }
+                }
             }
         }
         
@@ -215,8 +230,6 @@ class UserViewModel: ObservableObject{
     
     func clickCommentLikeButton(commentID: String) {
         
-        // Cherck whether the user has logined
-        // uid = Auth.auth().currentUser?.uid
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
             print("Unable to get the uid of the user, check the login state.")
             return
@@ -224,26 +237,46 @@ class UserViewModel: ObservableObject{
         
         getCurrentUser { user in
             if let user = user {
-                var updatedData = [
+                var like: Bool? = nil
+                var updatedUserData = [
                     "likedcommentsids": user.likedCommentsIDs
                 ] as [String: Any]
-                if let likedCommentsIDs = updatedData["likedcommentsids"] as? [String] {
+                
+                if let likedCommentsIDs = updatedUserData["likedcommentsids"] as? [String] {
                     if likedCommentsIDs.contains(commentID) {
                         // Unlike
-                        updatedData["likedcommentsids"] = likedCommentsIDs.filter { $0 != commentID }
+                        updatedUserData["likedcommentsids"] = likedCommentsIDs.filter { $0 != commentID }
+                        like = false
                     } else {
                         // Like
                         var newLikedCommentsIDs = likedCommentsIDs
                         newLikedCommentsIDs.append(commentID)
-                        updatedData["likedcommentsids"] = newLikedCommentsIDs
+                        updatedUserData["likedcommentsids"] = newLikedCommentsIDs
+                        like = true
                     }
                 }
                 FirebaseManager.shared.firestore
                     .collection("users")
                     .document(uid)
-                    .updateData(updatedData)
+                    .updateData(updatedUserData)
+                print("Successfully updated liked comments of user \(uid).")
                 
-                print("Successfully updated the details of user \(uid).")
+                self.getComment(commentID: commentID) { comment in
+                    if let comment = comment {
+                        var updatedCommentData = [
+                            "likes": comment.likes
+                        ] as [String: Any]
+                        
+                        if let likes = updatedCommentData["likes"] as? Int, let like = like {
+                            updatedCommentData["likes"] = like ? likes + 1 : likes - 1
+                        }
+                        FirebaseManager.shared.firestore
+                            .collection("comments")
+                            .document(commentID)
+                            .updateData(updatedCommentData)
+                        print("Successfully updated comment \(commentID).")
+                    }
+                }
             }
         }
         
@@ -268,11 +301,47 @@ class UserViewModel: ObservableObject{
     func signOutUser(){
         isLoggedIn = false
         currentUser = nil
-        do{
+        do {
             try FirebaseManager.shared.auth.signOut()
             print("Successfully signed out")
-        }catch{
+        } catch {
             print("Error signed out: \(error)")
+        }
+    }
+    
+    func getPost(postID: String, completion: @escaping (Post?) -> Void) {
+        FirebaseManager.shared.firestore
+            .collection("posts")
+            .document(postID)
+            .getDocument { documentSnapshot, error in
+                if let error = error {
+                    print("Failed to fetch post \(postID), \(error.localizedDescription)")
+                    completion(nil)
+                } else if let documentSnapshot = documentSnapshot, let data = documentSnapshot.data() {
+                    let post = Post(data: data)
+                    print("Successfully fetched post \(postID)")
+                    completion(post)
+                } else {
+                    completion(nil)
+                }
+        }
+    }
+    
+    func getComment(commentID: String, completion: @escaping (Comment?) -> Void) {
+        FirebaseManager.shared.firestore
+            .collection("comments")
+            .document(commentID)
+            .getDocument { documentSnapshot, error in
+                if let error = error {
+                    print("Failed to fetch comment \(commentID), \(error.localizedDescription)")
+                    completion(nil)
+                } else if let documentSnapshot = documentSnapshot, let data = documentSnapshot.data() {
+                    let comment = Comment(data: data)
+                    print("Successfully fetched Comment \(commentID)")
+                    completion(comment)
+                } else {
+                    completion(nil)
+                }
         }
     }
     
@@ -282,14 +351,13 @@ class UserViewModel: ObservableObject{
             .document(userUID)
             .getDocument { documentSnapshot, error in
                 if let error = error {
-                    print("Unable to fetch the details of the user \(userUID), \(error.localizedDescription)")
+                    print("Failed to fetch user \(userUID), \(error.localizedDescription)")
                     completion(nil)
                 } else if let documentSnapshot = documentSnapshot, let data = documentSnapshot.data() {
                     let user = User(data: data)
-                    print("Successfully fetched the user \(userUID)")
+                    print("Successfully fetched user \(userUID)")
                     completion(user)
                 } else {
-                    completion(nil)
                     completion(nil)
                 }
         }
@@ -300,9 +368,6 @@ class UserViewModel: ObservableObject{
             completion(nil)
             return
         }
-        
-        getUser(userUID: uid) { user in
-            completion(user)
-        }
+        getUser(userUID: uid) { user in completion(user) }
     }
 }

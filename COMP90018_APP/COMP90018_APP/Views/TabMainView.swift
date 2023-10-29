@@ -8,33 +8,32 @@
 import SwiftUI
 
 struct TabMainView: View {
+    
     @State var shakeResult: String = ""
     @State var searchCategory: String = ""
     
     @State private var isActive: Bool = false
     @State private var selectedTab: Int = 0
     
-    
-    @ObservedObject var userViewModel: UserViewModel
+    @StateObject var userViewModel = UserViewModel()
     @StateObject var postsViewModel = PostsViewModel()
     
     @State private var showLoginAlert = false
     
-    
     var body: some View {
-        let gradientStart = Color.orange.opacity(0.5)
-        let gradientEnd = Color.orange
-        let gradientBackground = LinearGradient(gradient: Gradient(colors: [gradientStart, gradientEnd]), startPoint: .top, endPoint: .bottom)
-        
-        NavigationStack{
-            TabView{
-                PostsView(searchCategory: $searchCategory, userViewModel: userViewModel, postsViewModel: postsViewModel)
+        NavigationStack {
+            TabView {
+                PostsView(
+                    searchCategory: $searchCategory,
+                    userViewModel: userViewModel,
+                    postsViewModel: postsViewModel
+                )
                     .navigationBarBackButtonHidden(true)
                     .tabItem {
                         Image(systemName: "fork.knife")
                         Text("Posts")
                     }
-                
+                    
                 ProfileView(userViewModel: userViewModel)
                     .navigationBarBackButtonHidden(true)
                     .tabItem {
@@ -76,9 +75,9 @@ struct TabMainView: View {
                             .onDisappear{
                                 // Refresh code
                                 if searchCategory != "" {
-                                    postsViewModel.fetchPostsByTag(tag: searchCategory)
+                                    postsViewModel.fetchPosts(tag: searchCategory)
                                 } else {
-                                    postsViewModel.fetchAllPosts()
+                                    postsViewModel.fetchPosts()
                                 }
                             }
                     })
@@ -101,9 +100,3 @@ struct PhotoView: View {
         }
     }
 }
-
-//struct TabView_Previews: PreviewProvider {
-//    static var previews: some View {
-//            TabMainView()
-//    }
-//}
