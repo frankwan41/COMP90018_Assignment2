@@ -12,6 +12,7 @@ struct ProfileView: View {
     @ObservedObject var userViewModel: UserViewModel
     @StateObject var profileViewModel = ProfileViewModel()
     @StateObject var postsViewModel = PostsViewModel()
+    @EnvironmentObject var speechRecognizer: SpeechRecognizerViewModel
     @State private var showLoginAlert = false
     @State private var wantsLogin = false
     
@@ -52,6 +53,27 @@ struct ProfileView: View {
                 }
                 .padding(.horizontal)
                 .navigationBarItems(trailing: userViewModel.isLoggedIn ? logoutButton : nil)
+                
+                // Show a whole screen progress view while enabling the voice control
+                if speechRecognizer.inProgress {
+                        // Semi-transparent background to indicate loading
+                        Color.black.opacity(0.3)
+                            .edgesIgnoringSafeArea(.all)
+                            .blur(radius: 3)
+
+                        // Loading content
+                        VStack {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .scaleEffect(1.5)
+                            Text("Enabling voice control")
+                                .foregroundColor(.white)
+                                .padding(.top, 20)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Color.black.opacity(0.5))
+                        .edgesIgnoringSafeArea(.all)
+                    }
                 
             }
             .onAppear {
@@ -144,7 +166,28 @@ extension ProfileView {
                             .background(Color.orange)
                             .cornerRadius(20)
                     }
-                    
+                    Button(action: {
+                        if speechRecognizer.isListening {
+                            speechRecognizer.stopListening()
+                        } else {
+                            speechRecognizer.checkAndStartListening()
+                        }
+                    }, label: {
+                        Text("Enable Voice Control: \(speechRecognizer.isListening ? "ON" : "OFF")")
+                            .font(.caption)
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.orange)
+                            .cornerRadius(20)
+                    })
+                    .alert(isPresented: $speechRecognizer.showingPermissionAlert) {
+                        Alert(
+                            title: Text("Permissions Required"),
+                            message: Text("This app requires access to the microphone and speech recognition. Please enable permissions in settings."),
+                            primaryButton: .default(Text("Go settings"), action: openAppSettings),
+                            secondaryButton: .cancel(Text("Reject"))
+                        )
+                    }
                 }
             }
             Divider()

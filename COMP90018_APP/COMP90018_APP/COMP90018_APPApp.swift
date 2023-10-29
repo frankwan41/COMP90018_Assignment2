@@ -19,7 +19,7 @@ struct COMP90018_APPApp: App {
     
     var body: some Scene {
         WindowGroup {
-            WelcomView()
+            WelcomView().environmentObject(SpeechRecognizerViewModel())
         }
     }
 }
