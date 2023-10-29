@@ -61,12 +61,17 @@ struct PostsView: View {
                             .foregroundStyle(.black)
                     }.padding()
                     
-                    if showPostsMapView {
-                        PostsMapView(locationManager: locationManager, posts: $postsViewModel.posts)
-                    } else {
-                        Group {
-                            if postsViewModel.posts.isEmpty && searchCategory.isEmpty {
-                                ProgressView().padding(.bottom, 2)
+                    if showPostsMapView{
+                        PostsMapView(locationManager: locationManager,userViewModel: userViewModel, postsViewModel: postsViewModel, posts: $postsViewModel.posts)
+                    }else{
+                        
+                        Group{
+                            if postsViewModel.posts.isEmpty{
+                                if searchCategory.isEmpty{
+                                    ProgressView()
+                                        .padding(.bottom, 2)
+                                }
+                                
                             }
                             HStack {
                                 TextField(
