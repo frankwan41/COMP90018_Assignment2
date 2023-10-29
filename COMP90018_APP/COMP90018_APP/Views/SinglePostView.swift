@@ -11,6 +11,7 @@ import Kingfisher
 import CoreLocation
 import MapKit
 
+
 struct SinglePostView: View {
     
     @State private var showAlert: Bool = false
@@ -180,8 +181,10 @@ struct SinglePostView: View {
                                     })
                                 
                             }
-                        } else {
+                        }else{
                             ToolbarItem(placement: .navigationBarTrailing) {
+                                
+                                
                                 Button {
                                     locationManager.requestPermission { authorized in
                                         if authorized {
@@ -231,8 +234,17 @@ struct SinglePostView: View {
                                       message: Text("Temperature: \(temperature)°C, Condition: \(weatherDescription)"),
                                       dismissButton: .default(Text("Got it!")))
                             }
+                        }
                     }
-                }
+//                    ToolbarItem(placement: .navigationBarTrailing) {
+//                        Button{
+//                            // Share / Other manipulations
+//                        }label: {
+//                            Image(systemName: "square.and.arrow.up")
+//                                .foregroundColor(.black)
+//                        }
+//                    }
+            }
                 
                 // Disable the text editor when tap screen
                 if (isTextFieldVisible) {
@@ -279,7 +291,7 @@ struct SinglePostView: View {
                 if let comments = comments {
                     self.comments = comments
                 }
-            }  
+            }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
                 if locationManager.status == Status.success {
@@ -321,7 +333,6 @@ struct SinglePostView: View {
         }
         
     }
-    
     struct WeatherData: Codable {
         let main: Main
         let weather: [Weather]
@@ -367,6 +378,7 @@ struct SinglePostView: View {
     }
     
 }
+
 
 // MARK: COMPONENTS
 
@@ -435,4 +447,12 @@ extension SinglePostView {
         }
     }
     
+}
+
+// MARK: UTILITIES
+func openMapsForNavigation(toLatitude latitude: CLLocationDegrees, longitude: CLLocationDegrees, locationName: String?) {
+   let destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude)))
+   destination.name = locationName ?? "Target Location"
+
+   MKMapItem.openMaps(with: [destination], launchOptions: [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving])
 }
