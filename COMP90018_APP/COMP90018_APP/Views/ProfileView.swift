@@ -188,7 +188,6 @@ extension ProfileView {
                             secondaryButton: .cancel(Text("Reject"))
                         )
                     }
-                    Text(speechRecognizer.speechText)
                 }
             }
             Divider()

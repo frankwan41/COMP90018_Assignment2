@@ -19,8 +19,11 @@ struct PostsView: View {
     @ObservedObject var userViewModel: UserViewModel
 
     @ObservedObject var postsViewModel: PostsViewModel
+    
+    @StateObject var locationManager = LocationManager()
   
     @State private var shouldShowProfile = false
+    @State private var showPostsMapView = false
     
     @EnvironmentObject var speechRecognizer: SpeechRecognizerViewModel
     var shakeCommand = "shake"
@@ -45,121 +48,138 @@ struct PostsView: View {
                 gradientBackground.edgesIgnoringSafeArea(.all)
                 
                 VStack {
-                    
-                    if postsViewModel.posts.isEmpty{
-                        if searchCategory.isEmpty{
-                            ProgressView()
-                                .padding(.bottom, 2)
+                    Button {
+                        locationManager.requestPermission { authorized in
+                            if authorized {
+                                showPostsMapView.toggle()
+                            } else {
+                                return
+                            }
+                            
                         }
-                        
-                    }
+                    } label: {
+                        Image(systemName: "map.fill")
+                            .resizable().scaledToFit()
+                            .frame(width: 20, height: 20)
+                            .foregroundStyle(.black)
+                    }.padding()
                     
-                    HStack {
-                        TextField(
-                            "Search tag...",
-                            text: $searchCategory,
-                            onEditingChanged: { isEditing in
-                                isSearchFocused = isEditing
-                                // when user press return will call this function
-                                if (isSearchFocused == true){
-                                    searchCategory = searchCategory.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-                                    shakeResult = searchCategory
-                                    processUserInput()
+                    if showPostsMapView{
+                        PostsMapView(locationManager: locationManager, posts: $postsViewModel.posts)
+                    }else{
+                        
+                        Group{
+                            if postsViewModel.posts.isEmpty{
+                                if searchCategory.isEmpty{
+                                    ProgressView()
+                                        .padding(.bottom, 2)
                                 }
+                                
                             }
-                        )
-                        .focused($isSearchFocused)
-                        
-                        .padding(10)
-                        .background(Color.white.opacity(0.5))
-                        .cornerRadius(20)
-                        
-                        if isSearchFocused || !searchCategory.isEmpty{
-                            Button("Cancel") {
-                                searchCategory = ""
-                                shakeResult = ""
-                                isSearchFocused = false
-                                processUserInput()
-                            }
-                            .padding(.trailing)
-                        }
-                    }
-                    .listRowBackground(postGradientBackground)
-                    
-                    
-                    if !shakeResult.isEmpty{
-                        if postsViewModel.posts.isEmpty{
-                            Text("💔Sorry, No Post About \(shakeResult)")
-                                .frame(alignment: .center)
-                                .bold()
-                                .font(.headline)
-                                .opacity(0.8)
-                                .padding(.vertical, 5)
-                        }else{
-                            Text("💝Posts For \(shakeResult)")
-                                .frame(alignment: .center)
-                                .bold()
-                                .font(.headline)
-                                .opacity(0.8)
-                                .padding(.vertical, 5)
                             
-                        }
-                    }
-                    
-                        if !isSearchFocused{
-                            
-                        }
-                    
-                    List {
-                        
-                        
-                        
-                        AllPostsView(
-                          isLoggedIn: $userViewModel.isLoggedIn,
-                          posts: $postsViewModel.posts,
-                          postsViewModel: postsViewModel,
-                          gradientBackground: postGradientBackground
-                        )
-                    }
-                    .listStyle(.plain)
-                    
-                    .toolbar {
-                        
-                        if userViewModel.isLoggedIn{
-                            ToolbarItem(placement: .topBarLeading) {
-                                HStack{
-                                    Button {
-                                        viewSwitcher = viewPage.chat
-                                    } label: {
-                                        Image(systemName: "message.circle.fill")
+                            HStack {
+                                TextField(
+                                    "Search tag...",
+                                    text: $searchCategory,
+                                    onEditingChanged: { isEditing in
+                                        isSearchFocused = isEditing
+                                        // when user press return will call this function
+                                        if (isSearchFocused == true){
+                                            searchCategory = searchCategory.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+                                            shakeResult = searchCategory
+                                            processUserInput()
+                                        }
                                     }
-                                    
-                                    Text("Chat")
-                                        .font(.headline)
-                                        .italic()
-                                        .bold()
-                                        .background(Color.orange.opacity(0.5))
-                                        .padding(.horizontal, 1)
+                                )
+                                .focused($isSearchFocused)
+                                
+                                .padding(10)
+                                .background(Color.white.opacity(0.5))
+                                .cornerRadius(20)
+                                
+                                if isSearchFocused || !searchCategory.isEmpty{
+                                    Button("Cancel") {
+                                        searchCategory = ""
+                                        shakeResult = ""
+                                        isSearchFocused = false
+                                        processUserInput()
+                                    }
+                                    .padding(.trailing)
                                 }
                             }
-                        }
-                        
-                        
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button {
-                                viewSwitcher = viewPage.shake
-                            } label: {
-                                Image(systemName: "dice")
+                            .listRowBackground(postGradientBackground)
+                            
+                            
+                            if !shakeResult.isEmpty{
+                                if postsViewModel.posts.isEmpty{
+                                    Text("💔Sorry, No Post About \(shakeResult)")
+                                        .frame(alignment: .center)
+                                        .bold()
+                                        .font(.headline)
+                                        .opacity(0.8)
+                                        .padding(.vertical, 5)
+                                }else{
+                                    Text("💝Posts For \(shakeResult)")
+                                        .frame(alignment: .center)
+                                        .bold()
+                                        .font(.headline)
+                                        .opacity(0.8)
+                                        .padding(.vertical, 5)
+                                    
+                                }
                             }
                             
+                            if !isSearchFocused{
+                                
+                            }
+                            
+                            List {
+                                
+                                
+                                
+                                AllPostsView(
+                                    isLoggedIn: $userViewModel.isLoggedIn,
+                                    posts: $postsViewModel.posts,
+                                    postsViewModel: postsViewModel,
+                                    gradientBackground: postGradientBackground
+                                )
+                            }
+                            .listStyle(.plain)
+                        }
+                        .padding(.horizontal, 5)
+                    }
+                }
+                .toolbar {
+                    
+                    if userViewModel.isLoggedIn{
+                        ToolbarItem(placement: .topBarLeading) {
+                            HStack{
+                                Button {
+                                    viewSwitcher = viewPage.chat
+                                } label: {
+                                    Image(systemName: "message.circle.fill")
+                                }
+                                
+                                Text("Chat")
+                                    .font(.headline)
+                                    .italic()
+                                    .bold()
+                                    .background(Color.orange.opacity(0.5))
+                                    .padding(.horizontal, 1)
+                            }
                         }
                     }
                     
                     
-                    
-                    
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            viewSwitcher = viewPage.shake
+                        } label: {
+                            Image(systemName: "dice")
+                        }
+                        
+                    }
                 }
-                .padding(.horizontal, 5)
             }
             
             NavigationLink(destination: ProfileView(userViewModel: userViewModel), isActive: $shouldShowProfile) {

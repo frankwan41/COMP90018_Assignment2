@@ -61,8 +61,6 @@ struct SinglePostView: View {
                 
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
-                        Text(speechRecognizer.commandText)
-                        Text(speechRecognizer.commandListerning.description)
                         PostPhotoView(post: $post, selectedPhotoIndex: $selectedPhotoIndex)
                         Text(post.postTitle)
                             .font(.title)
