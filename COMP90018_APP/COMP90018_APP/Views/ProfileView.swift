@@ -54,6 +54,27 @@ struct ProfileView: View {
                 .padding(.horizontal)
                 .navigationBarItems(trailing: userViewModel.isLoggedIn ? logoutButton : nil)
                 
+                // Show a whole screen progress view while enabling the voice control
+                if speechRecognizer.inProgress {
+                        // Semi-transparent background to indicate loading
+                        Color.black.opacity(0.3)
+                            .edgesIgnoringSafeArea(.all)
+                            .blur(radius: 3)
+
+                        // Loading content
+                        VStack {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .scaleEffect(1.5)
+                            Text("Enabling voice control")
+                                .foregroundColor(.white)
+                                .padding(.top, 20)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Color.black.opacity(0.5))
+                        .edgesIgnoringSafeArea(.all)
+                    }
+                
             }
             .onAppear {
                 if !userViewModel.isLoggedIn {

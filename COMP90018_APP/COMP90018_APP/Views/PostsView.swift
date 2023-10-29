@@ -22,6 +22,9 @@ struct PostsView: View {
   
     @State private var shouldShowProfile = false
     
+    @EnvironmentObject var speechRecognizer: SpeechRecognizerViewModel
+    var shakeCommand = "shake"
+    
 //    let gradientStart = Color.orange.opacity(0.5)
 //    let gradientEnd = Color.orange
     
@@ -163,6 +166,14 @@ struct PostsView: View {
                 EmptyView()
             }
         }
+        .onChange(of: speechRecognizer.commandText, perform: { value in
+            print(value)
+            if speechRecognizer.commandText.lowercased().contains(shakeCommand) {
+                DispatchQueue.main.async {
+                    viewSwitcher = .shake
+                }
+            }
+        })
         .refreshable {
             // Refresh code
             processUserInput()

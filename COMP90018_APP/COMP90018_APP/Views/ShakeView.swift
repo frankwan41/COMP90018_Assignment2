@@ -16,6 +16,9 @@ struct ShakeView: View {
     @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
     @AppStorage("shakeResult") var shakeResult = ""
     
+    @EnvironmentObject var speechRecognizer: SpeechRecognizerViewModel
+    var shakeCommand = "shake"
+    
     init(){
         shakeResult = ""
     }
@@ -67,6 +70,25 @@ struct ShakeView: View {
                     } label: {
                         Image(systemName: "fork.knife")
                     }.foregroundColor(.black)
+                }
+            }
+        }
+        .onAppear{
+            if speechRecognizer.commandText.lowercased().contains(shakeCommand) {
+                DispatchQueue.main.async {
+                    speechRecognizer.resetSpeechTexts()
+                    
+                    hasShaked = true
+                    categoryName = templateCategories.randomElement()
+                    // Create animation for shaking affect
+                    withAnimation(Animation.easeInOut(duration: 0.5)) {
+                        isShaking = true
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        withAnimation(Animation.easeInOut(duration: 0.5)){
+                            isShaking = false
+                        }
+                    }
                 }
             }
         }

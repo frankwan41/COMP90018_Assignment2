@@ -15,25 +15,28 @@ class SpeechRecognizerViewModel: ObservableObject {
     @Published var speechText: String = "Capture all speech text"
     @Published var commandText: String = "Say 'hi hotpot' to wake me up..."
     @Published var isListening: Bool = false
-    
-    
-    var wakeUpText: String = "hi hotpot"
-    
+    @Published var commandListerning: Bool = false
+    @Published var inProgress: Bool = false
     @Published var showingPermissionAlert = false
     
     
+    var wakeUpText: String = "hi hotpot"
+
 
     private var audioEngine = AVAudioEngine()
     private var speechRecognizer = SFSpeechRecognizer()
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
+    private var resetTimer: Timer?
 
     
     func checkAndStartListening() {
+            self.inProgress = true
             // First, check microphone permission
             switch AVAudioSession.sharedInstance().recordPermission {
             case .denied:
                 self.showingPermissionAlert = true
+                self.inProgress = false
                 return
             case .undetermined:
                 AVAudioSession.sharedInstance().requestRecordPermission { [weak self] granted in
@@ -42,6 +45,7 @@ class SpeechRecognizerViewModel: ObservableObject {
                         self?.checkSpeechRecognitionPermission()
                     } else {
                         self?.showingPermissionAlert = true
+                        self?.inProgress = false
                     }
                 }
                 return
@@ -50,6 +54,7 @@ class SpeechRecognizerViewModel: ObservableObject {
                 checkSpeechRecognitionPermission()
             @unknown default:
                 self.showingPermissionAlert = true
+                self.inProgress = false
             }
         }
 
@@ -62,6 +67,7 @@ class SpeechRecognizerViewModel: ObservableObject {
                         self?.startListening()
                     default:
                         self?.showingPermissionAlert = true
+                        self?.inProgress = false
                     }
                 }
             }
@@ -77,11 +83,13 @@ class SpeechRecognizerViewModel: ObservableObject {
         recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest) { [weak self] result, error in
             guard let self = self, let result = result else { return }
 
-            let latestText = result.bestTranscription.formattedString
-            speechText = latestText
-            if latestText.lowercased().contains(wakeUpText) {
+            self.speechText = result.bestTranscription.formattedString
+//            self.restartResetTimer()
+            
+            if self.speechText.lowercased().contains(wakeUpText) {
                 DispatchQueue.main.async {
-                    self.commandText = latestText
+                    self.commandText = self.speechText
+                    self.commandListerning = true
                 }
             }
         }
@@ -104,9 +112,11 @@ class SpeechRecognizerViewModel: ObservableObject {
         do {
             try audioEngine.start()
             isListening = true
+            self.inProgress = false
         } catch {
             print("audioEngine couldn't start because of an error.")
             isListening = false
+            self.inProgress = false
         }
     }
 
@@ -117,7 +127,33 @@ class SpeechRecognizerViewModel: ObservableObject {
         recognitionTask?.cancel()
         isListening = false
         
+        recognitionTask = nil
+        recognitionRequest = nil
+        
     }
+    
+    // Reset all speech text
+    func resetSpeechTexts(){
+        DispatchQueue.main.async {
+            self.speechText = ""
+            self.commandText = ""
+            self.commandListerning = false
+        }
+        
+        // Stop current speech recognition and start anew
+        stopListening()
+        startListening()
+    }
+    
+    // Start or Restart the Timer
+        private func restartResetTimer() {
+            resetTimer?.invalidate()
+            resetTimer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: false) { [weak self] _ in
+                self?.resetSpeechTexts()
+            }
+        }
+
+    
 
 
 }

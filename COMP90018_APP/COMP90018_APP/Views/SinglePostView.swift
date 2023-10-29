@@ -40,13 +40,15 @@ struct SinglePostView: View {
     @StateObject private var singlePostViewModel = SinglePostViewModel()
     
     @EnvironmentObject var speechRecognizer: SpeechRecognizerViewModel
+    @State private var microphoneAnimate = false
     
     @State var authorUsername: String?
     @State var profileImageURL: String?
     
     private let dateFormatter = DateFormatter()
     
-    var openMapCommand: String = "open map"
+    var openMapCommand: String = "map"
+    var checkWeatherCommand: String = "weather"
     
     @Environment(\.presentationMode) var presentationMode
 
@@ -59,6 +61,8 @@ struct SinglePostView: View {
                 
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
+                        Text(speechRecognizer.commandText)
+                        Text(speechRecognizer.commandListerning.description)
                         PostPhotoView(post: $post, selectedPhotoIndex: $selectedPhotoIndex)
                         Text(post.postTitle)
                             .font(.title)
@@ -212,8 +216,8 @@ struct SinglePostView: View {
                             }
                         }
                     }
-                    
-                    ToolbarItem(placement: .navigationBarTrailing) {
+                    if (post.longitude != 0 && post.latitude != 0) {
+                        ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
                                 let apiKey = "95e381fda50cae025af8d88dde3f5c5c"
                                 getWeather(latitude: post.latitude, longitude: post.longitude, apiKey: apiKey)
@@ -226,13 +230,14 @@ struct SinglePostView: View {
                                     .padding(.vertical, 5)
                                     .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
                             }
-                        
+                            
                             .alert(isPresented: $showAlert) {
                                 Alert(title: Text("Weather Info for \(cityName)"),
                                       message: Text("Temperature: \(temperature)°C, Condition: \(weatherDescription)"),
                                       dismissButton: .default(Text("Got it!")))
                             }
                         }
+                    }
 //                    ToolbarItem(placement: .navigationBarTrailing) {
 //                        Button{
 //                            // Share / Other manipulations
@@ -296,13 +301,31 @@ struct SinglePostView: View {
                 }
             }
         }
-//        .onChange(of: speechRecognizer.commandText, perform: { speech in
-//            if speechRecognizer.commandText.lowercased().contains(openMapCommand) {
-//                DispatchQueue.main.async {
-//                    self.commandText =
-//                }
-//            }
-//        })
+        .onChange(of: speechRecognizer.commandText, perform: { speech in
+            if speechRecognizer.commandText.lowercased().contains(openMapCommand) {
+                if showLocationDistance{
+                    DispatchQueue.main.async {
+                        speechRecognizer.resetSpeechTexts()
+                        openMapsForNavigation(toLatitude: post.latitude, longitude: post.longitude, locationName: post.location)
+                    }
+                }else {
+                    locationManager.requestPermission { authorized in
+                        if authorized {
+                            showLocationDistance = true
+                        } else {
+                            showLocationRequestAlert = true
+                        }
+                    }
+                }
+            }
+            if speechRecognizer.speechText.lowercased().contains(checkWeatherCommand) {
+                DispatchQueue.main.async {
+                    speechRecognizer.resetSpeechTexts()
+                    let apiKey = "95e381fda50cae025af8d88dde3f5c5c"
+                    getWeather(latitude: post.latitude, longitude: post.longitude, apiKey: apiKey)
+                }
+            }
+        })
         .refreshable {
             singlePostViewModel.getPostComments(postID: post.id) { comments in
                 if let comments = comments {
@@ -377,9 +400,22 @@ extension SinglePostView {
                     Text(String(post.likes))
                 }
                 // Pushes the two buttons apart
-                Spacer()
-                Spacer()
-                Spacer()
+                Spacer(minLength: 0)
+                if speechRecognizer.commandListerning {
+                    Image(systemName: "mic.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 30, height: 30)
+                        .scaleEffect(microphoneAnimate ? 1.2 : 1) // Pulsing effect
+                        .opacity(microphoneAnimate ? 0.7 : 1) // Changes the opacity
+                        .onAppear {
+                            withAnimation(Animation.easeInOut(duration: 0.7).repeatForever(autoreverses: true)) {
+                                microphoneAnimate = true
+                            }
+                        }
+
+                }
+                Spacer(minLength: 0)
                 HStack {
                     SinglePostCommentButton(
                         post: $post,
