@@ -6,9 +6,7 @@
 //
 
 import SwiftUI
-import CoreLocation
 import MapKit
-import Kingfisher
 
 // Distinguish post location and user current location
 enum MapAnnotationItem: Identifiable {
@@ -35,11 +33,9 @@ struct PostsMapView: View {
     @ObservedObject var postsViewModel: PostsViewModel
         
     @State private var filteredPosts: [Post] = []
-    @State private var selectedIndex: Int = 0
+    @State private var selectedIndex: Int
     @Binding var posts: [Post]
-    
-    @State private var selectedLocation: String = ""
-    
+        
     var mapRange: CLLocationDistance = 1000 // meters
 
     @State private var region: MKCoordinateRegion
@@ -53,14 +49,12 @@ struct PostsMapView: View {
             CLLocationCoordinate2D(latitude: -37.79927042919155, longitude: 144.96286139745774) // Default location
         self._region = State(initialValue: MKCoordinateRegion(center: initialCoordinate, latitudinalMeters: 1000, longitudinalMeters: 1000))
         
-        // Perform the filtering of posts here
+        // Perform the filtering of posts to discard posts without location
         let filtered = posts.wrappedValue.filter { $0.latitude != 0 && $0.longitude != 0 }
         self._filteredPosts = State(initialValue: filtered)
         
-        // Set the selectedLocation
-        if let firstFilteredPost = filtered.first {
-            self._selectedLocation = State(initialValue: firstFilteredPost.location)
-        }
+        // Set the selectedIndex
+        self._selectedIndex = State(initialValue: filtered.first != nil ? 0 : -1)
         
         if let currentLocation = locationManager.location {
             self._region = State(initialValue: locationManager.region)
@@ -71,31 +65,38 @@ struct PostsMapView: View {
         
             ZStack(alignment: .bottom) {
                 
+                // Create map annotation for all posts with valid latitude and lontitude, as well as indicate user current position
                 Map(coordinateRegion: $region, annotationItems: allAnnotations) { item in
                     
                     switch item {
                     case .post(let post):
                         MapAnnotation(coordinate: CLLocationCoordinate2D(latitude: post.latitude, longitude: post.longitude)) {
-                            CustomMapAnnotationView(item: item, type: item, selectedLocation: $selectedLocation)
+                            CustomMapAnnotationView(item: item, type: item, filteredPosts: $filteredPosts, selectedIndex: $selectedIndex)
                                 
                         }
                     case .currentLocation(let location):
                         MapAnnotation(coordinate: location) {
-                            CustomMapAnnotationView(item: item, type: item, selectedLocation: $selectedLocation)
+                            CustomMapAnnotationView(item: item, type: item,filteredPosts: $filteredPosts, selectedIndex: $selectedIndex)
 
                         }
                     }
                 }
                 
                 
-                ForEach(filteredPosts) {post in
-                    if post.location == selectedLocation {
-                        SinglePostPreview(post: post, isLoggedIn: $userViewModel.isLoggedIn, postsViewModel: postsViewModel)
+                ForEach(filteredPosts.indices, id: \.self) {index in
+                    let bindingPost = $filteredPosts[index]
+                    if index == selectedIndex {
+                        PostCard(
+                            post: bindingPost,
+                            userViewModel: userViewModel,
+                            postCollectionModel: postsViewModel
+                        )
                             .frame(height: 200)
                             .background(.white)
                             .clipShape(RoundedRectangle(cornerRadius: 25))
                             .overlay{
                                 
+                                // Button to last post
                                 Button {
                                     prevPost()
                                 } label: {
@@ -106,10 +107,12 @@ struct PostsMapView: View {
                                     .fontWeight(.bold)
                                     .foregroundStyle(.white)
                                 }
-                                .offset(x: -150, y: -35)
+                                .offset(x: -170, y: -70)
                                 
+                                
+                                // Navigation link to the single post
                                 NavigationLink {
-                                    SinglePostView(post: post).navigationBarBackButtonHidden(true)
+                                    SinglePostView(post: bindingPost).navigationBarBackButtonHidden(true)
                                 } label: {
                                     VStack(spacing: 1){
                                         Image(systemName: "info.circle.fill")
@@ -121,9 +124,9 @@ struct PostsMapView: View {
                                     }
                                     
                                 }
-                                .offset(y: 35)
+                                .offset(y: 10)
 
-                                
+                                // Button to next post
                                 Button {
                                     nextPost()
                                 } label: {
@@ -134,7 +137,7 @@ struct PostsMapView: View {
                                     .fontWeight(.bold)
                                     .foregroundStyle(.white)
                                 }
-                                .offset(x: 150, y: -35)
+                                .offset(x: 170, y: -70)
                                 
                             }
                         
@@ -152,48 +155,45 @@ struct PostsMapView: View {
         }
     }
     
+    // Decrease the selected index to navigate to previous post, if reaches 0 index, then set the index to the end
     func prevPost(){
         if filteredPosts.count > 0{
             let prevIndex = selectedIndex - 1
             guard filteredPosts.indices.contains(prevIndex) else {
                 selectedIndex = filteredPosts.count - 1
-                selectedLocation = filteredPosts[selectedIndex].location
                 updateRegion(latitude: filteredPosts[selectedIndex].latitude, longitude: filteredPosts[selectedIndex].longitude)
                 return
             }
             selectedIndex = prevIndex
-            selectedLocation = filteredPosts[selectedIndex].location
             
             updateRegion(latitude: filteredPosts[selectedIndex].latitude, longitude: filteredPosts[selectedIndex].longitude)
-            print(selectedIndex)
-            print(selectedLocation)
+
         }
     }
     
+    // Increase the selected index to navigate to next post, if reaches maximum index, then set the index to the begining
     func nextPost(){
         if filteredPosts.count > 0{
             let nextIndex = selectedIndex + 1
             guard filteredPosts.indices.contains(nextIndex) else {
                 selectedIndex = 0
-                selectedLocation = filteredPosts[selectedIndex].location
                 updateRegion(latitude: filteredPosts[selectedIndex].latitude, longitude: filteredPosts[selectedIndex].longitude)
                 return
             }
             selectedIndex = nextIndex
-            selectedLocation = filteredPosts[selectedIndex].location
             
             updateRegion(latitude: filteredPosts[selectedIndex].latitude, longitude: filteredPosts[selectedIndex].longitude)
-            
-            print(selectedIndex)
-            print(selectedLocation)
+
         }
     }
     
+    // Update map region to show to user
     func updateRegion(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
         let postCoordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         region = MKCoordinateRegion(center: postCoordinate, latitudinalMeters: mapRange, longitudinalMeters: mapRange)
     }
     
+    // Generate map items including posts and current device location
     var allAnnotations: [MapAnnotationItem] {
         var annotations = filteredPosts.map { MapAnnotationItem.post($0) }
         if let currentLocationCoordinate = locationManager.location {
@@ -209,12 +209,13 @@ struct CustomMapAnnotationView: View {
     var item: MapAnnotationItem
     let type: MapAnnotationItem
     
-    @Binding var selectedLocation: String
+    @Binding var filteredPosts: [Post]
+    @Binding var selectedIndex: Int
     
     var body: some View {
         switch type {
         case .post(let post):
-            // Custom view for a post
+                // Display number of likes of the post, apply scale effect if the post is selected
                 HStack {
                         Image(systemName: "heart.fill")
                             .foregroundColor(.red)
@@ -224,19 +225,21 @@ struct CustomMapAnnotationView: View {
                 }.padding(5)
                 .background(.white)
                 .clipShape(RoundedRectangle(cornerRadius: 25.0, style: .continuous))
-                .scaleEffect(post.location == selectedLocation ? 1.3 : 0.7)
+                .scaleEffect(filteredPosts.firstIndex(where: {$0.id == post.id}) == selectedIndex ? 1.3 : 0.7)
                     .overlay(
                         Image(systemName: "arrowtriangle.left.fill")
                             .rotationEffect(Angle(degrees: 270))
                             .foregroundColor(.white)
-                            .scaleEffect(post.location == selectedLocation ? 1.5 : 0.7)
+                            .scaleEffect(filteredPosts.firstIndex(where: {$0.id == post.id}) == selectedIndex ? 1.5 : 0.7)
                             .offset(y: 10)
                         
                         , alignment: .bottom)
                     .onTapGesture {
-                        print(selectedLocation)
-                        print(post.location)
-                        selectedLocation = post.location
+                        print(post)
+                        if let index = filteredPosts.firstIndex(where: { $0.id == post.id}){
+                            print(index)
+                            selectedIndex = index
+                        }
                     }
         case .currentLocation:
             // Custom view for the current location

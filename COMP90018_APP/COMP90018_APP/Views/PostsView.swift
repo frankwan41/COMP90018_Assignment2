@@ -66,12 +66,8 @@ struct PostsView: View {
                     }else{
                         
                         Group{
-                            if postsViewModel.posts.isEmpty{
-                                if searchCategory.isEmpty{
-                                    ProgressView()
-                                        .padding(.bottom, 2)
-                                }
-                                
+                            if postsViewModel.posts.isEmpty && searchCategory.isEmpty {
+                                ProgressView().padding(.bottom, 2)
                             }
                             HStack {
                                 TextField(
