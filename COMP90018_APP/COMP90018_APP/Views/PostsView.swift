@@ -65,7 +65,7 @@ struct PostsView: View {
                     }.padding()
                     
                     if showPostsMapView{
-                        PostsMapView(locationManager: locationManager, posts: $postsViewModel.posts)
+                        PostsMapView(locationManager: locationManager,userViewModel: userViewModel, postsViewModel: postsViewModel, posts: $postsViewModel.posts)
                     }else{
                         
                         Group{
