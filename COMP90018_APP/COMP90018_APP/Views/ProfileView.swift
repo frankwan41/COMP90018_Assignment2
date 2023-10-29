@@ -11,6 +11,7 @@ struct ProfileView: View {
 
     @ObservedObject var userViewModel: UserViewModel
     @StateObject var profileViewModel = ProfileViewModel()
+    @EnvironmentObject var speechRecognizer: SpeechRecognizerViewModel
 
     @State private var showLoginAlert = false
     @State private var wantsLogin = false
@@ -47,6 +48,28 @@ struct ProfileView: View {
                 }
                 .padding(.horizontal)
                 .navigationBarItems(trailing: userViewModel.isLoggedIn ? logoutButton : nil)
+                
+                // Show a whole screen progress view while enabling the voice control
+                if speechRecognizer.inProgress {
+                        // Semi-transparent background to indicate loading
+                        Color.black.opacity(0.3)
+                            .edgesIgnoringSafeArea(.all)
+                            .blur(radius: 3)
+
+                        // Loading content
+                        VStack {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .scaleEffect(1.5)
+                            Text("Enabling voice control")
+                                .foregroundColor(.white)
+                                .padding(.top, 20)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Color.black.opacity(0.5))
+                        .edgesIgnoringSafeArea(.all)
+                    }
+                
             }
             .onAppear {
                 if !userViewModel.isLoggedIn {
@@ -119,7 +142,7 @@ extension ProfileView {
                         .clipShape(Circle())
                         .shadow(radius: 10)
                 } else {
-                    ProgressView()
+                    Image(systemName: "person.circle")
                         .scaledToFit()
                         .frame(width: 150, height: 150)
                         .clipShape(Circle())
@@ -138,7 +161,28 @@ extension ProfileView {
                             .background(Color.orange)
                             .cornerRadius(20)
                     }
-                    
+                    Button(action: {
+                        if speechRecognizer.isListening {
+                            speechRecognizer.stopListening()
+                        } else {
+                            speechRecognizer.checkAndStartListening()
+                        }
+                    }, label: {
+                        Text("Enable Voice Control: \(speechRecognizer.isListening ? "ON" : "OFF")")
+                            .font(.caption)
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.orange)
+                            .cornerRadius(20)
+                    })
+                    .alert(isPresented: $speechRecognizer.showingPermissionAlert) {
+                        Alert(
+                            title: Text("Permissions Required"),
+                            message: Text("This app requires access to the microphone and speech recognition. Please enable permissions in settings."),
+                            primaryButton: .default(Text("Go settings"), action: openAppSettings),
+                            secondaryButton: .cancel(Text("Reject"))
+                        )
+                    }
                 }
             }
             Divider()
@@ -155,9 +199,16 @@ extension ProfileView {
             if selectedTab == .posts {
                 
                 if profileViewModel.posts.isEmpty{
-                    ProgressView()
-                        .padding(.top, 2)
-                        .padding(.bottom, 2)
+                    Text("💔Sorry, you don't have any posts yet.")
+                        .frame(alignment: .center)
+                        .bold()
+                        .font(.headline)
+                        .opacity(0.8)
+                        .padding(.vertical, 5)
+                    
+//                    ProgressView()
+//                        .padding(.top, 2)
+//                        .padding(.bottom, 2)
                 }
                 List{
                     PostCollection(
@@ -166,16 +217,15 @@ extension ProfileView {
                         gradientBackground: gradientBackground
                     )
                 }.listStyle(.plain)
-            } else if selectedTab == .liked {
-                // Replace with your LikedPostsView or a modified AllPostsView
-                // that displays liked posts.
-                
-                if profileViewModel.likedPosts.isEmpty{
-                    ProgressView()
-                        .padding(.top, 2)
-                        .padding(.bottom, 2)
+            } else if selectedTab == .liked {                
+                if profileViewModel.likedPosts.isEmpty { 
+                    Text("💔Sorry, You don't have liked posts yet.")
+                        .frame(alignment: .center)
+                        .bold()
+                        .font(.headline)
+                        .opacity(0.8)
+                        .padding(.vertical, 5)
                 }
-                
                 
                 List {
                     PostCollection(
@@ -199,7 +249,7 @@ extension ProfileView {
             userViewModel.signOutUser()
         }) {
             Text("Sign Out")
-                .foregroundColor(.orange)
+                .foregroundColor(.white)
                 .bold()
         }
     }

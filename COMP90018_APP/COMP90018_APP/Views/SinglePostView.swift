@@ -8,13 +8,22 @@
 import SwiftUI
 import Flow
 import Kingfisher
+import CoreLocation
+import MapKit
 
 struct SinglePostView: View {
     
     @State private var showAlert: Bool = false
+    @State private var showLocationRequestAlert: Bool = false
+    @State private var showLocationDistance: Bool = false
+    @State private var showDistanceFarAlert: Bool = false
+    var closeDistance: Double = 1000
+    var farDistance: Double = 50000
     @State private var temperature: Int = 0
     @State private var cityName: String = ""
     @State private var weatherDescription: String = ""
+        
+    @StateObject var locationManager = LocationManager()
     
     @Binding var post: Post
     @State var comments: [Comment] = []
@@ -29,10 +38,16 @@ struct SinglePostView: View {
     @StateObject private var userViewModel = UserViewModel()
     @StateObject private var singlePostViewModel = SinglePostViewModel()
     
+    @EnvironmentObject var speechRecognizer: SpeechRecognizerViewModel
+    @State private var microphoneAnimate = false
+    
     @State var authorUsername: String?
     @State var profileImageURL: String?
     
     private let dateFormatter = DateFormatter()
+    
+    var openMapCommand: String = "map"
+    var checkWeatherCommand: String = "weather"
     
     @Environment(\.presentationMode) var presentationMode
 
@@ -106,7 +121,98 @@ struct SinglePostView: View {
                             
                         }
                     }
-                    ToolbarItem(placement: .navigationBarTrailing) {
+                    // Only show the distance tip/distance if the post has location
+                    if (post.longitude != 0 && post.latitude != 0) {
+                        // If the location is enabled, show distance direclty, otherwise show distance tip button for enable location service
+                        if showLocationDistance {
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                let userLatitude = locationManager.location?.latitude ?? 0
+                                let userLontitude = locationManager.location?.longitude ?? 0
+                                
+                                let postCoordinate = CLLocation(latitude: post.latitude, longitude: post.longitude)
+                                let userCoordniate  = CLLocation(latitude: userLatitude, longitude: userLontitude)
+                                
+                                let distance = userCoordniate.distance(from: postCoordinate).rounded()
+                            
+                                    Button(action: {
+                                        // If the location is less than 50 km, navigate to map
+                                        if distance <= farDistance {
+                                            // Open Map for navigation
+                                            openMapsForNavigation(toLatitude: post.latitude, longitude: post.longitude, locationName: post.location)
+                                        }else{
+                                            showDistanceFarAlert = true
+                                        }
+                                    }) {
+                                        if distance < closeDistance {
+                                            // If less than 1000 meters, show in meters
+                                            Text("\(String(format: "%.0f", distance)) m")
+                                                .fontWeight(.bold)
+                                                .font(.callout)
+                                                .foregroundStyle(.black)
+                                                .padding(.horizontal, 15)
+                                                .padding(.vertical, 5)
+                                                .background(RoundedRectangle(cornerRadius: 15).stroke(Color.orange))
+                                        } else {
+                                            // If 1 km or more, convert to kilometers
+                                            let distanceInKilometers = distance / closeDistance
+                                            VStack{
+                                                Text("\(String(format: "%.0f", distanceInKilometers)) km")
+                                                Text("Go Here").font(.system(size: 10))
+                                            }
+                                                .fontWeight(.bold)
+                                                .font(.callout)
+                                                .foregroundStyle(.black)
+                                                .padding(.horizontal, 15)
+                                                .padding(.vertical, 5)
+                                                .background(RoundedRectangle(cornerRadius: 15).stroke(Color.orange))
+                                        }
+                                    }
+                                    .alert(isPresented: $showDistanceFarAlert, content: {
+                                        Alert(
+                                            title: Text("Confirmation"),
+                                            message: Text("This distance is over \(String(format: "%.0f", farDistance/closeDistance))km, Are you sure you want to proceed?"),
+                                            primaryButton: .default(Text("Yes")) {
+                                                // Open Map for navigation
+                                                openMapsForNavigation(toLatitude: post.latitude, longitude: post.longitude, locationName: post.location)
+                                            },
+                                            secondaryButton: .cancel()
+                                        )
+                                    })
+                                
+                            }
+                        } else {
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                Button {
+                                    locationManager.requestPermission { authorized in
+                                        if authorized {
+                                            showLocationDistance = true
+                                        } else {
+                                            showLocationRequestAlert = true
+                                        }
+                                        
+                                    }
+                                } label: {
+                                    Text("Distance tip")
+                                        .font(.subheadline)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Color.pink)
+                                        .padding(.horizontal, 15)
+                                        .padding(.vertical, 5)
+                                        .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
+                                }
+                                .alert(isPresented: $showLocationRequestAlert, content: {
+                                    Alert(
+                                        title: Text("Location Permission Denied"),
+                                        message: Text("The App requires location permission"),
+                                        primaryButton: .default(Text("Go Settings"), action: openAppSettings),
+                                        secondaryButton: .cancel(Text("Reject"))
+                                    )
+                                })
+                            }
+                        }
+                    }
+                    if (post.longitude != 0 && post.latitude != 0) {
+                        ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
                                 let apiKey = "95e381fda50cae025af8d88dde3f5c5c"
                                 getWeather(latitude: post.latitude, longitude: post.longitude, apiKey: apiKey)
@@ -119,6 +225,7 @@ struct SinglePostView: View {
                                     .padding(.vertical, 5)
                                     .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
                             }
+                            
                             .alert(isPresented: $showAlert) {
                                 Alert(title: Text("Weather Info for \(cityName)"),
                                       message: Text("Temperature: \(temperature)°C, Condition: \(weatherDescription)"),
@@ -172,8 +279,39 @@ struct SinglePostView: View {
                 if let comments = comments {
                     self.comments = comments
                 }
+            }  
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+                if locationManager.status == Status.success {
+                    showLocationDistance = true
+                }
             }
         }
+        .onChange(of: speechRecognizer.commandText, perform: { speech in
+            if speechRecognizer.commandText.lowercased().contains(openMapCommand) {
+                if showLocationDistance{
+                    DispatchQueue.main.async {
+                        speechRecognizer.resetSpeechTexts()
+                        openMapsForNavigation(toLatitude: post.latitude, longitude: post.longitude, locationName: post.location)
+                    }
+                }else {
+                    locationManager.requestPermission { authorized in
+                        if authorized {
+                            showLocationDistance = true
+                        } else {
+                            showLocationRequestAlert = true
+                        }
+                    }
+                }
+            }
+            if speechRecognizer.speechText.lowercased().contains(checkWeatherCommand) {
+                DispatchQueue.main.async {
+                    speechRecognizer.resetSpeechTexts()
+                    let apiKey = "95e381fda50cae025af8d88dde3f5c5c"
+                    getWeather(latitude: post.latitude, longitude: post.longitude, apiKey: apiKey)
+                }
+            }
+        })
         .refreshable {
             singlePostViewModel.getPostComments(postID: post.id) { comments in
                 if let comments = comments {
@@ -249,9 +387,22 @@ extension SinglePostView {
                     Text(String(post.likes))
                 }
                 // Pushes the two buttons apart
-                Spacer()
-                Spacer()
-                Spacer()
+                Spacer(minLength: 0)
+                if speechRecognizer.commandListerning {
+                    Image(systemName: "mic.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 30, height: 30)
+                        .scaleEffect(microphoneAnimate ? 1.2 : 1) // Pulsing effect
+                        .opacity(microphoneAnimate ? 0.7 : 1) // Changes the opacity
+                        .onAppear {
+                            withAnimation(Animation.easeInOut(duration: 0.7).repeatForever(autoreverses: true)) {
+                                microphoneAnimate = true
+                            }
+                        }
+
+                }
+                Spacer(minLength: 0)
                 HStack {
                     SinglePostCommentButton(
                         post: $post,

@@ -2,12 +2,19 @@ import Foundation
 import CoreLocation
 import MapKit
 
+enum Status: String {
+    case success = "success"
+    case fail = "fail"
+    case defaults = ""
+}
+
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     var manager = CLLocationManager()
         
         @Published var location: CLLocationCoordinate2D?
     @Published var region = MKCoordinateRegion()
     @Published var locationString: String = ""
+    @Published var status = Status.defaults
         
         override init() {
             super.init()
@@ -24,6 +31,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             case .authorizedWhenInUse, .authorizedAlways:
                 // Permissions have already been granted
                 completion(true)
+                self.status = Status.success
             case .notDetermined:
                 // Request permissions
                 manager.requestWhenInUseAuthorization()
@@ -41,8 +49,10 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             switch manager.authorizationStatus {
             case .authorizedWhenInUse, .authorizedAlways:
                 completionHandler?(true)
+                self.status = Status.success
             case .denied, .restricted:
                 completionHandler?(false)
+                self.status = Status.fail
                 print("Location authorization is \(manager.authorizationStatus.rawValue)")
             case .notDetermined:
                 print("Location authorization waiting...")
