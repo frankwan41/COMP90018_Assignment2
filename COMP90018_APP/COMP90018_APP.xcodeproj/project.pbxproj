@@ -36,6 +36,8 @@
 		4787E6F92AED143100025D4A /* LikeButtonPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4787E6F82AED143100025D4A /* LikeButtonPost.swift */; };
 		4787E6FB2AED145900025D4A /* LikeButtonComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4787E6FA2AED145900025D4A /* LikeButtonComment.swift */; };
 		4787E6FD2AED1A8F00025D4A /* DeleteButtonPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4787E6FC2AED1A8F00025D4A /* DeleteButtonPost.swift */; };
+		47B013472AEE46BB00FD89B6 /* ProfileViewLikedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47B013462AEE46BB00FD89B6 /* ProfileViewLikedModel.swift */; };
+		47B013492AEE473C00FD89B6 /* ProfileViewPostsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47B013482AEE473C00FD89B6 /* ProfileViewPostsModel.swift */; };
 		47B08A612AED1FDB006F32AF /* DeleteButtonComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47B08A602AED1FDB006F32AF /* DeleteButtonComment.swift */; };
 		47B08A652AED2DC1006F32AF /* PostPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47B08A642AED2DC1006F32AF /* PostPhotoView.swift */; };
 		47B08A682AED2F03006F32AF /* SinglePostCommentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47B08A672AED2F03006F32AF /* SinglePostCommentButton.swift */; };
@@ -164,6 +166,8 @@
 		4787E6F82AED143100025D4A /* LikeButtonPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeButtonPost.swift; sourceTree = "<group>"; };
 		4787E6FA2AED145900025D4A /* LikeButtonComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeButtonComment.swift; sourceTree = "<group>"; };
 		4787E6FC2AED1A8F00025D4A /* DeleteButtonPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButtonPost.swift; sourceTree = "<group>"; };
+		47B013462AEE46BB00FD89B6 /* ProfileViewLikedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewLikedModel.swift; sourceTree = "<group>"; };
+		47B013482AEE473C00FD89B6 /* ProfileViewPostsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewPostsModel.swift; sourceTree = "<group>"; };
 		47B08A602AED1FDB006F32AF /* DeleteButtonComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButtonComment.swift; sourceTree = "<group>"; };
 		47B08A642AED2DC1006F32AF /* PostPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostPhotoView.swift; sourceTree = "<group>"; };
 		47B08A672AED2F03006F32AF /* SinglePostCommentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SinglePostCommentButton.swift; sourceTree = "<group>"; };
@@ -354,6 +358,7 @@
 			isa = PBXGroup;
 			children = (
 				4787E6F32AEBEA9E00025D4A /* PostCollectionModel.swift */,
+				A2027CD42AB7D36000BA5391 /* ProfileViewModel.swift */,
 			);
 			path = InterfaceModels;
 			sourceTree = "<group>";
@@ -390,10 +395,11 @@
 				A2027C9B2AB304A100BA5391 /* UserModel.swift */,
 				A20A9FCD2AB7F8D3003833AA /* TagModel.swift */,
 				A2027CCC2AB42B6400BA5391 /* CommentModel.swift */,
+				A20A9FCF2AB81927003833AA /* UserViewModel.swift */,
 				A2027CD02AB7035500BA5391 /* AddPostViewModel.swift */,
 				A2027CD22AB7C85300BA5391 /* PostsViewModel.swift */,
-				A2027CD42AB7D36000BA5391 /* ProfileViewModel.swift */,
-				A20A9FCF2AB81927003833AA /* UserViewModel.swift */,
+				47B013482AEE473C00FD89B6 /* ProfileViewPostsModel.swift */,
+				47B013462AEE46BB00FD89B6 /* ProfileViewLikedModel.swift */,
 				A219E3DB2AE510B20082F991 /* ProfileSettingViewModel.swift */,
 				474617932AE8EF2B003145A2 /* SinglePostViewModel.swift */,
 				2DD346A92AE913F7001F6A57 /* LocationViewModel.swift */,
@@ -633,6 +639,7 @@
 				2DE1A5B72AB2C1A3000A2551 /* WelcomView.swift in Sources */,
 				2DE1A5BF2AB2C2D7000A2551 /* ProfileView.swift in Sources */,
 				A2D4FB722AECA2A3001326A8 /* ChatMainView.swift in Sources */,
+				47B013472AEE46BB00FD89B6 /* ProfileViewLikedModel.swift in Sources */,
 				A2D4FB682AEC913C001326A8 /* MessageCompo.swift in Sources */,
 				A2D4FAE22AEC8B51001326A8 /* MessageModel.swift in Sources */,
 				A2D4FB6E2AEC9862001326A8 /* MessageViewModel.swift in Sources */,
@@ -640,6 +647,7 @@
 				47B08A652AED2DC1006F32AF /* PostPhotoView.swift in Sources */,
 				A2027CD52AB7D36000BA5391 /* ProfileViewModel.swift in Sources */,
 				A20A9FCE2AB7F8D3003833AA /* TagModel.swift in Sources */,
+				47B013492AEE473C00FD89B6 /* ProfileViewPostsModel.swift in Sources */,
 				4787E6FD2AED1A8F00025D4A /* DeleteButtonPost.swift in Sources */,
 				47B08A682AED2F03006F32AF /* SinglePostCommentButton.swift in Sources */,
 				4787E6F42AEBEA9E00025D4A /* PostCollectionModel.swift in Sources */,

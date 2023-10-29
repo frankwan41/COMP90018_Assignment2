@@ -10,7 +10,8 @@ enum TabSelection: Int, CaseIterable {
 struct ProfileView: View {
 
     @ObservedObject var userViewModel: UserViewModel
-    @StateObject var profileViewModel = ProfileViewModel()
+    @StateObject var profileViewPostsModel = ProfileViewPostsModel()
+    @StateObject var profileViewLikedModel = ProfileViewLikedModel()
     @EnvironmentObject var speechRecognizer: SpeechRecognizerViewModel
 
     @State private var showLoginAlert = false
@@ -41,8 +42,7 @@ struct ProfileView: View {
                     } else {
                         loggedInView
                             .refreshable {
-                                profileViewModel.getUserInformation()
-                                profileViewModel.fetchPosts()
+                                refresh()
                             }
                     }
                 }
@@ -75,14 +75,12 @@ struct ProfileView: View {
                 if !userViewModel.isLoggedIn {
                     showLoginAlert = true
                 }
-                profileViewModel.getUserInformation()
-                profileViewModel.fetchPosts()
+                refresh()
             }
             .onChange(of: userViewModel.isLoggedIn, perform: { newValue in
                 if newValue {
                     wantsLogin = false
-                    profileViewModel.getUserInformation()
-                    profileViewModel.fetchPosts()
+                    refresh()
                 }
             })
             .sheet(isPresented: $wantsLogin) {
@@ -95,6 +93,13 @@ struct ProfileView: View {
                     }
             }
         }
+    }
+    
+    func refresh() {
+        profileViewPostsModel.getUserInformation()
+        profileViewPostsModel.fetchPosts()
+        profileViewLikedModel.getUserInformation()
+        profileViewLikedModel.fetchPosts()
     }
 
     
@@ -134,7 +139,7 @@ extension ProfileView {
     private var loggedInView: some View {
         VStack(spacing: 15) {
             HStack(alignment: .top,spacing: 10){
-                if let url = URL(string: profileViewModel.user.profileImageURL) {
+                if let url = URL(string: profileViewPostsModel.user.profileImageURL) {
                     KFImage(url)
                         .resizable()
                         .scaledToFit()
@@ -149,11 +154,11 @@ extension ProfileView {
                         .shadow(radius: 10)
                 }
                 VStack{
-                    Text(profileViewModel.user.userName)
+                    Text(profileViewPostsModel.user.userName)
                         .font(.largeTitle)
                         .bold()
                     
-                    NavigationLink(destination: ProfileSetttingView(profileSettingViewModel: ProfileSettingViewModel(), profileViewModel: profileViewModel)) {
+                    NavigationLink(destination: ProfileSetttingView(profileSettingViewModel: ProfileSettingViewModel(), profileViewModel: profileViewPostsModel)) {
                         Text("Modify Profile Details")
                             .font(.caption)
                             .foregroundColor(.white)
@@ -198,7 +203,7 @@ extension ProfileView {
             
             if selectedTab == .posts {
                 
-                if profileViewModel.posts.isEmpty{
+                if profileViewPostsModel.posts.isEmpty{
                     Text("💔Sorry, you don't have any posts yet.")
                         .frame(alignment: .center)
                         .bold()
@@ -213,12 +218,12 @@ extension ProfileView {
                 List{
                     PostCollection(
                         userViewModel: userViewModel,
-                        postCollectionModel: profileViewModel,
+                        postCollectionModel: profileViewPostsModel,
                         gradientBackground: gradientBackground
                     )
                 }.listStyle(.plain)
             } else if selectedTab == .liked {                
-                if profileViewModel.likedPosts.isEmpty { 
+                if profileViewLikedModel.posts.isEmpty {
                     Text("💔Sorry, You don't have liked posts yet.")
                         .frame(alignment: .center)
                         .bold()
@@ -230,7 +235,7 @@ extension ProfileView {
                 List {
                     PostCollection(
                         userViewModel: userViewModel,
-                        postCollectionModel: profileViewModel,
+                        postCollectionModel: profileViewLikedModel,
                         gradientBackground: gradientBackground
                     )
                 }.listStyle(.plain)
@@ -239,8 +244,7 @@ extension ProfileView {
 
         }
         .onChange(of: selectedTab, perform: { value in
-            profileViewModel.getUserInformation()
-            profileViewModel.fetchPosts()
+            refresh()
         })
     }
 
