@@ -29,6 +29,7 @@ struct MessageCompo: View {
                 Spacer()
             }
         }
+        .padding(.horizontal)
     }
 }
 

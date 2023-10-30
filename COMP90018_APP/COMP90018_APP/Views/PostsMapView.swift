@@ -116,15 +116,16 @@ struct PostsMapView: View {
                                 } label: {
                                     VStack(spacing: 1){
                                         Image(systemName: "info.circle.fill")
-                                            .fontWeight(.bold)
+                                            .font(.system(size: 12))
                                             .foregroundStyle(.black)
-                                        Text("Read")
-                                            .font(.caption)
-                                            .foregroundStyle(.black)
+                                        
+                                        // Create an transparent section for navigation
+                                        Rectangle()
+                                            .fill(Color.clear)
+                                            .frame(width: 100, height: 70)
                                     }
-                                    
                                 }
-                                .offset(y: 10)
+                                .offset(y: -56)
 
                                 // Button to next post
                                 Button {

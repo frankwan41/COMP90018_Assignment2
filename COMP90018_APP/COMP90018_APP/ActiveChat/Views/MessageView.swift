@@ -74,7 +74,7 @@ struct MessageView: View {
                     .cornerRadius(10)
                     .font(.body)
                     .foregroundColor(.black)
-                    .shadow(radius: 2)
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
                     .overlay(
                     RoundedRectangle(cornerRadius: 20)
                         .stroke(Color.gray, lineWidth: 1)

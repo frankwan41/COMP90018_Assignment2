@@ -47,7 +47,10 @@ struct PostCard: View {
                     }
                 }
                 VStack(alignment: .leading){
-                    Text(post.postTitle).font(.headline)
+                    Text(post.postTitle)
+                        .font(.headline)
+                        .lineLimit(2)
+                        .truncationMode(.tail)
                     HStack(spacing: 4){
                         if let urlString = author?.profileImageURL {
                             let url = URL(string: urlString)

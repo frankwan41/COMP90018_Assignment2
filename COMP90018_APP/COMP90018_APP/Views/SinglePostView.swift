@@ -116,6 +116,8 @@ struct SinglePostView: View {
                                 }
                                 if let username = authorUsername {
                                     Text(username)
+                                        .truncationMode(.tail)
+                                        .frame(width: 100)
                                 }
                             }
                             .foregroundColor(.black)
@@ -148,23 +150,23 @@ struct SinglePostView: View {
                                             // If less than 1000 meters, show in meters
                                             Text("\(String(format: "%.0f", distance)) m")
                                                 .fontWeight(.bold)
-                                                .font(.callout)
+                                                .font(.system(size: 12))
                                                 .foregroundStyle(.black)
-                                                .padding(.horizontal, 15)
-                                                .padding(.vertical, 5)
+                                                .padding(.horizontal, 8)
+                                                .padding(.vertical, 2)
                                                 .background(RoundedRectangle(cornerRadius: 15).stroke(Color.orange))
                                         } else {
                                             // If 1 km or more, convert to kilometers
                                             let distanceInKilometers = distance / closeDistance
                                             VStack{
                                                 Text("\(String(format: "%.0f", distanceInKilometers)) km")
-                                                Text("Go Here").font(.system(size: 10))
+                                                Text("Go Here").font(.system(size: 8))
                                             }
                                                 .fontWeight(.bold)
                                                 .font(.callout)
                                                 .foregroundStyle(.black)
-                                                .padding(.horizontal, 15)
-                                                .padding(.vertical, 5)
+                                                .padding(.horizontal, 8)
+                                                .padding(.vertical, 2)
                                                 .background(RoundedRectangle(cornerRadius: 15).stroke(Color.orange))
                                         }
                                     }
@@ -195,12 +197,12 @@ struct SinglePostView: View {
                                         
                                     }
                                 } label: {
-                                    Text("Distance tip")
-                                        .font(.subheadline)
+                                    Text("Distance")
+                                        .font(.system(size: 12))
                                         .fontWeight(.bold)
                                         .foregroundColor(Color.pink)
-                                        .padding(.horizontal, 15)
-                                        .padding(.vertical, 5)
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 2)
                                         .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
                                 }
                                 .alert(isPresented: $showLocationRequestAlert, content: {
@@ -220,12 +222,12 @@ struct SinglePostView: View {
                                 let apiKey = "95e381fda50cae025af8d88dde3f5c5c"
                                 getWeather(latitude: post.latitude, longitude: post.longitude, apiKey: apiKey)
                             } label: {
-                                Text("Weather tip")
-                                    .font(.subheadline)
+                                Text("Weather")
+                                    .font(.system(size: 12))
                                     .fontWeight(.bold)
                                     .foregroundColor(Color.pink)
-                                    .padding(.horizontal, 15)
-                                    .padding(.vertical, 5)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 2)
                                     .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
                             }
                             

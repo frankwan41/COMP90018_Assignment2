@@ -135,7 +135,7 @@ struct ChatMainView: View {
                             
                         }
                     ))
-                    .font(.title2)
+                    .font(.custom("ChalkboardSE-Bold", size: 20))
                     .padding(.horizontal, 10)
                     .tint(.orange)
                     .alert(isPresented: $showLocationRequestAlert) {
