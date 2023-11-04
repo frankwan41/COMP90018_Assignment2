@@ -4,13 +4,13 @@
 
 ## Table of Contents
 - [What2Eat](#comp90018_SoftwareProject---what2eat)
-  -[Table of Contents](#table-of-contents)
-  -[Demo Video](#demo-video)
-  -[User Guide](#user-guide)
-  -[Team Members](#team-members)
-  -[Key Features](#key-features)
-  -[Technologies Applied](#technologies-applied)
-  -[Development Setup](#development-setup)
+  - [Table of Contents](#table-of-contents)
+  - [Demo Video](#demo-video)
+  - [User Guide](#user-guide)
+  - [Team Members](#team-members)
+  - [Key Features](#key-features)
+  - [Technologies Applied](#technologies-applied)
+  - [Development Setup](#development-setup)
 
 
 ## [Demo Video]()
