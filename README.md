@@ -1,9 +1,10 @@
-# COMP90018_SoftwareProject - What2Eat
+# COMP90018_SoftwareProject-What2Eat
 
 ![](/readme_images/welcomeView.jpg)
 
 ## Table of Contents
-- [What2Eat](#comp90018_SoftwareProject---what2eat)
+
+- [What2Eat](#comp90018_SoftwareProject-what2eat)
   - [Table of Contents](#table-of-contents)
   - [Demo Video](#demo-video)
   - [User Guide](#user-guide)
