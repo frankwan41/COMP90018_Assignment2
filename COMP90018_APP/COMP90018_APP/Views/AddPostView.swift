@@ -28,6 +28,7 @@ struct AddPostView: View {
     @State private var existingTag: String? = nil
 
     
+    @State private var showInvalidPostAlert: Bool = false
     
     @State private var showImagePicker = false
     @State private var showImageCamera = false
@@ -43,30 +44,39 @@ struct AddPostView: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.dismiss) var dismiss
     
+    let gradientBackground = LinearGradient(
+        gradient: Gradient(colors: [Color.orange.opacity(0.2), Color.white.opacity(0.1)]),
+        startPoint: .top,
+        endPoint: .bottom
+    )
+    
     var body: some View {
         NavigationView{
-            ScrollView{
-                VStack(alignment: .leading){
-                    TextEditorView(text: $titleText, placeHolder: "Title", height: 50)
-                        .font(.title)
-                        .fontWeight(.bold)
-                    TextEditorView(text: $contentText, placeHolder: "Say something ...", height: 100)
-                        .font(.body)
-                    AddPhotoView(images: $images, showActionSheet: $showActionSheet, maxImagesCount: maxImagesCount)
-                        .padding(.bottom)
-                    Divider()
-                    LocationSection
-                    Divider()
-                    .padding(.bottom)
-                    
-                    PostTagsView(tags: $tags, existingTag: $existingTag)
-                        .padding(.bottom)
-                    AddPostTagsView(tags: $tags, existingTag: $existingTag)
-                    
+            ZStack{
+                gradientBackground.edgesIgnoringSafeArea(.all)
+                ScrollView{
+                    VStack(alignment: .leading){
+                        TextEditorView(text: $titleText, placeHolder: "Title", height: 50)
+                            .font(.title)
+                            .fontWeight(.bold)
+                        TextEditorView(text: $contentText, placeHolder: "Say something ...", height: 100)
+                            .font(.body)
+                        AddPhotoView(images: $images, showActionSheet: $showActionSheet, maxImagesCount: maxImagesCount)
+                            .padding(.bottom)
+                        Divider()
+                        LocationSection
+                        Divider()
+                            .padding(.bottom)
+                        
+                        PostTagsView(tags: $tags, existingTag: $existingTag)
+                            .padding(.bottom)
+                        AddPostTagsView(tags: $tags, existingTag: $existingTag)
+                        
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading)
+                    .padding()
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading)
-                .padding()
             }
             .alert(isPresented: $showLocationRequestAlert, content: {
                 Alert(
@@ -75,6 +85,9 @@ struct AddPostView: View {
                 primaryButton: .default(Text("Go Settings"), action: openAppSettings),
                 secondaryButton: .cancel(Text("Reject"))
             )
+            })
+            .alert(isPresented: $showInvalidPostAlert, content: {
+                Alert(title: Text("Invalid Post"), message: Text("The post at least need title or an image!"), dismissButton: .destructive(Text("OK")))
             })
             .sheet(isPresented: $showLocationSearchSheet, content: {
                 LocationSearchView(locationManager: locationManager, locationText: $location, selectedLatitude: $latitude, selectedLongitude: $longitude)
@@ -112,6 +125,11 @@ struct AddPostView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         
+                        if titleText.isEmpty && images.count == 0 {
+                            showInvalidPostAlert = true
+                            return
+                        }
+                        
                         //TODO: Submit the post
                         addPostViewModel.addPost(
                             postTitle:titleText, images: images, date: Date(), longitude: longitude, latitude: latitude, content: contentText, tags: tags, location: location
@@ -122,7 +140,7 @@ struct AddPostView: View {
                         Text("post".uppercased())
                     }
                     .buttonStyle(.borderedProminent)
-                    .tint(.red)
+                    .tint(.orange)
                     .padding()
                 }
             }
@@ -174,6 +192,7 @@ struct TextEditorView: View {
         ZStack(alignment: .topLeading){
             TextEditor(text: $text)
                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: height)
+                .clipShape(RoundedRectangle(cornerRadius: 15))
                 .padding(.bottom)
             
             if text.isEmpty {
@@ -258,7 +277,7 @@ struct PostTagsView: View {
                         .lineLimit(1)
                         .padding(.vertical, 5)
                         .padding(.horizontal, 10)
-                        .background(Capsule().fill(Color.gray.opacity(0.2)))
+                        .background(Capsule().fill(Color.orange.opacity(0.2)))
                     
                     // Top right button for deleting tag
                     Button(action: {
@@ -313,7 +332,7 @@ struct AddPostTagsView: View {
                     Text("Add")
                         .padding(.horizontal)
                         .padding(.vertical, 5)
-                        .background(Color.blue)
+                        .background(Color.orange)
                         .foregroundColor(.white)
                         .clipShape(RoundedRectangle(cornerRadius: 5))
                 }

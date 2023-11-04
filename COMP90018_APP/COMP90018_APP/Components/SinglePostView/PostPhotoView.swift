@@ -32,7 +32,7 @@ struct PostPhotoView: View {
         
         GeometryReader { geo in
             HStack(spacing: 8) {
-                if post.imageURLs.count > 0 {
+                if post.imageURLs.count > 1 {
                     ForEach(0 ..< post.imageURLs.count, id: \.self) { index in
                         Circle()
                             .frame(width: 8, height: 8)

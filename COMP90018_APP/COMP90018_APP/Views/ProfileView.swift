@@ -158,7 +158,7 @@ extension ProfileView {
                         .font(.largeTitle)
                         .bold()
                     
-                    NavigationLink(destination: ProfileSetttingView(profileSettingViewModel: ProfileSettingViewModel(), profileViewModel: profileViewPostsModel)) {
+                    NavigationLink(destination: ProfileSetttingView(profileSettingViewModel: ProfileSettingViewModel(), profileViewModel: profileViewPostsModel).navigationBarBackButtonHidden(true)) {
                         Text("Modify Profile Details")
                             .font(.caption)
                             .foregroundColor(.white)

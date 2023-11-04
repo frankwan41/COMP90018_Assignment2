@@ -61,7 +61,9 @@ struct SinglePostView: View {
                 
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
-                        PostPhotoView(post: $post, selectedPhotoIndex: $selectedPhotoIndex)
+                        if post.imageURLs.count > 0 {
+                            PostPhotoView(post: $post, selectedPhotoIndex: $selectedPhotoIndex)
+                        }
                         Text(post.postTitle)
                             .font(.title)
                             .fontWeight(.bold)

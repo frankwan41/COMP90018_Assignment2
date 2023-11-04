@@ -79,7 +79,7 @@ struct CommentTextField: View {
             }
             .frame(maxWidth: .infinity)
             .background(Color.white)
-            .padding(.horizontal)
+            .padding(.horizontal, post.imageURLs.count > 0 ? 15 : 0)
         }
     }
     

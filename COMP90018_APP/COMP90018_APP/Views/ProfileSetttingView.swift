@@ -42,10 +42,7 @@ struct ProfileSetttingView: View {
     
     var maxImagesCount = 1
     
-    
-    
-    
-
+    @Environment(\.presentationMode) private var presentationMode
     
     var fieldData: [(String, Binding<String>, Bool, String)] {
         [
@@ -59,14 +56,14 @@ struct ProfileSetttingView: View {
     }
     
     
-    
+    let gradientBackground = LinearGradient(
+        gradient: Gradient(colors: [Color.orange.opacity(0.1), Color.white.opacity(0.1)]),
+        startPoint: .leading,
+        endPoint: .trailing
+    )
     
     var body: some View {
-        ZStack{
-            isEditing ?             Color.black.opacity(0.1).ignoresSafeArea()
-            : Color.white.ignoresSafeArea()
-            
-
+        NavigationView {
             VStack{
                 Button {
                     if isEditing{
@@ -98,8 +95,8 @@ struct ProfileSetttingView: View {
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 44)
                                         .stroke(Color(.label), lineWidth:1)
-                                    )}
-                            
+                                )}
+                        
                         
                         if isEditing{
                             Text("Choose the Image")
@@ -110,21 +107,23 @@ struct ProfileSetttingView: View {
                         }
                     }
                     
-//                    Circle().fill(.white)
-//                        .shadow(radius: 10)
-//                        .frame(width: 200, height: 200)
-//                        .padding(.vertical, 50)
-//                        .overlay(Text("Select Your Image")
-//                        )
+                    //                    Circle().fill(.white)
+                    //                        .shadow(radius: 10)
+                    //                        .frame(width: 200, height: 200)
+                    //                        .padding(.vertical, 50)
+                    //                        .overlay(Text("Select Your Image")
+                    //                        )
                 }
-
                 
-                    
+                
+                
                 
                 List {
                     ForEach(fieldData, id: \.0) { (title, value, isSecure, defaultValue) in
                         EditableTextRow(title: title, value: isEditing ? value : .constant(defaultValue), isSecure: isSecure, isEditable: isEditing, passwordCover: $passwordCover)
+                            .listRowBackground(gradientBackground)
                             .padding(.vertical, 10)
+                        
                     }
                 }
                 .listStyle(.inset)
@@ -134,7 +133,7 @@ struct ProfileSetttingView: View {
                     profileSettingViewModel.getUserInformation { user in
                         updateFields(user: user)
                     }
-
+                    
                     getProfileImage()
                 }
                 .onDisappear {
@@ -147,43 +146,55 @@ struct ProfileSetttingView: View {
                     profileEditButton
                 }
             }
-        }
-        .onChange(of: imageChosen, perform: { newValue in
-            profileImageIsChanged = true
-            profileImage = imageChosen
-        })
-        
-        .onTapGesture {
-            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-
-        }
-        .confirmationDialog("", isPresented: $showActionSheet, actions: {
-            Button("Taking Photo") {
-                showImageCamera = true
-            }
-            Button("Select photos from album") {
-                showImagePicker = true
-            }
-        })
-        .sheet(isPresented: $showImageCamera) {
-            ImagePicker(sourceType: .camera) { selectedImage in
-                            if let image = selectedImage {
-                                imageChosen = image
-                                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)  // Save to photo library
-                            }
-                        }
-        }
-        .sheet(isPresented: $showImagePicker) {
-            ImagePickerCoordinatorView(maxImageCount: maxImagesCount - images.count,images: $images)
-                .onDisappear {
-                    if (images.count != 0){
-                        imageChosen = images.first!
+            .background( isEditing ? Color.black.opacity(0.1).ignoresSafeArea()
+                         : Color.orange.opacity(0.1).ignoresSafeArea())
+            .toolbar{
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        presentationMode.wrappedValue.dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.black)
                     }
                 }
-                .onAppear {
-                    images.removeAll()
-                }
+            }
+            .onChange(of: imageChosen, perform: { newValue in
+                profileImageIsChanged = true
+                profileImage = imageChosen
+            })
             
+            .onTapGesture {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                
+            }
+            .confirmationDialog("", isPresented: $showActionSheet, actions: {
+                Button("Taking Photo") {
+                    showImageCamera = true
+                }
+                Button("Select photos from album") {
+                    showImagePicker = true
+                }
+            })
+            .sheet(isPresented: $showImageCamera) {
+                ImagePicker(sourceType: .camera) { selectedImage in
+                    if let image = selectedImage {
+                        imageChosen = image
+                        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)  // Save to photo library
+                    }
+                }
+            }
+            .sheet(isPresented: $showImagePicker) {
+                ImagePickerCoordinatorView(maxImageCount: maxImagesCount - images.count,images: $images)
+                    .onDisappear {
+                        if (images.count != 0){
+                            imageChosen = images.first!
+                        }
+                    }
+                    .onAppear {
+                        images.removeAll()
+                    }
+                
+            }
         }
         
         
@@ -204,15 +215,15 @@ struct EditableTextRow: View {
             Text(title)
             Spacer()
             if isSecure {
-                    Group{
-                        if passwordCover {
-                            SecureField("", text: $value).disabled(!isEditable).multilineTextAlignment(.trailing)
-                            
-                        }else{
-                            TextField("", text: $value).disabled(!isEditable).multilineTextAlignment(.trailing)
-                        }
+                Group{
+                    if passwordCover {
+                        SecureField("", text: $value).disabled(!isEditable).multilineTextAlignment(.trailing)
+                        
+                    }else{
+                        TextField("", text: $value).disabled(!isEditable).multilineTextAlignment(.trailing)
                     }
-                    .padding(.trailing, isEditable ? 10 : 0)
+                }
+                .padding(.trailing, isEditable ? 10 : 0)
                 if isEditable{
                     Button {
                         passwordCover.toggle()
@@ -246,7 +257,7 @@ extension ProfileSetttingView {
                 .background(Color.blue)
                 .foregroundColor(.white)
                 .cornerRadius(10)
-                
+            
         }
         .padding(.bottom, 10)
     }
@@ -306,7 +317,7 @@ extension ProfileSetttingView {
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
-
+            
         }
     }
     
