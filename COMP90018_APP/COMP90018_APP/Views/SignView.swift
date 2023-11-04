@@ -49,7 +49,7 @@ struct SignView: View {
                         .foregroundColor(.white)
                         .padding()
                         .frame(width: 300, height: 50)
-                        .background(.blue)
+                        .background(.orange)
                         .cornerRadius(20)
                         .padding(.bottom)
                 }
@@ -109,7 +109,7 @@ struct SignView: View {
                 Button("Forgot password?") {
                     userViewModel.resetPassword(email: email)
                 }
-                .foregroundColor(.blue)
+                .foregroundColor(.orange)
             }
             
             HStack {
@@ -117,7 +117,7 @@ struct SignView: View {
                 Button(action: { isSignUpMode.toggle() }) {
                     Text(isSignUpMode ? "Sign In" : "Register")
                         .fontWeight(.bold)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(.orange)
                         .underline()
                 }
             }
