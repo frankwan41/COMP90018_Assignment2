@@ -20,6 +20,7 @@ struct COMP90018_APPApp: App {
     var body: some Scene {
         WindowGroup {
             WelcomView().environmentObject(SpeechRecognizerViewModel())
+                .preferredColorScheme(.light)
         }
     }
 }

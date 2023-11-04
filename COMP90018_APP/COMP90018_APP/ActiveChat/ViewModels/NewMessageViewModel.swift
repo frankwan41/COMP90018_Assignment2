@@ -46,6 +46,8 @@ class NewMessageViewModel: ObservableObject {
             
             let currentUserCoordinate = CLLocation(latitude: self.currentUser?.currentLatitude ?? 0, longitude: self.currentUser?.currentLongitude ?? 0)
             
+            var usersActive = [User]()
+            
             for user in users {
                 if user.uid != Auth.auth().currentUser?.uid {
                     
@@ -53,9 +55,9 @@ class NewMessageViewModel: ObservableObject {
                     // TODO: Only Fetch the users who are active
                     // TODO: Sort the users based on the distance between the user and the selected 
                     if user.isActive{
-                        self.users.append(user)
-                        self.users.sort{
-                            CLLocation(latitude: $0.currentLatitude, longitude: $0.currentLongitude).distance(from: currentUserCoordinate) 
+                        usersActive.append(user)
+                        usersActive.sort{
+                            CLLocation(latitude: $0.currentLatitude, longitude: $0.currentLongitude).distance(from: currentUserCoordinate)
                             <
                             CLLocation(latitude: $1.currentLatitude, longitude: $1.currentLongitude).distance(from: currentUserCoordinate)
                         }
@@ -63,6 +65,8 @@ class NewMessageViewModel: ObservableObject {
                     
                 }
             }
+            
+            self.users = usersActive
             
             
             

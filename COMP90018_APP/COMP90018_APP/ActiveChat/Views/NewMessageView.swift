@@ -42,6 +42,11 @@ struct NewMessageView: View {
                     }
                 }
             }
+            .refreshable {
+                Task{
+                    await viewModel.fetchAllUsers()
+                }
+            }
         }
     }
 }
