@@ -56,14 +56,11 @@ struct PostsMapView: View {
         // Set the selectedIndex
         self._selectedIndex = State(initialValue: filtered.first != nil ? 0 : -1)
         
-        if let currentLocation = locationManager.location {
-            self._region = State(initialValue: locationManager.region)
-        }
     }
 
     var body: some View {
         
-            ZStack(alignment: .bottom) {
+            VStack {
                 
                 // Create map annotation for all posts with valid latitude and lontitude, as well as indicate user current position
                 Map(coordinateRegion: $region, annotationItems: allAnnotations) { item in
@@ -81,6 +78,7 @@ struct PostsMapView: View {
                         }
                     }
                 }
+                .padding(.bottom, -20)
                 
                 
                 ForEach(filteredPosts.indices, id: \.self) {index in
@@ -152,6 +150,13 @@ struct PostsMapView: View {
                 self.user = user
             }
             
+            // Set the selectedIndex to the closest post
+            if let userLocation = locationManager.location, let closestIndex = indexOfNearestPost(to: userLocation) {
+                selectedIndex = closestIndex
+                // Set the region to include both locations
+                let postLocation = CLLocationCoordinate2D(latitude: filteredPosts[closestIndex].latitude, longitude: filteredPosts[closestIndex].longitude)
+                region = regionIncludingLocations(userLocation, postLocation)
+            }
             
         }
     }
@@ -193,6 +198,45 @@ struct PostsMapView: View {
         let postCoordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         region = MKCoordinateRegion(center: postCoordinate, latitudinalMeters: mapRange, longitudinalMeters: mapRange)
     }
+    
+    // Initialize region with cloest post and the current location
+    func regionIncludingLocations(_ location1: CLLocationCoordinate2D, _ location2: CLLocationCoordinate2D) -> MKCoordinateRegion {
+        let middlePoint = CLLocationCoordinate2D(
+            latitude: (location1.latitude + location2.latitude) / 2,
+            longitude: (location1.longitude + location2.longitude) / 2
+        )
+        
+        let latDelta = abs(location1.latitude - location2.latitude) * 2.0
+        let lonDelta = abs(location1.longitude - location2.longitude) * 2.0
+        
+        // Make sure the deltas are not too small to avoid an extremely zoomed in view
+        let span = MKCoordinateSpan(
+            latitudeDelta: max(latDelta, 0.01),
+            longitudeDelta: max(lonDelta, 0.01)
+        )
+        
+        return MKCoordinateRegion(center: middlePoint, span: span)
+    }
+
+
+
+
+    
+    // Calculate the post with the cloest distance to the current locaiton
+    func indexOfNearestPost(to location: CLLocationCoordinate2D) -> Int? {
+        guard !filteredPosts.isEmpty else { return nil }
+        
+        let distances = filteredPosts.map { post in
+            CLLocation(latitude: post.latitude, longitude: post.longitude).distance(from: CLLocation(latitude: location.latitude, longitude: location.longitude))
+        }
+        
+        if let closestIndex = distances.enumerated().min(by: { $0.element < $1.element })?.offset {
+            return closestIndex
+        }
+        
+        return nil
+    }
+
     
     // Generate map items including posts and current device location
     var allAnnotations: [MapAnnotationItem] {

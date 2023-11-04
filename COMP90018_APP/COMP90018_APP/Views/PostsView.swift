@@ -61,75 +61,15 @@ struct PostsView: View {
                             .foregroundStyle(.black)
                     }.padding()
                     
+                    // MUST HAVE THIS IF !!!!!!! NO IDEA WHY !!!!!!!!
                     if showPostsMapView{
                         PostsMapView(locationManager: locationManager,userViewModel: userViewModel, postsViewModel: postsViewModel, posts: $postsViewModel.posts)
-                    }else{
-                        
-                        Group{
-                            if postsViewModel.posts.isEmpty && searchCategory.isEmpty {
-                                ProgressView().padding(.bottom, 2)
-                            }
-                            HStack {
-                                TextField(
-                                    "Search tag...",
-                                    text: $searchCategory,
-                                    onEditingChanged: { isEditing in
-                                        isSearchFocused = isEditing
-                                        if (isSearchFocused) {
-                                            searchCategory = searchCategory
-                                                .trimmingCharacters(in: .whitespacesAndNewlines)
-                                                .lowercased()
-                                            shakeResult = searchCategory
-                                            processUserInput()
-                                        }
-                                    }
-                                )
-                                .focused($isSearchFocused)
-                                .padding(10)
-                                .background(Color.white.opacity(0.5))
-                                .cornerRadius(20)
-                                
-                                if isSearchFocused || !searchCategory.isEmpty {
-                                    Button("Cancel") {
-                                        searchCategory = ""
-                                        shakeResult = ""
-                                        isSearchFocused = false
-                                        processUserInput()
-                                    }
-                                    .padding(.trailing)
-                                }
-                            }
-                            .listRowBackground(postGradientBackground)
-                            
-                            if !shakeResult.isEmpty {
-                                if postsViewModel.posts.isEmpty {
-                                    Text("💔Sorry, No Post About \(shakeResult)")
-                                        .frame(alignment: .center)
-                                        .bold()
-                                        .font(.headline)
-                                        .opacity(0.8)
-                                        .padding(.vertical, 5)
-                                } else {
-                                    Text("💝Posts For \(shakeResult)")
-                                        .frame(alignment: .center)
-                                        .bold()
-                                        .font(.headline)
-                                        .opacity(0.8)
-                                        .padding(.vertical, 5)
-                                }
-                            }
-                            
-                            List {
-                                PostCollection(
-                                    userViewModel: userViewModel,
-                                    postCollectionModel: postsViewModel,
-                                    gradientBackground: postGradientBackground
-                                )
-                            }
-                            .listStyle(.plain)
-                        }
-                        .padding(.horizontal, 5)
+                            .opacity(showPostsMapView ? 1 : 0)
+                            .frame(maxHeight: showPostsMapView ? .infinity : 0)
                     }
+                    PostsListView
+                        .opacity(showPostsMapView ? 0 : 1)
+                        .frame(maxHeight: showPostsMapView ? 0 : .infinity)
                 }
                 .toolbar {
                     
@@ -194,5 +134,74 @@ struct PostsView: View {
         } else {
             postsViewModel.fetchPosts()
         }
+    }
+}
+
+extension PostsView {
+    private var PostsListView: some View {
+        VStack{
+            if postsViewModel.posts.isEmpty && searchCategory.isEmpty {
+                ProgressView().padding(.bottom, 2)
+            }
+            HStack {
+                TextField(
+                    "Search tag...",
+                    text: $searchCategory,
+                    onEditingChanged: { isEditing in
+                        isSearchFocused = isEditing
+                        if (isSearchFocused) {
+                            searchCategory = searchCategory
+                                .trimmingCharacters(in: .whitespacesAndNewlines)
+                                .lowercased()
+                            shakeResult = searchCategory
+                            processUserInput()
+                        }
+                    }
+                )
+                .focused($isSearchFocused)
+                .padding(10)
+                .background(Color.white.opacity(0.5))
+                .cornerRadius(20)
+                
+                if isSearchFocused || !searchCategory.isEmpty {
+                    Button("Cancel") {
+                        searchCategory = ""
+                        shakeResult = ""
+                        isSearchFocused = false
+                        processUserInput()
+                    }
+                    .padding(.trailing)
+                }
+            }
+            .listRowBackground(postGradientBackground)
+            
+            if !shakeResult.isEmpty {
+                if postsViewModel.posts.isEmpty {
+                    Text("💔Sorry, No Post About \(shakeResult)")
+                        .frame(alignment: .center)
+                        .bold()
+                        .font(.headline)
+                        .opacity(0.8)
+                        .padding(.vertical, 5)
+                } else {
+                    Text("💝Posts For \(shakeResult)")
+                        .frame(alignment: .center)
+                        .bold()
+                        .font(.headline)
+                        .opacity(0.8)
+                        .padding(.vertical, 5)
+                }
+            }
+            
+            List {
+                PostCollection(
+                    userViewModel: userViewModel,
+                    postCollectionModel: postsViewModel,
+                    gradientBackground: postGradientBackground
+                )
+            }
+            .listStyle(.plain)
+        }
+        .padding(.horizontal, 5)
     }
 }
