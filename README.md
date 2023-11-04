@@ -1,6 +1,7 @@
 # COMP90018_SoftwareProject-What2Eat
-
-![](/readme_images/welcomeView.jpg)
+<p align="center">
+<img src="readme_images/welcomeView.jpg" alt="Welcome View" width="400" height="400" align="center">
+</p>
 
 ## Table of Contents
 
@@ -10,9 +11,9 @@
   - [User Guide](#user-guide-and-key-features)
     - [Guest Mode](#guest-mode)
       - [Welcome](#welcome)
-      - [Read Posts](#gm-yes-rp)
-      - [Shake a Tag](#gm-no-shake)
-      - [Log In or Sign Up](#liosu)
+      - [Read Posts](#read-posts-as-a-guest-if-yes)
+      - [Shake a Tag](#shake-a-kind-of-cuisine-if-no)
+      - [Log In or Sign Up](#log-in-or-sign-up)
     - [User Mode](#user-mode)
   - [Team Members](#team-members)
   - [Technologies Applied](#technologies-applied)
@@ -27,12 +28,33 @@
 ### Guest Mode
 
 #### Welcome
+<p align="center">
+<img src="readme_images/welcome.PNG" alt="Welcome View" width="200" height="400" align="center">
+</p>
 
-#### YES: Read Posts as A Guest {#gm-yes-rp}
+#### Read Posts as A Guest If YES
+<p align="center">
+<img src="readme_images/gmPosts.PNG" alt="Posts View" width="200" height="400" align="center">
+</p>
 
-#### No: Shake A Kind of Cuisine {#gm-no-shake}
+#### Shake A Kind of Cuisine If NO
+<p align="center">
+  <img src="readme_images/shake.PNG" alt="Shake View" width="200" height="400" align="center">
+  <img src="readme_images/shakePosts.PNG" alt="Shake View" width="200" height="400" align="center">
+</p>
 
-#### Log In or Sign Up {#liosu}
+
+#### Log In or Sign Up 
+
+<p align="center">
+  <img src="readme_images/guestProfile.PNG" alt="Profile View" width="200" height="400" align="center">
+  
+  <img src="readme_images/signin.PNG" alt="Signin View" width="200" height="400" align="center">
+  
+  <img src="readme_images/signup.PNG" alt="Signup View" width="200" height="400" align="center">
+  
+</p>
+
 
 
 ### User Mode
