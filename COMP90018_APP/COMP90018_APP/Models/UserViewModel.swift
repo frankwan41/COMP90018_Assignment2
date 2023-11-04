@@ -370,4 +370,14 @@ class UserViewModel: ObservableObject {
         }
         getUser(userUID: uid) { user in completion(user) }
     }
+    
+    func sendPasswordResetEmail(email: String, completion: @escaping (Result<Void, Error>) -> Void) {
+            Auth.auth().sendPasswordReset(withEmail: email) { error in
+                if let error = error {
+                    completion(.failure(error))
+                } else {
+                    completion(.success(()))
+                }
+            }
+        }
 }

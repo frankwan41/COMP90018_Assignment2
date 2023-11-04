@@ -64,7 +64,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("Locations: \(locations)")
         self.location = locations.first?.coordinate
         guard let loc = locations.last else {return}
         self.region = MKCoordinateRegion(center: loc.coordinate, latitudinalMeters: 2000, longitudinalMeters: 2000)
@@ -79,7 +78,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
             
             let addressString = "\(placemark.locality ?? ""), \(placemark.administrativeArea ?? ""), \(placemark.country ?? "")"
-            print(addressString)
             self.locationString = addressString
         }
         

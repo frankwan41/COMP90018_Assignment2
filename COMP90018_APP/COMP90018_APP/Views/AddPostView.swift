@@ -47,13 +47,11 @@ struct AddPostView: View {
         NavigationView{
             ScrollView{
                 VStack(alignment: .leading){
-                    TextField("Title......", text: $titleText)
+                    TextEditorView(text: $titleText, placeHolder: "Title", height: 50)
                         .font(.title)
                         .fontWeight(.bold)
-                        .padding(.vertical)
-                    TextField("Say Something......", text: $contentText)
-                        .font(.title2)
-                        .padding(.bottom)
+                    TextEditorView(text: $contentText, placeHolder: "Say something ...", height: 100)
+                        .font(.body)
                     AddPhotoView(images: $images, showActionSheet: $showActionSheet, maxImagesCount: maxImagesCount)
                         .padding(.bottom)
                     Divider()
@@ -164,6 +162,29 @@ extension AddPostView {
 
     }
     
+}
+
+// Text editor allows text display on the screen width
+struct TextEditorView: View {
+    @Binding var text: String
+    var placeHolder: String
+    var height: CGFloat
+    
+    var body: some View {
+        ZStack(alignment: .topLeading){
+            TextEditor(text: $text)
+                .frame(minWidth: 0, maxWidth: .infinity, minHeight: height)
+                .padding(.bottom)
+            
+            if text.isEmpty {
+               Text(placeHolder)
+                    .foregroundColor(.gray.opacity(0.6))
+                    .padding(.top, 7)
+                    .padding(.leading, 5)
+                    .allowsHitTesting(false)
+           }
+        }
+    }
 }
 
 
