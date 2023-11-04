@@ -32,13 +32,14 @@ struct NewMessageView: View {
                 }
             }
             .padding(.top)
-            .navigationTitle("New Message")
+            .navigationTitle("Active Users")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
                         dismiss()
                     } label: {
                         Text("Cancel")
+                            .tint(Color.orange)
                     }
                 }
             }
