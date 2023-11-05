@@ -87,11 +87,12 @@ struct MessageView: View {
                 } label: {
                     Text("Send")
                         .padding(.trailing)
+                        .tint(Color.orange)
                 }
             }
             .padding()
         }
-        .navigationTitle(viewModel.user?.userName ?? "")
+        .navigationTitle(viewModel.user?.userName ?? "Loading...")
         .navigationBarTitleDisplayMode(.inline)
     }
 }

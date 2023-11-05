@@ -18,7 +18,7 @@ struct MessageCompo: View {
                 Text(message.text)
                     .foregroundColor(.white)
                     .padding(10)
-                    .background(Color.blue)
+                    .background(Color.orange)
                     .cornerRadius(10)
             } else {
                 Text(message.text)
