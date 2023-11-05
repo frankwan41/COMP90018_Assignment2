@@ -102,7 +102,7 @@ struct ProfileSetttingView: View {
                             Text("Choose the Image")
                                 .padding(.vertical, 1)
                                 .padding(.horizontal)
-                                .foregroundColor(.blue)
+                                .foregroundColor(.orange)
                                 .font(.title2)
                         }
                     }
@@ -254,7 +254,7 @@ extension ProfileSetttingView {
                 .frame(width: 200, height: 20)
                 .font(.title2)
                 .padding()
-                .background(Color.blue)
+                .background(Color.orange)
                 .foregroundColor(.white)
                 .cornerRadius(10)
             
@@ -280,7 +280,7 @@ extension ProfileSetttingView {
                     .frame(width: 90, height: 20)
                     .font(.title2)
                     .padding()
-                    .background(Color.blue)
+                    .background(Color.orange)
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
@@ -313,7 +313,7 @@ extension ProfileSetttingView {
                     .frame(width: 90, height: 20)
                     .font(.title2)
                     .padding()
-                    .background(Color.blue)
+                    .background(Color.orange)
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
