@@ -48,6 +48,11 @@ struct LikeButtonComment: View {
                 }
             }
         }
+        .onChange(of: userViewModel.isLoggedIn, perform: { loggedIn in
+            if (!loggedIn) {
+                isLiked = false;
+            }
+        })
     }
     
     func toggleAnimation() {
