@@ -117,6 +117,44 @@ class MessageViewModel: ObservableObject {
         }
     }
     
+    func sendImages(){
+        let imagesToSend = self.images
+        self.images.removeAll()
+        
+        for image in images{
+            sendSingleImage(image: image, timestamp: Timestamp())
+        }
+    }
+    
+    func sendSingleImage(image: UIImage, timestamp: Timestamp){
+        
+        
+        guard let selectedUserUid = user?.uid else{return}
+        
+        
+        // Create Date Formatter
+        let dateFormatter = DateFormatter()
+
+        // Set Date Format
+        dateFormatter.dateFormat = "YY/MM/dd"
+
+        // Convert Date to String
+        let timestampStr = dateFormatter.string(from: timestamp.dateValue())
+        
+        // TODO: Create an unique pathReference for the image
+        
+        
+        
+        // TODO: Upload the image and obtain its url
+        
+        // TODO: Upload the message 
+        
+        
+        
+        
+        
+    }
+    
     
     func persistRecentMessage(fromUid: String, toUid: String, username: String, profileImageUrl: String, text: String, timestamp: Timestamp, isImage: Bool) {
         let latestMessageData = [
