@@ -14,4 +14,8 @@ struct Message: Identifiable {
     let toId: String
     let text: String
     let date: Date
+    
+    // For Image
+    let isImage: Bool
+    let imageUrl: String
 }

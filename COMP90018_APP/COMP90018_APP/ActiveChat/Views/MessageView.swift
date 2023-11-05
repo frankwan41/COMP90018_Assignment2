@@ -11,6 +11,14 @@ struct MessageView: View {
     @ObservedObject var viewModel: MessageViewModel
     @State private var isEditing: Bool = false
     
+    
+    @State private var showImagePicker = false
+    @State private var showImageCamera = false
+    @State private var showActionSheet = false
+    @State private var profileImageIsChanged = false
+    @State private var images: [UIImage] = []
+    let maxImagesCount = 9
+    
     var body: some View {
         VStack {
             if viewModel.user == nil{
@@ -80,20 +88,62 @@ struct MessageView: View {
                         .stroke(Color.gray, lineWidth: 1)
                     )
                 
-                Button {
-                    if !viewModel.newMessageText.isEmpty{
-                        viewModel.sendNewMessage()
+                
+                // TODO: Display the ADD IMAGE button if no text typed
+                if viewModel.newMessageText.isEmpty{
+                    Button{
+                        // TODO: Show Image Picker
+                        showActionSheet = true
+                        
+                    }label:{
+                        Image(systemName: "plus")
+                            .foregroundColor(.white)
+                            .background(.orange)
+                            .font(.headline)
+                            .bold()
+                            .clipShape(Circle())
+                            .font(.headline)
                     }
-                } label: {
-                    Text("Send")
-                        .padding(.trailing)
-                        .tint(Color.orange)
+                    
+                    
+                }else{
+                    Button {
+                        if !viewModel.newMessageText.isEmpty{
+                            viewModel.sendNewMessage()
+                        }
+                    } label: {
+                        Text("Send")
+                            .padding(.trailing)
+                            .tint(Color.orange)
+                            .bold()
+                            .font(.headline)
+                    }
                 }
             }
             .padding()
         }
         .navigationTitle(viewModel.user?.userName ?? "Loading...")
         .navigationBarTitleDisplayMode(.inline)
+        
+        .confirmationDialog("", isPresented: $showActionSheet, actions: {
+            Button("Taking Photo") {
+                showImageCamera = true
+            }
+            Button("Select photos from album") {
+                showImagePicker = true
+            }
+        })
+        .sheet(isPresented: $showImageCamera) {
+            ImagePicker(sourceType: .camera) { selectedImage in
+                            if let image = selectedImage {
+                                images.append(image)
+                                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)  // Save to photo library
+                            }
+                        }
+        }
+        .sheet(isPresented: $showImagePicker) {
+            ImagePickerCoordinatorView(maxImageCount: maxImagesCount - images.count,images: $images)
+        }
     }
 }
 

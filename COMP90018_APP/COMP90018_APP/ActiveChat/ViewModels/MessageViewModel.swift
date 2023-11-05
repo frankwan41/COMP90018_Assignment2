@@ -39,7 +39,11 @@ class MessageViewModel: ObservableObject {
             "fromId": currentUser.uid,
             "toId": selectedUserUid,
             "text": messageTextToSend,//newMessageText,
-            "timestamp": Timestamp()
+            "timestamp": Timestamp(),
+            
+            "isImage": false,
+            "imageUrl": ""
+            
         ] as [String : Any]
         
         let messagesCollection = Firestore.firestore().collection("messages")
@@ -101,7 +105,10 @@ class MessageViewModel: ObservableObject {
                 let timestamp = data["timestamp"] as! Timestamp
                 let date = timestamp.dateValue()
                 
-                return Message(id: id, fromId: fromId, toId: toId, text: text, date: date)
+                let isImage = data["isImage"] as? Bool ?? false
+                let imageUrl = data["imageUrl"] as? String ?? ""
+                
+                return Message(id: id, fromId: fromId, toId: toId, text: text, date: date, isImage: isImage, imageUrl: imageUrl)
             })
             
             self.count += 1

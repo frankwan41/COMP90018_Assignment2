@@ -19,6 +19,9 @@ struct LatestMessage: Identifiable, Codable {
     let text: String
     let timestamp: Timestamp
     
+    // For Image
+    //let isImage: Bool
+    
     init(data: [String: Any]){
         
         self.id = data["id"] as? String ?? ""
@@ -28,6 +31,7 @@ struct LatestMessage: Identifiable, Codable {
         self.profileImageUrl = data["profileImageUrl"] as? String ?? ""
         self.text = data["text"] as? String ?? ""
         self.timestamp = (data["timestamp"] as? Timestamp ?? Timestamp(date: Date()))
+        //self.isImage = data["isImage"] as? Bool ?? false
         
     }
 }
