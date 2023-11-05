@@ -44,16 +44,18 @@ struct ProfileSetttingView: View {
     
     @Environment(\.presentationMode) private var presentationMode
     
-    var fieldData: [(String, Binding<String>, Bool, String)] {
+    var fieldData: [(String, Binding<String>, Bool, String, Bool)] {
         [
-            //("Email", $editedEmail, false, originalEmail),
-            ("Username", $editedUsername, false, originalUsername),
-            //("Password", $editedPassword, true, originalPassword),
-            ("Phone Number", $editedPhoneNumber, false, originalPhoneNumber),
-            ("Age", $editedAge, false, originalAge),
-            ("Gender", $editedGender, false, originalGender)
+            // Comment out or remove the Email and Password if they are not used
+            //("Email", $editedEmail, false, originalEmail, false), // Assuming email is not numeric
+            ("Username", $editedUsername, false, originalUsername, false), // Assuming username is not numeric
+            //("Password", $editedPassword, true, originalPassword, false), // Assuming password is not numeric
+            ("Phone Number", $editedPhoneNumber, false, originalPhoneNumber, true),
+            ("Age", $editedAge, false, originalAge, true),
+            ("Gender", $editedGender, false, originalGender, false) // Assuming gender is not numeric
         ]
     }
+
     
     
     let gradientBackground = LinearGradient(
@@ -119,13 +121,20 @@ struct ProfileSetttingView: View {
                 
                 
                 List {
-                    ForEach(fieldData, id: \.0) { (title, value, isSecure, defaultValue) in
-                        EditableTextRow(title: title, value: isEditing ? value : .constant(defaultValue), isSecure: isSecure, isEditable: isEditing, passwordCover: $passwordCover)
-                            .listRowBackground(gradientBackground)
-                            .padding(.vertical, 10)
-                        
+                    ForEach(fieldData, id: \.0) { (title, value, isSecure, defaultValue, isNumeric) in
+                        EditableTextRow(
+                            title: title,
+                            value: isEditing ? value : .constant(defaultValue),
+                            isSecure: isSecure,
+                            isEditable: isEditing,
+                            isNumeric: isNumeric,
+                            passwordCover: $passwordCover
+                        )
+                        .listRowBackground(gradientBackground)
+                        .padding(.vertical, 10)
                     }
                 }
+
                 .listStyle(.inset)
                 .navigationBarTitle(isEditing ? "Edit Profile" : "User Profile", displayMode: .inline)
                 .onAppear {
@@ -208,31 +217,53 @@ struct EditableTextRow: View {
     @Binding var value: String
     var isSecure: Bool = false
     var isEditable: Bool
+    var isNumeric: Bool = false
     @Binding var passwordCover: Bool
     
     var body: some View {
-        HStack{
+        HStack {
             Text(title)
             Spacer()
             if isSecure {
-                Group{
+                Group {
                     if passwordCover {
-                        SecureField("", text: $value).disabled(!isEditable).multilineTextAlignment(.trailing)
-                        
-                    }else{
-                        TextField("", text: $value).disabled(!isEditable).multilineTextAlignment(.trailing)
+                        SecureField("", text: $value)
+                            .disabled(!isEditable)
+                            .multilineTextAlignment(.trailing)
+                    } else {
+                        TextField("", text: $value)
+                            .disabled(!isEditable)
+                            .multilineTextAlignment(.trailing)
                     }
                 }
                 .padding(.trailing, isEditable ? 10 : 0)
-                if isEditable{
+                if isEditable {
                     Button {
                         passwordCover.toggle()
                     } label: {
-                        Image(systemName: passwordCover ? "eye.slash" :  "eye").accentColor(.gray)
+                        Image(systemName: passwordCover ? "eye.slash" : "eye").accentColor(.gray)
                     }
                 }
             } else {
-                TextField("", text: $value).disabled(!isEditable).multilineTextAlignment(.trailing)
+                // Check if the field is supposed to be numeric
+                if isNumeric {
+                    TextField("", text: Binding<String>(
+                        get: { self.value },
+                        set: { newValue in
+                            // Only allow the value to change if the new value is empty (allow deletion) or a numeric value
+                            if newValue.isEmpty || newValue.allSatisfy({ $0.isNumber }) {
+                                self.value = newValue
+                            }
+                        }
+                    ))
+                    .disabled(!isEditable)
+                    .multilineTextAlignment(.trailing)
+                    .keyboardType(.numberPad) // Display number pad for numeric input
+                } else {
+                    TextField("", text: $value)
+                        .disabled(!isEditable)
+                        .multilineTextAlignment(.trailing)
+                }
             }
         }
     }
