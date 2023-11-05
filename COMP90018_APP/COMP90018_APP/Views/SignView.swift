@@ -36,11 +36,15 @@ struct SignView: View {
                     .frame(width: 300, height: 50)
                     .background(.primary.opacity(0.2))
                     .cornerRadius(10)
-                Text(emailInvalidMessage).foregroundColor(.red)
+                if isSignUpMode{
+                    Text(emailInvalidMessage).foregroundColor(.red)
+                }
                 Spacer().frame(height: 20)
                 passwordField
                 VStack {
-                    Text(passwordInvalidMessage).foregroundColor(.red)
+                    if isSignUpMode {
+                        Text(passwordInvalidMessage).foregroundColor(.red)
+                    }
                     Text(userViewModel.errorMessage).foregroundColor(.red)
                 }
                 if isSignUpMode { signupExtraField }
@@ -127,12 +131,12 @@ struct SignView: View {
     private func handleSubmit() {
         hasSubmitted = true
         validInputCheck(email: email, password: password)
-        if emailInvalidMessage.isEmpty && passwordInvalidMessage.isEmpty {
-            if isSignUpMode {
+        if isSignUpMode{
+            if  emailInvalidMessage.isEmpty && passwordInvalidMessage.isEmpty {
                 userViewModel.signUpUser(email: email, password: password, userName: username, gender: gender, age: age, phoneNumber: phoneNumber)
-            } else {
-                userViewModel.signInUser(email: email, password: password)
             }
+        }else {
+            userViewModel.signInUser(email: email, password: password)
         }
     }
 
