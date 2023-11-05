@@ -37,7 +37,7 @@ struct LatestMessageCompo: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(latestMessage.username)
                         .font(.headline)
-                        .foregroundColor(.primary)
+                        .foregroundColor(.orange)
                     Text(latestMessage.text)
                         .font(.subheadline)
                         .foregroundColor(Auth.auth().currentUser?.uid == latestMessage.fromUid ? .secondary : .primary)

@@ -70,7 +70,7 @@ struct ChatMainView: View {
                         Text(currentUser.userName)
                             .font(.system(size: 24))
                             .bold()
-                            .tint(Color.orange)
+                            .foregroundColor(Color.orange)
                         
                         Text(currentUser.email)
                             .font(.system(size: 12))
