@@ -16,6 +16,7 @@ class MessageViewModel: ObservableObject {
     @Published var messages = [Message]()
     @Published var newMessageText = ""
     @Published var count = 0
+    @Published var images: [UIImage] = []
     
     private var listenerRegistration: ListenerRegistration?
     
@@ -63,7 +64,8 @@ class MessageViewModel: ObservableObject {
                     username: self.user?.userName ?? "",
                     profileImageUrl: self.user?.profileImageURL ?? "",
                     text: messageTextToSend,//self.newMessageText,
-                    timestamp: Timestamp()
+                    timestamp: Timestamp(),
+                    isImage: false
                 )
                 // self.newMessageText = ""
                 self.count += 1
@@ -116,14 +118,15 @@ class MessageViewModel: ObservableObject {
     }
     
     
-    func persistRecentMessage(fromUid: String, toUid: String, username: String, profileImageUrl: String, text: String, timestamp: Timestamp) {
+    func persistRecentMessage(fromUid: String, toUid: String, username: String, profileImageUrl: String, text: String, timestamp: Timestamp, isImage: Bool) {
         let latestMessageData = [
             "fromUid": fromUid,
             "toUid": toUid,
             "username": username,
             "profileImageUrl": profileImageUrl,
             "text": text,
-            "timestamp": timestamp
+            "timestamp": timestamp,
+            "isImage": isImage
         ] as [String: Any]
         
         let latestMessageCollection = Firestore.firestore().collection("latestMessages")
@@ -144,7 +147,8 @@ class MessageViewModel: ObservableObject {
             "username": currentUser.userName,
             "profileImageUrl": currentUser.profileImageURL,
             "text": text,
-            "timestamp": timestamp
+            "timestamp": timestamp,
+            "isImage": isImage
         ] as [String: Any]
         
         latestMessageCollection

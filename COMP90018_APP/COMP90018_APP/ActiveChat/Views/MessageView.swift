@@ -16,7 +16,7 @@ struct MessageView: View {
     @State private var showImageCamera = false
     @State private var showActionSheet = false
     @State private var profileImageIsChanged = false
-    @State private var images: [UIImage] = []
+    // @State private var images: [UIImage] = []
     let maxImagesCount = 9
     
     var body: some View {
@@ -136,13 +136,13 @@ struct MessageView: View {
         .sheet(isPresented: $showImageCamera) {
             ImagePicker(sourceType: .camera) { selectedImage in
                             if let image = selectedImage {
-                                images.append(image)
+                                viewModel.images.append(image)
                                 UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)  // Save to photo library
                             }
                         }
         }
         .sheet(isPresented: $showImagePicker) {
-            ImagePickerCoordinatorView(maxImageCount: maxImagesCount - images.count,images: $images)
+            ImagePickerCoordinatorView(maxImageCount: maxImagesCount - viewModel.images.count,images: $viewModel.images)
         }
     }
 }
