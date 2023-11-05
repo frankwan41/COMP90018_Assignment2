@@ -57,7 +57,7 @@ class AddPostViewModel{
                 ])
                 
                 print("Successfully uploaded the post \(ref.documentID)")
-               
+                
                 // save the image of the post to the storage
                 self.savePostImage(images: images, documentID: ref.documentID as String){ imageURLs in
                     Firestore.firestore()
@@ -70,11 +70,11 @@ class AddPostViewModel{
                 // Upload the tags of the post to the collection of the tags
                 self.uploadTagsInPost(tags: tags)
             }
-                
-                
         
-                
-            
+        
+        
+        
+        
         
     }
     
@@ -113,10 +113,10 @@ class AddPostViewModel{
             }
         }
         
-
+        
         dispatchGroup.notify(queue: .global()) {
-                completion(imageURLs)
-            }
+            completion(imageURLs)
+        }
         
     }
     
@@ -158,7 +158,7 @@ class AddPostViewModel{
                     print("Successfully uploaded one of the images in the post \(documentID)")
                     completion(url.absoluteString)
                 }
-            
+                
             }
         }
         
@@ -184,30 +184,25 @@ class AddPostViewModel{
     }
     
     // TODO: Fetch all tags from Firestore
-    func fetchAllTags(completion: @escaping ([String]?) -> Void) {
-        
-        
+    func fetchAllTags(searchTerm: String, completion: @escaping ([String]?) -> Void) {
         FirebaseManager.shared.firestore
             .collection("tags")
             .getDocuments { documentsSnapshot, error in
                 if let error = error {
-                    print("Failed to fecth all tags \(error)")
+                    print("Failed to fetch all tags \(error)")
+                    completion(nil)
                     return
                 }
                 var tags: [String] = []
                 
                 documentsSnapshot?.documents.forEach({ snapshot in
                     let data = snapshot.data()
-                    let tag = Tag(data: data)
-                    tags.append(tag.name)
+                    if let tag = data["name"] as? String, tag.fuzzyMatch(searchTerm) {
+                        tags.append(tag)
+                    }
                 })
                 
                 completion(tags)
-                
-                
             }
-        
-        completion(nil)
     }
-    
 }

@@ -11,6 +11,7 @@ import BSImagePicker
 import CoreLocationUI
 import MapKit
 import Combine
+import Foundation
 
 struct AddPostView: View {
     
@@ -38,6 +39,7 @@ struct AddPostView: View {
     @State private var showLocationRequestAlert = false
     
     var maxImagesCount = 9
+    
     
     @State private var locationEnable = false
     
@@ -232,8 +234,7 @@ struct AddPhotoView: View {
                                     .frame(width: 100, height: 100)
                                     .clipped()
                                 // Image delete button
-                                Button(action: {
-                                            images.remove(at: index)
+                                Button(action: {                                            images.remove(at: index)
                                         }) {
                                             Image(systemName: "xmark.circle.fill")
                                                 .font(.caption)
@@ -301,12 +302,20 @@ struct AddPostTagsView: View {
     @State private var addPostViewModel = AddPostViewModel()
     @Binding var tags: [String]
     @Binding var existingTag: String?
-    @State private var tagsExsiting: [String] = []
+    @State private var tagsExisting: [String] = []
     @State private var searchText: String = ""
     @State private var showDropdown: Bool = false
+
+    var matchingTags: [String] {
+        guard !searchText.isEmpty else { return [] }
+        let lowercasedQuery = searchText.lowercased()
+        return tagsExisting.filter { tag in
+            return tag.lowercased().contains(lowercasedQuery) ||
+                   tag.lowercased().range(of: lowercasedQuery, options: .regularExpression) != nil
+        }
+    }
     
     
-    var matchingTags: [String] { tagsExsiting.filter { $0.lowercased().contains(searchText.lowercased()) && !searchText.isEmpty }}
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -315,18 +324,10 @@ struct AddPostTagsView: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.trailing)
                 Button(action: {
-                    if !searchText.isEmpty{
-                        let processedString = searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-                        if !tags.contains(processedString){
-                            tags.append(processedString)
-                            searchText = ""
-                        }else{
-                            existingTag = processedString
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                existingTag = nil
-                            }
-                            searchText = ""
-                        }
+                    let processedString = searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+                    if !processedString.isEmpty && !tags.contains(processedString) {
+                        tags.append(processedString)
+                        searchText = ""
                     }
                 }) {
                     Text("Add")
@@ -337,26 +338,18 @@ struct AddPostTagsView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 5))
                 }
             }
-            // Display matching tags as dropdown
             if !matchingTags.isEmpty {
                 ScrollView {
                     VStack(alignment: .leading) {
-                        ForEach(matchingTags.indices, id: \.self) {index in
+                        ForEach(matchingTags, id: \.self) { tag in
                             Button(action: {
-                                if !tags.contains(matchingTags[index]) {
-                                    
-                                    tags.append(matchingTags[index].trimmingCharacters(in: .whitespacesAndNewlines).lowercased())
-                                    searchText = ""
-                                }else{
-                                    existingTag = matchingTags[index]
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                        existingTag = nil
-                                    }
+                                let processedTag = tag.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+                                if !tags.contains(processedTag) {
+                                    tags.append(processedTag)
                                     searchText = ""
                                 }
-                                
                             }) {
-                                Text(matchingTags[index])
+                                Text(tag)
                                     .padding(10)
                                     .padding(.leading, 5)
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -371,16 +364,37 @@ struct AddPostTagsView: View {
                             .stroke(Color.gray, lineWidth: 1)
                     )
                 }
-                .frame(height: 400)
+                .frame(height: 200)
             }
         }
-        .task {
-            addPostViewModel.fetchAllTags(){ tagsFetched in
-                if let tagsFetched = tagsFetched{
-                    tagsExsiting = tagsFetched
-                }
-            }
+        .onAppear {
+            tagsExisting = [
+                // Melbourne tags
+                "Melbourne food", "Melbourne coffee", "Melbourne nightlife",
+                "Melbourne markets", "Melbourne culture", "Melbourne events",
+
+                // Sydney tags
+                "Sydney beaches", "Sydney dining", "Sydney opera house",
+                "Sydney markets", "Sydney festivals", "Sydney seafood",
+
+                // Brisbane tags
+                "Brisbane river", "Brisbane BBQ", "Brisbane markets",
+                "Brisbane street food", "Brisbane local produce",
+
+                // Perth tags
+                "Perth beaches", "Perth vineyards", "Perth local cuisine",
+                "Perth seafood", "Perth festivals", "Perth street art",
+
+                // Adelaide tags
+                "Adelaide wineries", "Adelaide local food", "Adelaide art",
+                "Adelaide festivals", "Adelaide beaches", "Adelaide markets",
+
+                // Other tags
+                "Australian BBQ", "Australian wildlife", "Australian hiking",
+                "Australian surfing", "Australian outback", "Australian road trip"
+            ]
         }
+
     }
 }
 

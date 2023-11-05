@@ -136,6 +136,7 @@
 		A2D4FB722AECA2A3001326A8 /* ChatMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D4FB712AECA2A3001326A8 /* ChatMainView.swift */; };
 		A2D4FB762AECA5AE001326A8 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D4FB752AECA5AE001326A8 /* MessageView.swift */; };
 		A2D4FB792AECA67A001326A8 /* NewMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D4FB782AECA67A001326A8 /* NewMessageView.swift */; };
+		EF78EE7C2AF75D5F0010F356 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF78EE7B2AF75D5F0010F356 /* StringExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -197,6 +198,7 @@
 		A2D4FB712AECA2A3001326A8 /* ChatMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMainView.swift; sourceTree = "<group>"; };
 		A2D4FB752AECA5AE001326A8 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		A2D4FB782AECA67A001326A8 /* NewMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageView.swift; sourceTree = "<group>"; };
+		EF78EE7B2AF75D5F0010F356 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -359,6 +361,7 @@
 			children = (
 				4787E6F32AEBEA9E00025D4A /* PostCollectionModel.swift */,
 				A2027CD42AB7D36000BA5391 /* ProfileViewModel.swift */,
+				EF78EE7B2AF75D5F0010F356 /* StringExtensions.swift */,
 			);
 			path = InterfaceModels;
 			sourceTree = "<group>";
@@ -652,6 +655,7 @@
 				47B08A682AED2F03006F32AF /* SinglePostCommentButton.swift in Sources */,
 				4787E6F42AEBEA9E00025D4A /* PostCollectionModel.swift in Sources */,
 				4787E6FB2AED145900025D4A /* LikeButtonComment.swift in Sources */,
+				EF78EE7C2AF75D5F0010F356 /* StringExtensions.swift in Sources */,
 				A2027CD32AB7C85300BA5391 /* PostsViewModel.swift in Sources */,
 				4787E6EA2AEBE10400025D4A /* PostCard.swift in Sources */,
 				2DE1A5B92AB2C25D000A2551 /* PostsView.swift in Sources */,

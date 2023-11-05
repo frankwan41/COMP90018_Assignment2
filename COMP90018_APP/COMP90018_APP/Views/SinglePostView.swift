@@ -114,6 +114,7 @@ struct SinglePostView: View {
                                         .scaledToFit()
                                         .frame(width: 30, height: 30)
                                         .overlay(Circle().stroke(Color.black, lineWidth: 1))
+                                    
                                 }
                                 if let username = authorUsername {
                                     Text(username)

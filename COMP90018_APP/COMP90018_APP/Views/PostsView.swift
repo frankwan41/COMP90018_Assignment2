@@ -128,14 +128,21 @@ struct PostsView: View {
     
     // when user press return, search the tag
     func processUserInput() {
-        // Now you can use userInput to perform any operations you need
-        if searchCategory != "" {
-            postsViewModel.fetchPosts(tag: searchCategory)
+        // 首先确保有有效的搜索词
+        if !searchCategory.isEmpty {
+            // 过滤帖子，只保留标签模糊匹配的帖子
+            postsViewModel.posts = postsViewModel.posts.filter { post in
+                post.tags.contains { $0.fuzzyMatch(searchCategory) }
+            }
         } else {
+            // 如果没有搜索词，则显示所有帖子
+            // 这可能需要调用另一个方法来重新获取所有帖子
             postsViewModel.fetchPosts()
         }
     }
 }
+
+
 
 extension PostsView {
     private var PostsListView: some View {
