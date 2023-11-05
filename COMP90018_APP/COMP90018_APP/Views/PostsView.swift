@@ -128,18 +128,18 @@ struct PostsView: View {
     
     // when user press return, search the tag
     func processUserInput() {
-        // 首先确保有有效的搜索词
         if !searchCategory.isEmpty {
-            // 过滤帖子，只保留标签模糊匹配的帖子
+            // Filter posts to only keep those with tags that fuzzily match the search term
             postsViewModel.posts = postsViewModel.posts.filter { post in
                 post.tags.contains { $0.fuzzyMatch(searchCategory) }
             }
         } else {
-            // 如果没有搜索词，则显示所有帖子
-            // 这可能需要调用另一个方法来重新获取所有帖子
+            // If there is no search term, display all posts
+            // This may require calling another method to re-fetch all posts
             postsViewModel.fetchPosts()
         }
     }
+
 }
 
 
