@@ -15,6 +15,12 @@
       - [Shake a Tag](#shake-a-kind-of-cuisine-if-no)
       - [Log In or Sign Up](#log-in-or-sign-up)
     - [User Mode](#user-mode)
+      - [Like Post or Comment](#like-post-or-comment)
+      - [Send or Delete Post](#send-or-delete-post)
+      - [Send or Delete Comment](#send-or-delete-comment)
+      - [View Own or Liked Posts](#view-own-or-liked-posts)
+      - [Edit Profile](#edit-profile)
+      - [Chat with Nearby Users](#chat-with-nearby-users)
   - [Team Members](#team-members)
   - [Technologies Applied](#technologies-applied)
   - [Development Setup](#development-setup)
@@ -61,6 +67,45 @@
 
 ### User Mode
 
+#### Like Post or Comment
+<p align="center">
+  <img src="readme_images/userMode/likeAPost.PNG" alt="Like a Post" width="200" height="400" align="center">
+  <img src="readme_images/userMode/likeAComment.PNG" alt="Like a Comment" width="200" height="400" align="center">
+</p>
+
+#### Send or Delete Post
+<p align="center">
+  <img src="readme_images/userMode/sendAPost.PNG" alt="Send a Post" width="200" height="400" align="center">
+  <img src="readme_images/userMode/deleteAPost.PNG" alt="Delete a Post" width="200" height="400" align="center">
+</p>
+
+#### Send or Delete Comment
+<p align="center">
+  <img src="readme_images/userMode/sendAComment.PNG" alt="Send A Comment" width="200" height="400" align="center">
+  <img src="readme_images/userMode/deleteAComment.PNG" alt="Delete A Comment" width="200" height="400" align="center">
+</p>
+
+#### View Own or Liked Posts
+<p align="center">
+  <img src="readme_images/userMode/ownPosts.PNG" alt="Own Posts" width="200" height="400" align="center">
+  <img src="readme_images/userMode/likedPosts.PNG" alt="Liked Posts" width="200" height="400" align="center">
+</p>
+
+#### Edit Profile
+<p align="center">
+  <img src="readme_images/userMode/editProfile.PNG" alt="Edit Profile" width="200" height="400" align="center">
+</p>
+
+#### Chat with Nearby Users
+<p align="center">
+  <img src="readme_images/userMode/chat.PNG" alt="Chat" width="200" height="400" align="center">
+  <img src="readme_images/userMode/findActive.PNG" alt="Find Active users" width="200" height="400" align="center">
+  <img src="readme_images/userMode/sendMessage.PNG" alt="Send Message" width="200" height="400" align="center">
+</p>
+
+
+
+
 ## Team Members
 
 - [Bowen Fan](https://github.com/bowenfan-unimelb)
@@ -84,3 +129,7 @@
 
 ## Development Setup
 
+1. Clone the repo into Your Macbook
+2. Open the folder COMP90018_APP in Xcode
+3. Change the team(your personal team) and bundle ID (arbitrary one for testing) in General Setting
+4. Build the Application on iPhone (In the developer mode and trust the application)
