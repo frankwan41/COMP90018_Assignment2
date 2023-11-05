@@ -98,23 +98,22 @@ struct SinglePostView: View {
                         Button {
                             // Access user profile
                         } label: {
-                            HStack{
+                            HStack {
                                 // Get user profile picture
-                                if let urlString = profileImageURL {
-                                    let url = URL(string: urlString)
+                                if let urlString = profileImageURL, let url = URL(string: urlString) {
                                     KFImage(url)
                                         .resizable()
-                                        .frame(maxWidth: 30, maxHeight: 30)
-                                        .clipped()
-                                        .cornerRadius(50)
-                                        .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label), lineWidth: 1))
+                                        .scaledToFit()
+                                        .frame(width: 30, height: 30)
+                                        .clipShape(Circle())
+                                        .overlay(Circle().stroke(Color.black, lineWidth: 1))
                                 } else {
+                                    // Display a default profile image
                                     Image(systemName: "person.circle.fill")
                                         .resizable()
-                                        .frame(maxWidth: 30, maxHeight: 30)
-                                        .clipped()
-                                        .cornerRadius(50)
-                                        .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label), lineWidth: 1))
+                                        .scaledToFit()
+                                        .frame(width: 30, height: 30)
+                                        .overlay(Circle().stroke(Color.black, lineWidth: 1))
                                 }
                                 if let username = authorUsername {
                                     Text(username)
@@ -123,9 +122,9 @@ struct SinglePostView: View {
                                 }
                             }
                             .foregroundColor(.black)
-                            
                         }
                     }
+
                     // Only show the distance tip/distance if the post has location
                     if (post.longitude != 0 && post.latitude != 0) {
                         // If the location is enabled, show distance direclty, otherwise show distance tip button for enable location service
@@ -156,7 +155,7 @@ struct SinglePostView: View {
                                                 .foregroundStyle(.black)
                                                 .padding(.horizontal, 8)
                                                 .padding(.vertical, 2)
-                                                .background(RoundedRectangle(cornerRadius: 15).stroke(Color.orange))
+                                                .background(RoundedRectangle(cornerRadius: 15).stroke(Color.red))
                                         } else {
                                             // If 1 km or more, convert to kilometers
                                             let distanceInKilometers = distance / closeDistance
@@ -169,7 +168,7 @@ struct SinglePostView: View {
                                                 .foregroundStyle(.black)
                                                 .padding(.horizontal, 8)
                                                 .padding(.vertical, 2)
-                                                .background(RoundedRectangle(cornerRadius: 15).stroke(Color.orange))
+                                                .background(RoundedRectangle(cornerRadius: 15).stroke(Color.red))
                                         }
                                     }
                                     .alert(isPresented: $showDistanceFarAlert, content: {
@@ -235,7 +234,7 @@ struct SinglePostView: View {
                             
                             .alert(isPresented: $showAlert) {
                                 Alert(title: Text("Weather Info for \(cityName)"),
-                                      message: Text("Temperature: \(temperature)°C, Condition: \(weatherDescription)"),
+                                      message: Text("Temperature: \(temperature)°C \nCondition: \(weatherDescription)"),
                                       dismissButton: .default(Text("Got it!")))
                             }
                         }

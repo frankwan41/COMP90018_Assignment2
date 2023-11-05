@@ -102,7 +102,7 @@ struct ProfileSetttingView: View {
                             Text("Choose the Image")
                                 .padding(.vertical, 1)
                                 .padding(.horizontal)
-                                .foregroundColor(.orange)
+                                .foregroundColor(.black)
                                 .font(.title2)
                         }
                     }
