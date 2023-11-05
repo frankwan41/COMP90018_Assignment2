@@ -138,11 +138,15 @@ struct MessageView: View {
                             if let image = selectedImage {
                                 viewModel.images.append(image)
                                 UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)  // Save to photo library
+                                viewModel.sendImages()
                             }
                         }
         }
         .sheet(isPresented: $showImagePicker) {
             ImagePickerCoordinatorView(maxImageCount: maxImagesCount - viewModel.images.count,images: $viewModel.images)
+                .onDisappear{
+                    viewModel.sendImages()
+                }
         }
     }
 }

@@ -141,17 +141,123 @@ class MessageViewModel: ObservableObject {
         // Convert Date to String
         let timestampStr = dateFormatter.string(from: timestamp.dateValue())
         
-        // TODO: Create an unique pathReference for the image
+        // TODO: Create an unique pathReference for the image (Done)
+        let imagePath = currentUser.uid + selectedUserUid + timestampStr
+        
+        // TODO: Upload the image and obtain its url and then Upload the message
+        
+        self.saveSingleImage(image: image, documentID: imagePath) { imageUrl in
+            if let imageUrl = imageUrl{
+                
+                // TODO: upload the message to Firebase messages
+                
+                let newMessageData = [
+                    "fromId": self.currentUser.uid,
+                    "toId": selectedUserUid,
+                    "text": "",//newMessageText,
+                    "timestamp": timestamp,
+                    
+                    "isImage": true,
+                    "imageUrl": imageUrl
+                    
+                ] as [String : Any]
+                
+                let messagesCollection = Firestore.firestore().collection("messages")
+                
+                // Send a copy to the current user
+                messagesCollection
+                    .document(self.currentUser.uid)
+                    .collection(selectedUserUid)
+                    .addDocument(data: newMessageData) { error in
+                        if let error = error {
+                            print("Failed to send message, \(error.localizedDescription)")
+                        }
+                        
+                        self.persistRecentMessage(
+                            fromUid: self.currentUser.uid,
+                            toUid: selectedUserUid,
+                            username: self.user?.userName ?? "",
+                            profileImageUrl: self.user?.profileImageURL ?? "",
+                            text: "",//self.newMessageText,
+                            timestamp: timestamp,
+                            isImage: true
+                        )
+                        // self.newMessageText = ""
+                        self.count += 1
+                    }
+                
+                // Send a copy to the recipient
+                messagesCollection
+                    .document(selectedUserUid)
+                    .collection(self.currentUser.uid)
+                    .addDocument(data: newMessageData) { error in
+                        if let error = error {
+                            print("Failed to send message to recipient, \(error.localizedDescription)")
+                        }
+                        
+                        print("Successfully sent message to recipient!")
+                    }
+                
+                
+                
+            }else{
+                print("Failed to send the image to the recipient \(selectedUserUid) from \(self.currentUser.uid)")
+            }
+        }
         
         
         
-        // TODO: Upload the image and obtain its url
-        
-        // TODO: Upload the message 
+    
         
         
         
         
+    }
+    
+    func saveSingleImage(image: UIImage, documentID: String, completion: @escaping (String?) -> Void){
+        
+        // create the reference in the storage by the doumentID of the post
+        let ref = FirebaseManager.shared.storage.reference(withPath: documentID)
+        
+        // Compress the image
+        guard let imageData = image.jpegData(compressionQuality: 1) else {
+            print("Unable to compress the image of post \(documentID)")
+            completion(nil)
+            return}
+        
+        // Put the compressed image into the storage
+        let uploadTask = ref.putData(imageData, metadata: nil) { metadata, error in
+            if let error = error{
+                print("Error in storing the image, \(error.localizedDescription)")
+                print("Failed to upload one of the images in the post \(documentID)")
+                completion(nil)
+                return
+            }
+            
+            //Obtain the url of the image in the storage
+            ref.downloadURL { url, error in
+                if let error = error{
+                    print("Error in obtaining the url of the image \(error.localizedDescription)")
+                    print("Failed to upload one of the images in the post \(documentID)")
+                    completion(nil)
+                    return
+                }
+                
+                // Put the url to the collections of the post
+                if let url = url{
+                    print("The URL of the image is \(url)")
+                    print("Successfully uploaded one of the images in the post \(documentID)")
+                    completion(url.absoluteString)
+                }
+            
+            }
+        }
+        
+        // Monitor the progress of the upload task if needed.
+            uploadTask.observe(.progress) { snapshot in
+                let percentComplete = 100.0 * Double(snapshot.progress!.completedUnitCount) / Double(snapshot.progress!.totalUnitCount)
+                print("Image Upload is \(percentComplete)% complete")
+            }
         
     }
     

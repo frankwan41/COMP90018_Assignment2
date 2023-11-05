@@ -59,8 +59,8 @@ struct LatestMessageCompo: View {
                         .foregroundColor(.orange)
                     
                     // TODO: IF this is an image (Done)
-                    Text(latestMessage.text)
-                    //Text(latestMessage.isImage ? "[Image]" : latestMessage.text)
+                    //Text(latestMessage.text)
+                    Text(latestMessage.isImage ? "[Image]" : latestMessage.text)
                         .font(.subheadline)
                         .foregroundColor(Auth.auth().currentUser?.uid == latestMessage.fromUid ? .secondary : .primary)
                 }

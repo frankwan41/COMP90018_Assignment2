@@ -20,7 +20,7 @@ struct LatestMessage: Identifiable, Codable {
     let timestamp: Timestamp
     
     // For Image
-    //let isImage: Bool
+    let isImage: Bool
     
     init(data: [String: Any]){
         
@@ -31,7 +31,7 @@ struct LatestMessage: Identifiable, Codable {
         self.profileImageUrl = data["profileImageUrl"] as? String ?? ""
         self.text = data["text"] as? String ?? ""
         self.timestamp = (data["timestamp"] as? Timestamp ?? Timestamp(date: Date()))
-        //self.isImage = data["isImage"] as? Bool ?? false
+        self.isImage = data["isImage"] as? Bool ?? false
         
     }
 }
