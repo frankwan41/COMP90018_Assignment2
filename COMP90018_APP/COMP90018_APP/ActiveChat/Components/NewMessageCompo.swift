@@ -40,7 +40,7 @@ struct NewMessageCompo: View {
             VStack(alignment: .leading, spacing: 8) {
                 Text(user.userName)
                     .font(.headline)
-                    .foregroundColor(.black)
+                    .foregroundColor(.orange)
                 
                 Text(user.email)
                     .font(.subheadline)
