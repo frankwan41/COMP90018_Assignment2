@@ -123,7 +123,7 @@ struct PostsView: View {
             // Refresh code
             processUserInput()
         }
-        .task {
+        .onAppear {
             searchCategory = shakeResult
             processUserInput()
         }
