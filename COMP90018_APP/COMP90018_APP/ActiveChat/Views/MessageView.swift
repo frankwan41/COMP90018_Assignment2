@@ -19,16 +19,46 @@ struct MessageView: View {
     @State private var images: [UIImage] = []
     let maxImagesCount = 9
     
+    @Environment(\.dismiss) var dismiss
+    
+    
     var body: some View {
         VStack {
-            if viewModel.user == nil{
-                Text("Loading...")
-                    .frame(alignment: .center)
-                    .tint(.orange)
+            
+//            VStack{
+//                Spacer()
+//            }
+            
+            ZStack{
+                HStack{
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "arrowshape.turn.up.left.circle.fill")
+                            .tint(.orange)
+                            .font(.title)
+                    }
+                    .padding(.leading)
+                    
+                    Spacer()
+                }
+                
+                Text(viewModel.user?.userName ?? "Loading...")
+                    .foregroundStyle(Color.orange)
+                    .font(.title2)
+                    .bold()
+                    .padding(.horizontal)
+                
+                HStack{
+                    Spacer()
+                }
             }
-            VStack{
-                Spacer()
-            }
+            .shadow(radius: 30, x: -10.0, y: -10.0)
+            .padding(.top, 2)
+            
+            
+            
+            Divider()
             
             ScrollView {
                 ScrollViewReader { proxy in
@@ -99,13 +129,14 @@ struct MessageView: View {
                         showActionSheet = true
                         
                     }label:{
-                        Image(systemName: "plus")
-                            .foregroundColor(.white)
-                            .background(.orange)
-                            .font(.headline)
+                        Image(systemName: "rectangle.stack.badge.plus.fill")
+                            .scaledToFit()
+                            .foregroundColor(.orange)
+                            .background(.white)
+                            .font(.title)
                             .bold()
-                            .clipShape(Circle())
-                            .font(.headline)
+                            //.clipShape(Circle())
+                            .padding(.horizontal)
                     }
                     
                     
@@ -116,18 +147,21 @@ struct MessageView: View {
                         }
                     } label: {
                         Text("Send")
-                            .padding(.trailing)
+                            .padding(.horizontal)
                             .tint(Color.orange)
                             .bold()
                             .font(.headline)
-                            .frame(width: 20, height: 20, alignment: .trailing)
+                            
                     }
                 }
             }
             .padding()
         }
-        .navigationTitle(viewModel.user?.userName ?? "Loading...")
-        .navigationBarTitleDisplayMode(.inline)
+        //.navigationTitle(viewModel.user?.userName ?? "Loading...")
+        //.navigationBarTitleDisplayMode(.inline)
+        //.navigationBarHidden(true)
+        //.toolbar(.hidden)
+        //.navigationBarBackButtonHidden()
         
         
         .confirmationDialog("", isPresented: $showActionSheet, actions: {

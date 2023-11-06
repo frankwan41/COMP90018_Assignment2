@@ -41,7 +41,7 @@ struct MessageCompo: View {
                         .cornerRadius(10)
                 }
                 
-                Image(systemName: "arrow.uturn.backward.circle.fill")
+                Image(systemName: "arrowtriangle.left.circle.fill")
                     //.resizable()
                     .scaledToFill()
                     .frame(width: 5, height: 5)
@@ -58,7 +58,7 @@ struct MessageCompo: View {
                 
                 // TODO: If this is an image (Done)
                 
-                Image(systemName: "arrow.uturn.forward.circle.fill")
+                Image(systemName: "arrowtriangle.right.circle.fill")
                     //.resizable()
                     .scaledToFill()
                     .frame(width: 5, height: 5)

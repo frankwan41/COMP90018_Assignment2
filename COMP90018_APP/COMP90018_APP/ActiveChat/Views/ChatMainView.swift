@@ -98,8 +98,15 @@ struct ChatMainView: View {
                     }
                 }
                 
-                NavigationLink("", destination: MessageView(viewModel: messageViewModel), isActive: $showMessageView)
+                //NavigationLink("", destination: MessageView(viewModel: messageViewModel), isActive: $showMessageView)
             }
+        
+            .fullScreenCover(isPresented: $showMessageView, onDismiss: {
+                showMessageView = false
+            }, content: {
+                MessageView(viewModel: messageViewModel)
+            })
+            
             .toolbar {
                 ToolbarItem(placement:.topBarLeading){
                     Button {
