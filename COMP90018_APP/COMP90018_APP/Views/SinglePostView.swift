@@ -14,6 +14,10 @@ import MapKit
 
 struct SinglePostView: View {
     
+    
+    @AppStorage("shakeResult") var shakeResult = ""
+    @Environment(\.dismiss) var dismiss
+    
     @State private var showAlert: Bool = false
     @State private var showLocationRequestAlert: Bool = false
     @State private var showLocationDistance: Bool = false
@@ -440,12 +444,21 @@ extension SinglePostView {
         HFlow(spacing: 10) {
             ForEach(post.tags.indices, id: \.self) { index in
                 ZStack(alignment: .topTrailing) {
-                    Text(post.tags[index])
-                        .font(.caption)
-                        .lineLimit(1)
-                        .padding(.vertical, 5)
-                        .padding(.horizontal, 10)
-                        .background(Capsule().fill(Color.gray.opacity(0.2)))
+                    Button {
+                        
+                        shakeResult = post.tags[index]
+                        dismiss()
+                        
+                    } label: {
+                        Text(post.tags[index])
+                            .font(.caption)
+                            .lineLimit(1)
+                            .padding(.vertical, 5)
+                            .padding(.horizontal, 10)
+                            .background(Capsule().fill(Color.gray.opacity(0.2)))
+                    }
+
+                    
                 }
             }
         }
