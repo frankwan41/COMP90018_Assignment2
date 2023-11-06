@@ -93,6 +93,7 @@ struct ProfileSetttingView: View {
                         }else{
                             Image(systemName: "person.circle").resizable()
                                 .scaledToFill()
+                                .foregroundStyle(Color.orange)
                                 .frame(width:200, height: 200)
                                 .clipped()
                                 .cornerRadius(50)
