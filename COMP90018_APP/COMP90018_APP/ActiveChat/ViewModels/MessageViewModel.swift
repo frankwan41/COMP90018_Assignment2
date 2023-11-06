@@ -119,12 +119,14 @@ class MessageViewModel: ObservableObject {
     
     func sendImages(images: [UIImage]){
         
-        for image in images{
-            sendSingleImage(image: image, timestamp: Timestamp())
+        
+        for (indexValue, image) in images.enumerated(){
+            
+            sendSingleImage(image: image, timestamp: Timestamp(), uniqueNumber: indexValue)
         }
     }
     
-    func sendSingleImage(image: UIImage, timestamp: Timestamp){
+    func sendSingleImage(image: UIImage, timestamp: Timestamp, uniqueNumber: Int){
         
         
         guard let selectedUserUid = user?.uid else{return}
@@ -134,15 +136,15 @@ class MessageViewModel: ObservableObject {
         let dateFormatter = DateFormatter()
 
         // Set Date Format
-        dateFormatter.dateFormat = "YY/MM/dd"
+        dateFormatter.dateFormat = "ss/MM/dd/yyyy"
 
         // Convert Date to String
         let timestampStr = dateFormatter.string(from: timestamp.dateValue())
         
         // TODO: Create an unique pathReference for the image (Done)
-        let imagePath = currentUser.uid + selectedUserUid + timestampStr
+        let imagePath = currentUser.uid + selectedUserUid + timestampStr + String(uniqueNumber)
         
-        // TODO: Upload the image and obtain its url and then Upload the message
+        // TODO: Upload the image and obtain its url and then Upload the message (Done)
         
         self.saveSingleImage(image: image, documentID: imagePath) { imageUrl in
             if let imageUrl = imageUrl{

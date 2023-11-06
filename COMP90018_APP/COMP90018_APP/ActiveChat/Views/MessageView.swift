@@ -120,6 +120,7 @@ struct MessageView: View {
                             .tint(Color.orange)
                             .bold()
                             .font(.headline)
+                            .frame(width: 20, height: 20, alignment: .trailing)
                     }
                 }
             }
