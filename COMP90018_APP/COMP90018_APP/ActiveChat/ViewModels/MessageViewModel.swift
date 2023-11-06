@@ -18,12 +18,53 @@ class MessageViewModel: ObservableObject {
     @Published var count = 0
     // @Published var images: [UIImage] = []
     
+    @Published var fromProfileImage: UIImage?
+    @Published var toProfileImage: UIImage?
+    
     private var listenerRegistration: ListenerRegistration?
     
     init(user: User?, currentUser: User) {
         self.user = user
         self.currentUser = currentUser
+        
     }
+    
+    func updateUserProfileImages(){
+        
+        
+        self.getUserProfileImage(userUID: currentUser.uid) { profileImage in
+            self.fromProfileImage = profileImage
+        }
+        
+        if let toUser = self.user {
+            self.getUserProfileImage(userUID: toUser.uid) { profileImage in
+                self.toProfileImage = profileImage
+            }
+        }
+        
+    }
+    
+    /**
+     Inputs: userUID
+     This function will retrieve the image of user profile.
+     */
+    func getUserProfileImage(userUID: String, completion: @escaping (UIImage?) -> Void){
+        let ref = FirebaseManager.shared.storage.reference(withPath: userUID)
+        ref.getData(maxSize: Int64(PostsViewModel.MAX_IMAGE_SIZE)) { data, error in
+            if let error = error{
+                print("Unable to retrieve the image in the user profile, \(error.localizedDescription)")
+                completion(nil)
+            } else {
+                if let data = data{
+                    let image = UIImage(data: data)
+                    completion(image)
+                }
+            }
+        }
+        
+        
+    }
+    
     
     func sendNewMessage() {
         let messageTextToSend = self.newMessageText
@@ -31,10 +72,6 @@ class MessageViewModel: ObservableObject {
         
         
         guard let selectedUserUid = user?.uid else { return }
-        
-        
-        
-        
         
         let newMessageData = [
             "fromId": currentUser.uid,
@@ -86,6 +123,8 @@ class MessageViewModel: ObservableObject {
     
     func fetchMessages() {
         guard let selectedUserUid = user?.uid else { return }
+        
+        self.updateUserProfileImages()
         
         let messagesQuery = Firestore.firestore().collection("messages")
             .document(currentUser.uid)
@@ -325,6 +364,7 @@ class MessageViewModel: ObservableObject {
             }
             
             fetchMessages()
+            self.updateUserProfileImages()
         } catch {
             print("Error fetching user \(error.localizedDescription)")
         }

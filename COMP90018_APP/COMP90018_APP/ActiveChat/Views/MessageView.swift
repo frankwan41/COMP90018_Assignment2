@@ -64,7 +64,7 @@ struct MessageView: View {
                 ScrollViewReader { proxy in
                     VStack {
                         ForEach(viewModel.messages, id:\.id) { message in
-                            MessageCompo(message: message, isFromCurrentUser: message.fromId == viewModel.currentUser.uid)
+                            MessageCompo(message: message, isFromCurrentUser: message.fromId == viewModel.currentUser.uid, viewModel: viewModel)
                                 .id(message.id)
                         }
                         
@@ -162,7 +162,9 @@ struct MessageView: View {
         //.navigationBarHidden(true)
         //.toolbar(.hidden)
         //.navigationBarBackButtonHidden()
-        
+        .onAppear(perform: {
+            viewModel.toProfileImage = nil
+        })
         
         .confirmationDialog("", isPresented: $showActionSheet, actions: {
             Button("Taking Photo") {
