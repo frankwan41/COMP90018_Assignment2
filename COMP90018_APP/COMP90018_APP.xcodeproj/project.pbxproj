@@ -137,6 +137,8 @@
 		A2D4FB722AECA2A3001326A8 /* ChatMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D4FB712AECA2A3001326A8 /* ChatMainView.swift */; };
 		A2D4FB762AECA5AE001326A8 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D4FB752AECA5AE001326A8 /* MessageView.swift */; };
 		A2D4FB792AECA67A001326A8 /* NewMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D4FB782AECA67A001326A8 /* NewMessageView.swift */; };
+		EF50B8B82AF8AA5C005B8BA0 /* UserProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF50B8B72AF8AA5C005B8BA0 /* UserProfileViewModel.swift */; };
+		EF50B8BA2AF8AAB4005B8BA0 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF50B8B92AF8AAB4005B8BA0 /* UserProfileView.swift */; };
 		EF78EE7C2AF75D5F0010F356 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF78EE7B2AF75D5F0010F356 /* StringExtensions.swift */; };
 /* End PBXBuildFile section */
 
@@ -200,6 +202,8 @@
 		A2D4FB712AECA2A3001326A8 /* ChatMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMainView.swift; sourceTree = "<group>"; };
 		A2D4FB752AECA5AE001326A8 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		A2D4FB782AECA67A001326A8 /* NewMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageView.swift; sourceTree = "<group>"; };
+		EF50B8B72AF8AA5C005B8BA0 /* UserProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewModel.swift; sourceTree = "<group>"; };
+		EF50B8B92AF8AAB4005B8BA0 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 		EF78EE7B2AF75D5F0010F356 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -342,6 +346,7 @@
 				2DE1A5C42AB2CA68000A2551 /* TabMainView.swift */,
 				2DE1A5C62AB2CC0F000A2551 /* AddPostView.swift */,
 				2D65DA432AEDFE4600703782 /* PostsMapView.swift */,
+				EF50B8B92AF8AAB4005B8BA0 /* UserProfileView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -410,6 +415,7 @@
 				474617932AE8EF2B003145A2 /* SinglePostViewModel.swift */,
 				2DD346A92AE913F7001F6A57 /* LocationViewModel.swift */,
 				2DB04A592AECF41C00270DC5 /* SpeechRecognizerViewModel.swift */,
+				EF50B8B72AF8AA5C005B8BA0 /* UserProfileViewModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -653,10 +659,12 @@
 				2DE1A5C52AB2CA68000A2551 /* TabMainView.swift in Sources */,
 				47B08A652AED2DC1006F32AF /* PostPhotoView.swift in Sources */,
 				A2027CD52AB7D36000BA5391 /* ProfileViewModel.swift in Sources */,
+				EF50B8B82AF8AA5C005B8BA0 /* UserProfileViewModel.swift in Sources */,
 				A20A9FCE2AB7F8D3003833AA /* TagModel.swift in Sources */,
 				47B013492AEE473C00FD89B6 /* ProfileViewPostsModel.swift in Sources */,
 				4787E6FD2AED1A8F00025D4A /* DeleteButtonPost.swift in Sources */,
 				47B08A682AED2F03006F32AF /* SinglePostCommentButton.swift in Sources */,
+				EF50B8BA2AF8AAB4005B8BA0 /* UserProfileView.swift in Sources */,
 				4787E6F42AEBEA9E00025D4A /* PostCollectionModel.swift in Sources */,
 				4787E6FB2AED145900025D4A /* LikeButtonComment.swift in Sources */,
 				EF78EE7C2AF75D5F0010F356 /* StringExtensions.swift in Sources */,
@@ -799,7 +807,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"COMP90018_APP/Preview Content\"";
-				DEVELOPMENT_TEAM = BP5V2KJJ9F;
+				DEVELOPMENT_TEAM = FG3983F44B;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "COMP90018-APP-Info.plist";
@@ -822,7 +830,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "COMP90018.COMP90018-APP-Test2";
+				PRODUCT_BUNDLE_IDENTIFIER = "COMP90018.COMP90018-APP-Alex";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -838,7 +846,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"COMP90018_APP/Preview Content\"";
-				DEVELOPMENT_TEAM = BP5V2KJJ9F;
+				DEVELOPMENT_TEAM = FG3983F44B;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "COMP90018-APP-Info.plist";
@@ -861,7 +869,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "COMP90018.COMP90018-APP-Test2";
+				PRODUCT_BUNDLE_IDENTIFIER = "COMP90018.COMP90018-APP-Alex";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
