@@ -36,7 +36,7 @@ struct MessageView: View {
                     } label: {
                         Image(systemName: "arrowshape.turn.up.left.circle.fill")
                             .tint(.orange)
-                            .font(.title)
+                            .font(.largeTitle)
                     }
                     .padding(.leading)
                     
