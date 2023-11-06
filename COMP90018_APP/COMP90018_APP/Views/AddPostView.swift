@@ -353,6 +353,7 @@ struct AddPostTagsView: View {
                                     .padding(10)
                                     .padding(.leading, 5)
                                     .frame(maxWidth: .infinity, alignment: .leading)
+                                    .foregroundColor(.black)
                             }
                             Divider()
                         }

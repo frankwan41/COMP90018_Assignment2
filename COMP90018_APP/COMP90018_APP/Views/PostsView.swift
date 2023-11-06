@@ -70,6 +70,9 @@ struct PostsView: View {
                     PostsListView
                         .opacity(showPostsMapView ? 0 : 1)
                         .frame(maxHeight: showPostsMapView ? 0 : .infinity)
+                    HStack {
+                                            Spacer()
+                                        }
                 }
                 .toolbar {
                     
