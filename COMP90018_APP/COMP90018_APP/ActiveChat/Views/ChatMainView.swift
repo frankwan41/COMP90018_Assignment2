@@ -70,10 +70,12 @@ struct ChatMainView: View {
                         Text(currentUser.userName)
                             .font(.system(size: 24))
                             .bold()
+                            .foregroundColor(Color.orange)
                         
                         Text(currentUser.email)
                             .font(.system(size: 12))
                             .foregroundColor(Color(.lightGray))
+                            .tint(Color.orange)
                     }
                     
                     Spacer()
@@ -96,8 +98,15 @@ struct ChatMainView: View {
                     }
                 }
                 
-                NavigationLink("", destination: MessageView(viewModel: messageViewModel), isActive: $showMessageView)
+                //NavigationLink("", destination: MessageView(viewModel: messageViewModel), isActive: $showMessageView)
             }
+        
+            .fullScreenCover(isPresented: $showMessageView, onDismiss: {
+                showMessageView = false
+            }, content: {
+                MessageView(viewModel: messageViewModel)
+            })
+            
             .toolbar {
                 ToolbarItem(placement:.topBarLeading){
                     Button {

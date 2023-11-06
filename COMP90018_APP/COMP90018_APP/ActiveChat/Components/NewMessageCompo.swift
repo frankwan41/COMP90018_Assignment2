@@ -26,13 +26,16 @@ struct NewMessageCompo: View {
             if !user.profileImageURL.isEmpty{
                 KFImage(URL(string: user.profileImageURL))
                     .resizable()
+                    .scaledToFill()
                     .frame(width: 60, height: 60)
                     .clipShape(Circle())
             }else{
                 Image(systemName: "person.circle")
                     .resizable()
+                    .scaledToFill()
                     .frame(width: 60, height: 60)
                     .clipShape(Circle())
+                    .foregroundColor(.orange)
             }
             
             
@@ -40,7 +43,7 @@ struct NewMessageCompo: View {
             VStack(alignment: .leading, spacing: 8) {
                 Text(user.userName)
                     .font(.headline)
-                    .foregroundColor(.black)
+                    .foregroundColor(.orange)
                 
                 Text(user.email)
                     .font(.subheadline)

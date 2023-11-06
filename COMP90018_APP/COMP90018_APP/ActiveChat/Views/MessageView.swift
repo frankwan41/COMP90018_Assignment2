@@ -11,13 +11,54 @@ struct MessageView: View {
     @ObservedObject var viewModel: MessageViewModel
     @State private var isEditing: Bool = false
     
+    
+    @State private var showImagePicker = false
+    @State private var showImageCamera = false
+    @State private var showActionSheet = false
+    @State private var profileImageIsChanged = false
+    @State private var images: [UIImage] = []
+    let maxImagesCount = 9
+    
+    @Environment(\.dismiss) var dismiss
+    
+    
     var body: some View {
         VStack {
-            if viewModel.user == nil{
-                Text("Loading...")
-                    .frame(alignment: .center)
-                    .tint(.orange)
+            
+//            VStack{
+//                Spacer()
+//            }
+            
+            ZStack{
+                HStack{
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "arrowshape.turn.up.left.circle.fill")
+                            .tint(.orange)
+                            .font(.title)
+                    }
+                    .padding(.leading)
+                    
+                    Spacer()
+                }
+                
+                Text(viewModel.user?.userName ?? "Loading...")
+                    .foregroundStyle(Color.orange)
+                    .font(.title2)
+                    .bold()
+                    .padding(.horizontal)
+                
+                HStack{
+                    Spacer()
+                }
             }
+            .shadow(radius: 30, x: -10.0, y: -10.0)
+            .padding(.top, 2)
+            
+            
+            
+            Divider()
             
             ScrollView {
                 ScrollViewReader { proxy in
@@ -80,19 +121,74 @@ struct MessageView: View {
                         .stroke(Color.gray, lineWidth: 1)
                     )
                 
-                Button {
-                    if !viewModel.newMessageText.isEmpty{
-                        viewModel.sendNewMessage()
+                
+                // TODO: Display the ADD IMAGE button if no text typed
+                if viewModel.newMessageText.isEmpty{
+                    Button{
+                        // TODO: Show Image Picker
+                        showActionSheet = true
+                        
+                    }label:{
+                        Image(systemName: "rectangle.stack.badge.plus.fill")
+                            .scaledToFit()
+                            .foregroundColor(.orange)
+                            .background(.white)
+                            .font(.title)
+                            .bold()
+                            //.clipShape(Circle())
+                            .padding(.horizontal)
                     }
-                } label: {
-                    Text("Send")
-                        .padding(.trailing)
+                    
+                    
+                }else{
+                    Button {
+                        if !viewModel.newMessageText.isEmpty{
+                            viewModel.sendNewMessage()
+                        }
+                    } label: {
+                        Text("Send")
+                            .padding(.horizontal)
+                            .tint(Color.orange)
+                            .bold()
+                            .font(.headline)
+                            
+                    }
                 }
             }
             .padding()
         }
-        .navigationTitle(viewModel.user?.userName ?? "")
-        .navigationBarTitleDisplayMode(.inline)
+        //.navigationTitle(viewModel.user?.userName ?? "Loading...")
+        //.navigationBarTitleDisplayMode(.inline)
+        //.navigationBarHidden(true)
+        //.toolbar(.hidden)
+        //.navigationBarBackButtonHidden()
+        
+        
+        .confirmationDialog("", isPresented: $showActionSheet, actions: {
+            Button("Taking Photo") {
+                showImageCamera = true
+            }
+            Button("Select photos from album") {
+                showImagePicker = true
+            }
+        })
+        .sheet(isPresented: $showImageCamera) {
+            ImagePicker(sourceType: .camera) { selectedImage in
+                            if let image = selectedImage {
+                                images.append(image)
+                                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)  // Save to photo library
+                                viewModel.sendImages(images: images)
+                                images.removeAll()
+                            }
+                        }
+        }
+        .sheet(isPresented: $showImagePicker) {
+            ImagePickerCoordinatorView(maxImageCount: maxImagesCount - images.count,images: $images)
+                .onDisappear{
+                    viewModel.sendImages(images: images)
+                    images.removeAll()
+                }
+        }
     }
 }
 
