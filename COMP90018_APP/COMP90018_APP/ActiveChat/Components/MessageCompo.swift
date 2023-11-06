@@ -15,8 +15,10 @@ struct MessageCompo: View {
     let imageWidth: CGFloat = 300
     let imageHeight: CGFloat = 400
     
-    @State var fromProfileImage: UIImage?
-    @State var toProfileImage: UIImage?
+//    @State var fromProfileImage: UIImage?
+//    @State var toProfileImage: UIImage?
+    
+    @ObservedObject var viewModel: MessageViewModel
     
     var body: some View {
         HStack {
@@ -44,7 +46,7 @@ struct MessageCompo: View {
                         .cornerRadius(10)
                 }
                 
-                if let fromProfileImage = fromProfileImage{
+                if let fromProfileImage = viewModel.fromProfileImage{
                     Image(uiImage: fromProfileImage)
                         .resizable()
                         .scaledToFill()
@@ -88,7 +90,7 @@ struct MessageCompo: View {
             } else {
                 
                 // TODO: If this is an image (Done)
-                if let toProfileImage = toProfileImage{
+                if let toProfileImage = viewModel.toProfileImage{
                     Image(uiImage: toProfileImage)
                         .resizable()
                         .scaledToFill()

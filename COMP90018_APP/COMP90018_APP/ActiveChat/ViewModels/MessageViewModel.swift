@@ -27,6 +27,11 @@ class MessageViewModel: ObservableObject {
         self.user = user
         self.currentUser = currentUser
         
+    }
+    
+    func updateUserProfileImages(){
+        
+        
         self.getUserProfileImage(userUID: currentUser.uid) { profileImage in
             self.fromProfileImage = profileImage
         }
@@ -36,6 +41,7 @@ class MessageViewModel: ObservableObject {
                 self.toProfileImage = profileImage
             }
         }
+        
     }
     
     /**
@@ -117,6 +123,8 @@ class MessageViewModel: ObservableObject {
     
     func fetchMessages() {
         guard let selectedUserUid = user?.uid else { return }
+        
+        self.updateUserProfileImages()
         
         let messagesQuery = Firestore.firestore().collection("messages")
             .document(currentUser.uid)
@@ -356,6 +364,7 @@ class MessageViewModel: ObservableObject {
             }
             
             fetchMessages()
+            self.updateUserProfileImages()
         } catch {
             print("Error fetching user \(error.localizedDescription)")
         }

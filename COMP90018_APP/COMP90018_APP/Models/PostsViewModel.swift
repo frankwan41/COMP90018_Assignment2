@@ -11,7 +11,7 @@ import UIKit
 class PostsViewModel: PostCollectionModel {
     
     static let DEFAULT_POST_COUNT = 100
-    static let MAX_IMAGE_SIZE: Int = 10 * 1024 * 1024
+    static let MAX_IMAGE_SIZE: Int = 20 * 1024 * 1024
     
     /**
      Fetch all posts and order them by timestamps descendingly
