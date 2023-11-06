@@ -139,6 +139,7 @@ struct welcomeMainView: View {
                 }
             }
         }.ignoresSafeArea()
+            .withFooter()
     }
 }
 

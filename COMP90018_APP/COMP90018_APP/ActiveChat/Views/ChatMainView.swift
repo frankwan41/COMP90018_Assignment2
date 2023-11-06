@@ -100,7 +100,7 @@ struct ChatMainView: View {
                 
                 //NavigationLink("", destination: MessageView(viewModel: messageViewModel), isActive: $showMessageView)
             }
-        
+            .withFooter()
             .fullScreenCover(isPresented: $showMessageView, onDismiss: {
                 showMessageView = false
             }, content: {

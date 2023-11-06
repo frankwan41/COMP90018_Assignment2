@@ -31,6 +31,7 @@ struct NewMessageView: View {
                     }
                 }
             }
+            .withFooter()
             .padding(.top)
             .navigationTitle("Active Users")
             .toolbar {

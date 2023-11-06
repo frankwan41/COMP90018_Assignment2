@@ -40,6 +40,8 @@ struct ProfileSetttingView: View {
     @State private var imageChosen: UIImage?
     @State private var profileImage: UIImage?
     
+    @StateObject private var keyboard = KeyboardResponder()
+    
     var maxImagesCount = 1
     
     @Environment(\.presentationMode) private var presentationMode
@@ -150,7 +152,9 @@ struct ProfileSetttingView: View {
                 }
                 
                 if isEditing{
-                    profileCancelSaveBtn
+                    if !keyboard.isKeyboardVisible {
+                        profileCancelSaveBtn
+                    }
                 }else{
                     profileEditButton
                 }

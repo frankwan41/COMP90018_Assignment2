@@ -439,6 +439,7 @@ extension SinglePostView {
             .shadow(radius: 1)
         }
         .edgesIgnoringSafeArea(.bottom)
+        .withFooter()
     }
     private var TagsSection: some View{
         HFlow(spacing: 10) {
