@@ -64,7 +64,7 @@ struct MessageView: View {
                 ScrollViewReader { proxy in
                     VStack {
                         ForEach(viewModel.messages, id:\.id) { message in
-                            MessageCompo(message: message, isFromCurrentUser: message.fromId == viewModel.currentUser.uid)
+                            MessageCompo(message: message, isFromCurrentUser: message.fromId == viewModel.currentUser.uid, fromProfileImage: viewModel.fromProfileImage, toProfileImage: viewModel.fromProfileImage)
                                 .id(message.id)
                         }
                         

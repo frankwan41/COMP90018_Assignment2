@@ -15,6 +15,9 @@ struct MessageCompo: View {
     let imageWidth: CGFloat = 300
     let imageHeight: CGFloat = 400
     
+    @State var fromProfileImage: UIImage?
+    @State var toProfileImage: UIImage?
+    
     var body: some View {
         HStack {
             if isFromCurrentUser {
@@ -41,13 +44,41 @@ struct MessageCompo: View {
                         .cornerRadius(10)
                 }
                 
-                Image(systemName: "arrowtriangle.left.circle.fill")
-                    //.resizable()
-                    .scaledToFill()
-                    .frame(width: 5, height: 5)
-                    //.cornerRadius(50)
-                    //.clipShape(Circle())
-                    .foregroundColor(.orange)
+                if let fromProfileImage = fromProfileImage{
+                    Image(uiImage: fromProfileImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 40, height: 40)
+                        .clipped()
+                        .cornerRadius(50)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 44)
+                                .stroke(Color(.label), lineWidth: 1)
+                        )
+                        .shadow(radius: 5)
+                }else{
+                    
+                    Image(systemName: "person.fill.questionmark")
+                        //.resizable()
+                        .scaledToFill()
+                        .frame(width: 40, height: 40)
+                        //.cornerRadius(50)
+                        //.clipShape(Circle())
+                        .foregroundColor(.orange)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 44)
+                                .stroke(Color(.label), lineWidth: 1)
+                        )
+                        .shadow(radius: 5)
+                    
+                }
+//                Image(systemName: "arrowtriangle.left.circle.fill")
+//                    //.resizable()
+//                    .scaledToFill()
+//                    .frame(width: 5, height: 5)
+//                    //.cornerRadius(50)
+//                    //.clipShape(Circle())
+//                    .foregroundColor(.orange)
 //                    .overlay(
 //                        RoundedRectangle(cornerRadius: 44)
 //                            .stroke(Color(.label), lineWidth: 1)
@@ -57,14 +88,46 @@ struct MessageCompo: View {
             } else {
                 
                 // TODO: If this is an image (Done)
+                if let toProfileImage = toProfileImage{
+                    Image(uiImage: toProfileImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 40, height: 40)
+                        .clipped()
+                        .cornerRadius(50)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 44)
+                                .stroke(Color(.label), lineWidth: 1)
+                        )
+                        .shadow(radius: 5)
+                }else{
+                    
+                    Image(systemName: "person.fill.questionmark")
+                        //.resizable()
+                        .scaledToFill()
+                        .frame(width: 40, height: 40)
+                        //.cornerRadius(50)
+                        //.clipShape(Circle())
+                        .foregroundColor(.orange)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 44)
+                                .stroke(Color(.label), lineWidth: 1)
+                        )
+                        .shadow(radius: 5)
+                    
+                }
                 
-                Image(systemName: "arrowtriangle.right.circle.fill")
-                    //.resizable()
-                    .scaledToFill()
-                    .frame(width: 5, height: 5)
-                    //.cornerRadius(50)
-                    //.clipShape(Circle())
-                    .foregroundColor(.secondary)
+                
+                
+                
+                
+//                Image(systemName: "arrowtriangle.right.circle.fill")
+//                    //.resizable()
+//                    .scaledToFill()
+//                    .frame(width: 5, height: 5)
+//                    //.cornerRadius(50)
+//                    //.clipShape(Circle())
+//                    .foregroundColor(.secondary)
 //                    .overlay(
 //                        RoundedRectangle(cornerRadius: 44)
 //                            .stroke(Color(.label), lineWidth: 1)
