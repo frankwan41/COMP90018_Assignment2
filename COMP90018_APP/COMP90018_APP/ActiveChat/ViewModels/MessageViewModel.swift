@@ -19,7 +19,11 @@ class MessageViewModel: ObservableObject {
     // @Published var images: [UIImage] = []
     
     @Published var fromProfileImage: UIImage?
-    @Published var toProfileImage: UIImage?
+    //@Published var toProfileImage: UIImage?
+    
+    @Published var toProfileImages = [String: UIImage]()
+    
+    
     
     private var listenerRegistration: ListenerRegistration?
     
@@ -38,7 +42,8 @@ class MessageViewModel: ObservableObject {
         
         if let toUser = self.user {
             self.getUserProfileImage(userUID: toUser.uid) { profileImage in
-                self.toProfileImage = profileImage
+                //self.toProfileImage = profileImage
+                self.toProfileImages[toUser.uid] = profileImage
             }
         }
         
