@@ -16,7 +16,7 @@ struct MessageView: View {
     @State private var showImageCamera = false
     @State private var showActionSheet = false
     @State private var profileImageIsChanged = false
-    // @State private var images: [UIImage] = []
+    @State private var images: [UIImage] = []
     let maxImagesCount = 9
     
     var body: some View {
@@ -25,6 +25,9 @@ struct MessageView: View {
                 Text("Loading...")
                     .frame(alignment: .center)
                     .tint(.orange)
+            }
+            VStack{
+                Spacer()
             }
             
             ScrollView {
@@ -125,6 +128,7 @@ struct MessageView: View {
         .navigationTitle(viewModel.user?.userName ?? "Loading...")
         .navigationBarTitleDisplayMode(.inline)
         
+        
         .confirmationDialog("", isPresented: $showActionSheet, actions: {
             Button("Taking Photo") {
                 showImageCamera = true
@@ -136,16 +140,18 @@ struct MessageView: View {
         .sheet(isPresented: $showImageCamera) {
             ImagePicker(sourceType: .camera) { selectedImage in
                             if let image = selectedImage {
-                                viewModel.images.append(image)
+                                images.append(image)
                                 UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)  // Save to photo library
-                                viewModel.sendImages()
+                                viewModel.sendImages(images: images)
+                                images.removeAll()
                             }
                         }
         }
         .sheet(isPresented: $showImagePicker) {
-            ImagePickerCoordinatorView(maxImageCount: maxImagesCount - viewModel.images.count,images: $viewModel.images)
+            ImagePickerCoordinatorView(maxImageCount: maxImagesCount - images.count,images: $images)
                 .onDisappear{
-                    viewModel.sendImages()
+                    viewModel.sendImages(images: images)
+                    images.removeAll()
                 }
         }
     }

@@ -16,7 +16,7 @@ class MessageViewModel: ObservableObject {
     @Published var messages = [Message]()
     @Published var newMessageText = ""
     @Published var count = 0
-    @Published var images: [UIImage] = []
+    // @Published var images: [UIImage] = []
     
     private var listenerRegistration: ListenerRegistration?
     
@@ -117,9 +117,7 @@ class MessageViewModel: ObservableObject {
         }
     }
     
-    func sendImages(){
-        let imagesToSend = self.images
-        self.images.removeAll()
+    func sendImages(images: [UIImage]){
         
         for image in images{
             sendSingleImage(image: image, timestamp: Timestamp())

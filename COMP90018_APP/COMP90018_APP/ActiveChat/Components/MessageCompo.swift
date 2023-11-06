@@ -40,21 +40,51 @@ struct MessageCompo: View {
                         .background(Color.orange)
                         .cornerRadius(10)
                 }
+                
+                Image(systemName: "arrow.uturn.backward.circle.fill")
+                    //.resizable()
+                    .scaledToFill()
+                    .frame(width: 5, height: 5)
+                    //.cornerRadius(50)
+                    //.clipShape(Circle())
+                    .foregroundColor(.orange)
+//                    .overlay(
+//                        RoundedRectangle(cornerRadius: 44)
+//                            .stroke(Color(.label), lineWidth: 1)
+//                    )
+//                    .shadow(radius: 5)
+                
             } else {
                 
                 // TODO: If this is an image (Done)
+                
+                Image(systemName: "arrow.uturn.forward.circle.fill")
+                    //.resizable()
+                    .scaledToFill()
+                    .frame(width: 5, height: 5)
+                    //.cornerRadius(50)
+                    //.clipShape(Circle())
+                    .foregroundColor(.secondary)
+//                    .overlay(
+//                        RoundedRectangle(cornerRadius: 44)
+//                            .stroke(Color(.label), lineWidth: 1)
+//                    )
+//                    .shadow(radius: 5)
+                
                 if message.isImage{
                     if message.imageUrl.isEmpty{
                         ProgressView()
                             .scaledToFill()
                             .aspectRatio(contentMode: .fit)
                             .frame(maxWidth: imageWidth, maxHeight: imageHeight)
+                            
                     }else{
                         KFImage(URL(string: message.imageUrl))
                             .resizable()
                             .scaledToFill()
                             .aspectRatio(contentMode: .fit)
                             .frame(maxWidth: imageWidth, maxHeight: imageHeight)
+                            
                     }
                     
                 }else{
