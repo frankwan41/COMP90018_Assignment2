@@ -12,10 +12,13 @@ import CoreLocationUI
 import MapKit
 import Combine
 import Foundation
+import Photos
+import UIKit
 
 struct AddPostView: View {
     
     @StateObject var locationManager = LocationManager()
+    @StateObject var keyboard = KeyboardResponder()
    
     var addPostViewModel = AddPostViewModel()
 
@@ -79,6 +82,18 @@ struct AddPostView: View {
                     .padding(.leading)
                     .padding()
                 }
+                
+                // Tap anywhere on the ZStack to dismiss the keyboard if it's visible
+                if keyboard.isKeyboardVisible {
+                    Color.clear
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                        }
+                        .zIndex(1)
+                        .ignoresSafeArea()
+
+                }
             }
             .withFooter()
             .alert(isPresented: $showLocationRequestAlert, content: {
@@ -101,7 +116,18 @@ struct AddPostView: View {
                     showImageCamera = true
                 }
                 Button("Select photos from album") {
-                    showImagePicker = true
+                    PHPhotoLibrary.requestAuthorization { status in
+                        if status == .denied || status == .notDetermined {
+                            /* User denied permission or left the authorization in an undetermined state
+                            Enter code here to handle this event or leave it blank if you don't want to do anything
+                            */
+                        } else {
+                            /*
+                            auth_status is either authorized, limited, or restricted. Call wrapper function
+                            */
+                            self.showImagePicker = true
+                        }
+                    }
                 }
             })
             .sheet(isPresented: $showImageCamera) {

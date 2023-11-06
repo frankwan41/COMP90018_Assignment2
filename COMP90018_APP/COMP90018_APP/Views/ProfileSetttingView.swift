@@ -9,6 +9,7 @@ import SwiftUI
 import FirebaseAuth
 import FirebaseStorage
 import Kingfisher
+import Photos
 
 struct ProfileSetttingView: View {
     @State private var isEditing = false
@@ -186,7 +187,18 @@ struct ProfileSetttingView: View {
                     showImageCamera = true
                 }
                 Button("Select photos from album") {
-                    showImagePicker = true
+                    PHPhotoLibrary.requestAuthorization { status in
+                        if status == .denied || status == .notDetermined {
+                            /* User denied permission or left the authorization in an undetermined state
+                            Enter code here to handle this event or leave it blank if you don't want to do anything
+                            */
+                        } else {
+                            /*
+                            auth_status is either authorized, limited, or restricted. Call wrapper function
+                            */
+                            self.showImagePicker = true
+                        }
+                    }
                 }
             })
             .sheet(isPresented: $showImageCamera) {
