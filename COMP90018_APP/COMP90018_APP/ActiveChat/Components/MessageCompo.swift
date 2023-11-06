@@ -12,8 +12,8 @@ struct MessageCompo: View {
     let message: Message
     let isFromCurrentUser: Bool
     
-    let imageWidth: CGFloat = 300
-    let imageHeight: CGFloat = 400
+    let imageWidth: CGFloat = 200
+    let imageHeight: CGFloat = 300
     
 //    @State var fromProfileImage: UIImage?
 //    @State var toProfileImage: UIImage?
@@ -91,7 +91,8 @@ struct MessageCompo: View {
             } else {
                 
                 // TODO: If this is an image (Done)
-                if let toProfileImage = viewModel.toProfileImage{
+                if let toProfileImage = viewModel.toProfileImages[isFromCurrentUser ? message.toId : message.fromId]{
+                    
                     Image(uiImage: toProfileImage)
                         .resizable()
                         .scaledToFill()

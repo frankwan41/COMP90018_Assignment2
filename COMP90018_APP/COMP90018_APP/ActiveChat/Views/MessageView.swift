@@ -163,9 +163,9 @@ struct MessageView: View {
         //.navigationBarHidden(true)
         //.toolbar(.hidden)
         //.navigationBarBackButtonHidden()
-        .onAppear(perform: {
-            viewModel.toProfileImage = nil
-        })
+//        .onAppear(perform: {
+//            viewModel.toProfileImage = nil
+//        })
         
         .confirmationDialog("", isPresented: $showActionSheet, actions: {
             Button("Taking Photo") {
