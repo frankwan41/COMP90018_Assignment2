@@ -50,6 +50,7 @@ struct ShakeView: View {
                     CategoryView
                 }
             }
+            .withFooter()
             .onShake {
                 hasShaked = true
                 categoryName = templateCategories.randomElement()

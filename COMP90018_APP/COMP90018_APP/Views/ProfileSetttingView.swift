@@ -40,6 +40,8 @@ struct ProfileSetttingView: View {
     @State private var imageChosen: UIImage?
     @State private var profileImage: UIImage?
     
+    @StateObject private var keyboard = KeyboardResponder()
+    
     var maxImagesCount = 1
     
     @Environment(\.presentationMode) private var presentationMode
@@ -91,6 +93,7 @@ struct ProfileSetttingView: View {
                         }else{
                             Image(systemName: "person.circle").resizable()
                                 .scaledToFill()
+                                .foregroundStyle(Color.orange)
                                 .frame(width:200, height: 200)
                                 .clipped()
                                 .cornerRadius(50)
@@ -150,7 +153,9 @@ struct ProfileSetttingView: View {
                 }
                 
                 if isEditing{
-                    profileCancelSaveBtn
+                    if !keyboard.isKeyboardVisible {
+                        profileCancelSaveBtn
+                    }
                 }else{
                     profileEditButton
                 }

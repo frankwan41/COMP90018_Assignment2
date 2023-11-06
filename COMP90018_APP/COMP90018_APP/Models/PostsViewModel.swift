@@ -35,6 +35,30 @@ class PostsViewModel: PostCollectionModel {
             }
     }
     
+    func fetchPostsBySearch(searchCategory: String){
+        FirebaseManager.shared.firestore
+            .collection("posts")
+            .order(by: "timestamp", descending: true)
+            .getDocuments { documentsSnapshot, error in
+                if let error = error{
+                    print("Failed to fetch posts in PostsViewModel \(error)")
+                    return
+                }
+                var newPosts = [Post]()
+                documentsSnapshot?.documents.forEach { snapshot in
+                    let data = snapshot.data()
+                    let post = Post(data: data)
+                    newPosts.append(post)
+                }
+                
+                self.posts = newPosts.filter { post in
+                    post.tags.contains { $0.fuzzyMatch(searchCategory) }
+                }
+            }
+        
+        
+    }
+    
     /**
      Fetch all posts that contain a tag and order them by timestamps descendingly
      */

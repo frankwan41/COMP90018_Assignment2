@@ -14,6 +14,10 @@ import MapKit
 
 struct SinglePostView: View {
     
+    
+    @AppStorage("shakeResult") var shakeResult = ""
+    @Environment(\.dismiss) var dismiss
+    
     @State private var showAlert: Bool = false
     @State private var showLocationRequestAlert: Bool = false
     @State private var showLocationDistance: Bool = false
@@ -46,6 +50,7 @@ struct SinglePostView: View {
     @State var profileImageURL: String?
     
     private let dateFormatter = DateFormatter()
+    @State var dateTimeText: String = "";
     
     var openMapCommand: String = "map"
     var checkWeatherCommand: String = "weather"
@@ -73,7 +78,7 @@ struct SinglePostView: View {
                         TagsSection
                             .padding(.horizontal)
                         HStack {
-                            Text(dateFormatter.string(from: post.timestamp))
+                            Text(dateTimeText)
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                                 .padding(.horizontal)
@@ -277,6 +282,7 @@ struct SinglePostView: View {
         }
         .onAppear {
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            dateTimeText = dateFormatter.string(from: post.timestamp)
             userViewModel.getCurrentUser { user in
                 if let user = user {
                     self.currentUser = user
@@ -435,17 +441,27 @@ extension SinglePostView {
             .shadow(radius: 1)
         }
         .edgesIgnoringSafeArea(.bottom)
+        .withFooter()
     }
     private var TagsSection: some View{
         HFlow(spacing: 10) {
             ForEach(post.tags.indices, id: \.self) { index in
                 ZStack(alignment: .topTrailing) {
-                    Text(post.tags[index])
-                        .font(.caption)
-                        .lineLimit(1)
-                        .padding(.vertical, 5)
-                        .padding(.horizontal, 10)
-                        .background(Capsule().fill(Color.gray.opacity(0.2)))
+                    Button {
+                        
+                        shakeResult = post.tags[index]
+                        dismiss()
+                        
+                    } label: {
+                        Text(post.tags[index])
+                            .font(.caption)
+                            .lineLimit(1)
+                            .padding(.vertical, 5)
+                            .padding(.horizontal, 10)
+                            .background(Capsule().fill(Color.gray.opacity(0.2)))
+                    }
+
+                    
                 }
             }
         }

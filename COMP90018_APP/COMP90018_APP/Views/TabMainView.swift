@@ -41,6 +41,7 @@ struct TabMainView: View {
                         Text("Profile")
                     }
             }
+            .withFooter()
             
             .tint(.black)
             // Customize an add button to tab items to start a post

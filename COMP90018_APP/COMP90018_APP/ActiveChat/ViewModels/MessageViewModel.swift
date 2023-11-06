@@ -136,10 +136,11 @@ class MessageViewModel: ObservableObject {
         let dateFormatter = DateFormatter()
 
         // Set Date Format
-        dateFormatter.dateFormat = "ss/MM/dd/yyyy"
+        dateFormatter.dateFormat = "ss/mm/HH/dd/MM/yyyy"
 
         // Convert Date to String
         let timestampStr = dateFormatter.string(from: timestamp.dateValue())
+        
         
         // TODO: Create an unique pathReference for the image (Done)
         let imagePath = currentUser.uid + selectedUserUid + timestampStr + String(uniqueNumber)

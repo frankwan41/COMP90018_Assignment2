@@ -41,3 +41,19 @@ public extension View {
         modifier(KeyboardAvoiding())
     }
 }
+
+class KeyboardResponder: ObservableObject {
+    @Published var isKeyboardVisible = false
+    private var cancellables = Set<AnyCancellable>()
+
+    init() {
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.publisher(for: UIResponder.keyboardWillShowNotification)
+            .sink { [weak self] _ in self?.isKeyboardVisible = true }
+            .store(in: &cancellables)
+
+        notificationCenter.publisher(for: UIResponder.keyboardWillHideNotification)
+            .sink { [weak self] _ in self?.isKeyboardVisible = false }
+            .store(in: &cancellables)
+    }
+}

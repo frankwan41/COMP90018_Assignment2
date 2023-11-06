@@ -80,6 +80,7 @@ struct AddPostView: View {
                     .padding()
                 }
             }
+            .withFooter()
             .alert(isPresented: $showLocationRequestAlert, content: {
                 Alert(
                 title: Text("Location Permission Denied"),
