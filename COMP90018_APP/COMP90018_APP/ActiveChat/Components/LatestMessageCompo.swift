@@ -63,6 +63,8 @@ struct LatestMessageCompo: View {
                     Text(latestMessage.isImage ? "[Image]" : latestMessage.text)
                         .font(.subheadline)
                         .foregroundColor(Auth.auth().currentUser?.uid == latestMessage.fromUid ? .secondary : .primary)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
                 }
                 
                 Spacer()
