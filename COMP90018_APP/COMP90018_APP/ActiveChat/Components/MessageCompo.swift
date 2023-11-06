@@ -60,7 +60,8 @@ struct MessageCompo: View {
                         .shadow(radius: 5)
                 }else{
                     
-                    Image(systemName: "person.fill.questionmark")
+                    //Image(systemName: "person.fill.questionmark")
+                    ProgressView()
                         //.resizable()
                         .scaledToFill()
                         .frame(width: 40, height: 40)
@@ -104,7 +105,8 @@ struct MessageCompo: View {
                         .shadow(radius: 5)
                 }else{
                     
-                    Image(systemName: "person.fill.questionmark")
+                    //Image(systemName: "person.fill.questionmark")
+                    ProgressView()
                         //.resizable()
                         .scaledToFill()
                         .frame(width: 40, height: 40)
