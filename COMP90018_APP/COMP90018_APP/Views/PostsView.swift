@@ -132,14 +132,16 @@ struct PostsView: View {
     // when user press return, search the tag
     func processUserInput() {
         if !searchCategory.isEmpty {
+            
             // Filter posts to only keep those with tags that fuzzily match the search term
-            postsViewModel.posts = postsViewModel.posts.filter { post in
-                post.tags.contains { $0.fuzzyMatch(searchCategory) }
-            }
+            postsViewModel.fetchPostsBySearch(searchCategory: searchCategory)
+            
         } else {
+            
             // If there is no search term, display all posts
             // This may require calling another method to re-fetch all posts
             postsViewModel.fetchPosts()
+            
         }
     }
 
