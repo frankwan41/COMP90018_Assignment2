@@ -50,6 +50,7 @@ struct SinglePostView: View {
     @State var profileImageURL: String?
     
     private let dateFormatter = DateFormatter()
+    @State var dateTimeText: String = "";
     
     var openMapCommand: String = "map"
     var checkWeatherCommand: String = "weather"
@@ -77,7 +78,7 @@ struct SinglePostView: View {
                         TagsSection
                             .padding(.horizontal)
                         HStack {
-                            Text(dateFormatter.string(from: post.timestamp))
+                            Text(dateTimeText)
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                                 .padding(.horizontal)
@@ -281,6 +282,7 @@ struct SinglePostView: View {
         }
         .onAppear {
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            dateTimeText = dateFormatter.string(from: post.timestamp)
             userViewModel.getCurrentUser { user in
                 if let user = user {
                     self.currentUser = user
