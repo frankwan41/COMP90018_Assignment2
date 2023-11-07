@@ -139,6 +139,7 @@ extension PostsView {
                 ProgressView().padding(.bottom, 2)
             }
             HStack {
+                Spacer().frame(width: 20)
                 TextField(
                     "Search tag...",
                     text: $searchCategory,
@@ -154,12 +155,12 @@ extension PostsView {
                     }
                 )
                 .focused($isSearchFocused)
-                .frame(width: 375)
                 .padding(10)
                 .background(Color.white.opacity(0.5))
                 .cornerRadius(20)
                 
                 if isSearchFocused || !searchCategory.isEmpty {
+                    Spacer().frame(width: 20)
                     Button("Cancel") {
                         searchCategory = ""
                         shakeResult = ""
@@ -168,6 +169,7 @@ extension PostsView {
                     }
                     .padding(.trailing)
                 }
+                Spacer().frame(width: 20)
             }
             
             if !shakeResult.isEmpty {
