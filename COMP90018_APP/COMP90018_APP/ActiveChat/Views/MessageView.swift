@@ -180,8 +180,12 @@ struct MessageView: View {
 //            viewModel.toProfileImage = nil
 //        })
         .fullScreenCover(isPresented: $showUserProfile, content: {
-            UserProfileView(viewModel: UserProfileViewModel(userId: viewModel.user?.uid ?? ""))
+            let userViewModel = UserViewModel()
+            let postCollectionModel = PostCollectionModel()
+
+            UserProfileView(viewModel: UserProfileViewModel(userId: viewModel.user?.uid ?? "", userViewModel: userViewModel, postCollectionModel: postCollectionModel))
         })
+
         
         .confirmationDialog("", isPresented: $showActionSheet, actions: {
             Button("Taking Photo") {
