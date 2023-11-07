@@ -22,6 +22,7 @@ struct SignView: View {
     @State private var hasSubmitted: Bool = false
     @State private var emailInvalidMessage: String = ""
     @State private var passwordInvalidMessage: String = ""
+    @State private var showPasswordResetAlert = false
 
     var body: some View {
         ZStack {
@@ -66,6 +67,13 @@ struct SignView: View {
             .onChange(of: password) { newValue in
                 passwordCheckAftSubmit(newValue: newValue)
                 userViewModel.errorMessage = ""
+            }
+            .alert(isPresented: $showPasswordResetAlert) {
+                Alert(
+                    title: Text("Password Reset"),
+                      message: Text("A link to reset your password has been sent to your email!"),
+                      dismissButton: .default(Text("OK"))
+                )
             }
         }
     }
@@ -112,6 +120,7 @@ struct SignView: View {
             if !isSignUpMode {
                 Button("Forgot password?") {
                     userViewModel.resetPassword(email: email)
+                    showPasswordResetAlert = true
                 }
                 .foregroundColor(.orange)
             }
