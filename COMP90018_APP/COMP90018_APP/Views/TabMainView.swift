@@ -41,8 +41,13 @@ struct TabMainView: View {
                         Text("Profile")
                     }
             }
+            .onAppear {
+                let tabBarAppearance = UITabBarAppearance()
+                tabBarAppearance.configureWithDefaultBackground()
+                UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+            }
             .withFooter()
-            
+
             .tint(.black)
             // Customize an add button to tab items to start a post
             .overlay(
@@ -59,6 +64,7 @@ struct TabMainView: View {
                         .resizable()
                         .frame(width: 45, height: 40)
                         .foregroundColor(.orange)
+                        .background(.white)
                         .cornerRadius(10)
                 }
                     .alert(isPresented: $showLoginAlert) {
