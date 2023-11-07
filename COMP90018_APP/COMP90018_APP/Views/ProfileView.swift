@@ -19,23 +19,11 @@ struct ProfileView: View {
     
     @State private var selectedTab: TabSelection = .posts
     
-    let gradientBackground = LinearGradient(
-        gradient: Gradient(colors: [Color.orange, Color.white]),
-        startPoint: .top,
-        endPoint: .bottom
-    )
-    
-    let postGradientBackground = LinearGradient(
-        gradient: Gradient(colors: [Color.orange.opacity(0.01), Color.orange.opacity(0.01)]),
-        startPoint: .top,
-        endPoint: .bottom
-    )
-
     var body: some View {
 
         NavigationView {
             ZStack {
-                gradientBackground.edgesIgnoringSafeArea(.all)
+                backgroundColor.edgesIgnoringSafeArea(.all)
                 VStack(spacing: 20) {
                     if !userViewModel.isLoggedIn {
                         guestView
@@ -51,24 +39,24 @@ struct ProfileView: View {
                 
                 // Show a whole screen progress view while enabling the voice control
                 if speechRecognizer.inProgress {
-                        // Semi-transparent background to indicate loading
-                        Color.black.opacity(0.3)
-                            .edgesIgnoringSafeArea(.all)
-                            .blur(radius: 3)
-
-                        // Loading content
-                        VStack {
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                .scaleEffect(1.5)
-                            Text("Enabling voice control")
-                                .foregroundColor(.white)
-                                .padding(.top, 20)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(Color.black.opacity(0.5))
+                    // Semi-transparent background to indicate loading
+                    Color.black.opacity(0.3)
                         .edgesIgnoringSafeArea(.all)
+                        .blur(radius: 3)
+
+                    // Loading content
+                    VStack {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            .scaleEffect(1.5)
+                        Text("Enabling voice control")
+                            .foregroundColor(.white)
+                            .padding(.top, 20)
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.black.opacity(0.5))
+                    .edgesIgnoringSafeArea(.all)
+                }
                 
             }
             .onAppear {
@@ -193,36 +181,31 @@ extension ProfileView {
             Divider()
             
             Picker("", selection: $selectedTab) {
-                            ForEach(TabSelection.allCases, id: \.self) { tab in
-                                Text(tab == .posts ? "Posts" : "Liked").tag(tab)
-                            }
-                        }
-                        .pickerStyle(SegmentedPickerStyle())
-                        .padding()
-            
+                ForEach(TabSelection.allCases, id: \.self) { tab in
+                    Text(tab == .posts ? "Posts" : "Liked").tag(tab)
+                }
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            .padding()
             
             if selectedTab == .posts {
                 
-                if profileViewPostsModel.posts.isEmpty{
+                if profileViewPostsModel.posts.isEmpty {
                     Text("💔Sorry, you don't have any posts yet.")
                         .frame(alignment: .center)
                         .bold()
                         .font(.headline)
                         .opacity(0.8)
                         .padding(.vertical, 5)
-                    
-//                    ProgressView()
-//                        .padding(.top, 2)
-//                        .padding(.bottom, 2)
                 }
-                List{
+                List {
                     PostCollection(
                         userViewModel: userViewModel,
-                        postCollectionModel: profileViewPostsModel,
-                        gradientBackground: gradientBackground
+                        postCollectionModel: profileViewPostsModel
                     )
-                }.listStyle(.plain)
-            } else if selectedTab == .liked {                
+                }
+                .listStyle(.plain)
+            } else if selectedTab == .liked {
                 if profileViewLikedModel.posts.isEmpty {
                     Text("💔Sorry, You don't have liked posts yet.")
                         .frame(alignment: .center)
@@ -235,12 +218,11 @@ extension ProfileView {
                 List {
                     PostCollection(
                         userViewModel: userViewModel,
-                        postCollectionModel: profileViewLikedModel,
-                        gradientBackground: gradientBackground
+                        postCollectionModel: profileViewLikedModel
                     )
-                }.listStyle(.plain)
+                }
+                .listStyle(.plain)
             }
-            
 
         }
         .onChange(of: selectedTab, perform: { value in
