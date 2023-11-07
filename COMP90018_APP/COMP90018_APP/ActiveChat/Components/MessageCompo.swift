@@ -20,6 +20,7 @@ struct MessageCompo: View {
     
     @ObservedObject var viewModel: MessageViewModel
     
+    
     var body: some View {
         HStack {
             if isFromCurrentUser {

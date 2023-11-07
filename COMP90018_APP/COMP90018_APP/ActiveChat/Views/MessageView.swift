@@ -22,6 +22,8 @@ struct MessageView: View {
     
     @Environment(\.dismiss) var dismiss
     
+    @State private var showUserProfile = false
+    
     
     var body: some View {
         VStack {
@@ -52,6 +54,17 @@ struct MessageView: View {
                 
                 HStack{
                     Spacer()
+                    
+                    Button{
+                        showUserProfile.toggle()
+                    }label:{
+                        Image(systemName: "photo.stack.fill")
+                            .tint(.orange)
+                            .font(.largeTitle)
+                        
+                    }
+                    .padding(.trailing)
+                    
                 }
             }
             .shadow(radius: 30, x: -10.0, y: -10.0)
@@ -166,6 +179,9 @@ struct MessageView: View {
 //        .onAppear(perform: {
 //            viewModel.toProfileImage = nil
 //        })
+        .fullScreenCover(isPresented: $showUserProfile, content: {
+            UserProfileView(viewModel: UserProfileViewModel(userId: viewModel.user?.uid ?? ""))
+        })
         
         .confirmationDialog("", isPresented: $showActionSheet, actions: {
             Button("Taking Photo") {
