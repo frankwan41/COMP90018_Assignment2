@@ -27,23 +27,11 @@ struct PostsView: View {
     @EnvironmentObject var speechRecognizer: SpeechRecognizerViewModel
     var shakeCommand = "shake"
     
-    let gradientBackground = LinearGradient(
-        gradient: Gradient(colors: [Color.orange, Color.white]),
-        startPoint: .top,
-        endPoint: .bottom
-    )
-    
-    let postGradientBackground = LinearGradient(
-        gradient: Gradient(colors: [Color.orange.opacity(0.1), Color.orange.opacity(0.1)]),
-        startPoint: .top,
-        endPoint: .bottom
-    )
-    
     var body: some View {
        
         NavigationView {
             ZStack {
-                gradientBackground.edgesIgnoringSafeArea(.all)
+                backgroundColor.edgesIgnoringSafeArea(.all)
                 VStack {
                     Button {
                         locationManager.requestPermission { authorized in
@@ -70,9 +58,6 @@ struct PostsView: View {
                     PostsListView
                         .opacity(showPostsMapView ? 0 : 1)
                         .frame(maxHeight: showPostsMapView ? 0 : .infinity)
-                    HStack {
-                                            Spacer()
-                                        }
                 }
                 .toolbar {
                     
@@ -94,7 +79,6 @@ struct PostsView: View {
                             }
                         }
                     }
-                    
                     
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button {
@@ -185,7 +169,6 @@ extension PostsView {
                     .padding(.trailing)
                 }
             }
-            .listRowBackground(postGradientBackground)
             
             if !shakeResult.isEmpty {
                 if postsViewModel.posts.isEmpty {
@@ -208,12 +191,10 @@ extension PostsView {
             List {
                 PostCollection(
                     userViewModel: userViewModel,
-                    postCollectionModel: postsViewModel,
-                    gradientBackground: postGradientBackground
+                    postCollectionModel: postsViewModel
                 )
             }
             .listStyle(.plain)
         }
-        .padding(.horizontal, 5)
     }
 }
