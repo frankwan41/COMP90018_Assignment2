@@ -64,27 +64,3 @@ struct UserProfileView: View {
         .background(Color.white) // Set the background color for the entire view to white
     }
 }
-
-
-
-
-
-
-                        // User profile button
-                        //                                    Button {
-                        //                                        // Action for user profile button
-                        //                                    } label: {
-                        //                                        if let urlString = viewModel.userProfileImage, let url = URL(string: urlString) {
-                        //                                            KFImage(url)
-                        //                                                .resizable()
-                        //                                                .scaledToFit()
-                        //                                                .frame(width: 30, height: 30)
-                        //                                                .clipShape(Circle())
-                        //                                                .overlay(Circle().stroke(Color.white, lineWidth: 1))
-                        //                                        } else {
-                        //                                            Image(systemName: "person.circle.fill")
-                        //                                                .resizable()
-                        //                                                .scaledToFit()
-                        //                                                .frame(width: 30, height: 30)
-                        //                                                .overlay(Circle().stroke(Color.white, lineWidth: 1))
-                        //                                        }
