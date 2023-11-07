@@ -33,21 +33,50 @@ struct PostsView: View {
             ZStack {
                 backgroundColor.edgesIgnoringSafeArea(.all)
                 VStack {
-                    Button {
-                        locationManager.requestPermission { authorized in
-                            if authorized {
-                                showPostsMapView.toggle()
-                            } else {
-                                return
+                    
+                    HStack {
+                        
+                        Spacer().frame(width: 25)
+                        
+                        if userViewModel.isLoggedIn {
+                            Button {
+                                viewSwitcher = viewPage.chat
+                            } label: {
+                                Image(systemName: "message.circle.fill")
+                                    .resizable().scaledToFit()
+                                    .frame(width: 25, height: 25)
+                                    .foregroundStyle(.black)
                             }
-                            
                         }
-                    } label: {
-                        Image(systemName: "map.fill")
-                            .resizable().scaledToFit()
-                            .frame(width: 20, height: 20)
-                            .foregroundStyle(.black)
-                    }.padding()
+
+                        Spacer()
+
+                        Button {
+                            locationManager.requestPermission { authorized in
+                                if authorized {
+                                    showPostsMapView.toggle()
+                                } else {
+                                    return
+                                }
+                            }
+                        } label: {
+                            Image(systemName: "map.fill")
+                                .resizable().scaledToFit()
+                                .frame(width: 25, height: 25)
+                                .foregroundStyle(.black)
+                        }
+
+                        Spacer()
+
+                        Button {
+                            viewSwitcher = viewPage.shake
+                        } label: {
+                            Image(systemName: "dice")
+                                .resizable().scaledToFit()
+                                .frame(width: 25, height: 25)
+                                .foregroundStyle(.black)
+                        }.padding(.horizontal, 20)
+                    }
                     
                     // MUST HAVE THIS IF !!!!!!! NO IDEA WHY !!!!!!!!
                     if showPostsMapView{
@@ -58,36 +87,6 @@ struct PostsView: View {
                     PostsListView
                         .opacity(showPostsMapView ? 0 : 1)
                         .frame(maxHeight: showPostsMapView ? 0 : .infinity)
-                }
-                .toolbar {
-                    
-                    if userViewModel.isLoggedIn{
-                        ToolbarItem(placement: .topBarLeading) {
-                            HStack{
-                                Button {
-                                    viewSwitcher = viewPage.chat
-                                } label: {
-                                    Image(systemName: "message.circle.fill")
-                                }
-                                
-                                Text("Chat")
-                                    .font(.headline)
-                                    .italic()
-                                    .bold()
-                                    .background(Color.orange.opacity(0.5))
-                                    .padding(.horizontal, 1)
-                            }
-                        }
-                    }
-                    
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            viewSwitcher = viewPage.shake
-                        } label: {
-                            Image(systemName: "dice")
-                        }
-                        
-                    }
                 }
             }
             NavigationLink(
@@ -155,6 +154,7 @@ extension PostsView {
                     }
                 )
                 .focused($isSearchFocused)
+                .frame(width: 375)
                 .padding(10)
                 .background(Color.white.opacity(0.5))
                 .cornerRadius(20)
