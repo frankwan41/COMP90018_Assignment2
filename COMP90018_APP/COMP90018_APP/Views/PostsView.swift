@@ -8,6 +8,14 @@
 import SwiftUI
 import Kingfisher
 
+enum SearchTypes: String,CaseIterable,Identifiable {
+    case tag = "tag"
+    case user = "user"
+    case post = "post"
+    
+    var id: Self { self }
+}
+
 struct PostsView: View {
 
     @Binding var searchCategory: String
@@ -23,6 +31,9 @@ struct PostsView: View {
   
     @State private var shouldShowProfile = false
     @State private var showPostsMapView = false
+    @State private var searchType: SearchTypes = .tag
+    @State private var pickerIsActive = false
+    @State private var showDropDown = false
     
     @EnvironmentObject var speechRecognizer: SpeechRecognizerViewModel
     var shakeCommand = "shake"
@@ -133,8 +144,16 @@ struct PostsView: View {
     func processUserInput() {
         if !searchCategory.isEmpty {
             
-            // Filter posts to only keep those with tags that fuzzily match the search term
-            postsViewModel.fetchPostsBySearch(searchCategory: searchCategory)
+            switch searchType {
+            case .tag:
+                // Filter posts to only keep those with tags that fuzzily match the search term
+                postsViewModel.fetchPostsBySearch(searchCategory: searchCategory)
+            case .user:
+                postsViewModel.fetchPostsByUsername(searchUsername: searchCategory)
+            case .post:
+                postsViewModel.fetchPostsByTitleOrContent(searchText: searchCategory)
+            }
+            
             
         } else {
             
@@ -156,8 +175,17 @@ extension PostsView {
                 ProgressView().padding(.bottom, 2)
             }
             HStack {
+                Picker("", selection: $searchType) {
+                    ForEach(SearchTypes.allCases) { type in
+                        Text(type.rawValue.capitalized).tag(type)
+                            
+                    }
+                }
+                .padding(.trailing, -10)
+                .pickerStyle(.menu)
+                
                 TextField(
-                    "Search tag...",
+                    "Search \(searchType.rawValue)...",
                     text: $searchCategory,
                     onEditingChanged: { isEditing in
                         isSearchFocused = isEditing
@@ -189,14 +217,17 @@ extension PostsView {
             
             if !shakeResult.isEmpty {
                 if postsViewModel.posts.isEmpty {
-                    Text("💔Sorry, No Post About \(shakeResult)")
+                    Text("💔Sorry, No \(searchType.rawValue) About \(shakeResult)")
                         .frame(alignment: .center)
                         .bold()
                         .font(.headline)
                         .opacity(0.8)
                         .padding(.vertical, 5)
                 } else {
-                    Text("💝Posts For \(shakeResult)")
+                    VStack{
+                        Text("Searching category: \(searchType.rawValue)")
+                        Text("💝Posts For \(shakeResult)")
+                    }
                         .frame(alignment: .center)
                         .bold()
                         .font(.headline)
