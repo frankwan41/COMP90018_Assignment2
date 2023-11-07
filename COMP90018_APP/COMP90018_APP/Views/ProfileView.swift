@@ -246,7 +246,11 @@ extension ProfileView {
         }) {
             Text("Sign Out")
                 .foregroundColor(.white)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
                 .bold()
+                .background(Color.orange)
+                .cornerRadius(20)
         }
     }
 }

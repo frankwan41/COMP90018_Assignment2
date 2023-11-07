@@ -34,6 +34,7 @@ struct PostsView: View {
                 backgroundColor.edgesIgnoringSafeArea(.all)
                 VStack {
                     
+                    Spacer().frame(height: 10)
                     HStack {
                         
                         Spacer().frame(width: 25)
@@ -44,7 +45,7 @@ struct PostsView: View {
                             } label: {
                                 Image(systemName: "message.circle.fill")
                                     .resizable().scaledToFit()
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 30, height: 30)
                                     .foregroundStyle(.black)
                             }
                         }
@@ -62,7 +63,7 @@ struct PostsView: View {
                         } label: {
                             Image(systemName: "map.fill")
                                 .resizable().scaledToFit()
-                                .frame(width: 25, height: 25)
+                                .frame(width: 30, height: 30)
                                 .foregroundStyle(.black)
                         }
 
@@ -73,10 +74,11 @@ struct PostsView: View {
                         } label: {
                             Image(systemName: "dice")
                                 .resizable().scaledToFit()
-                                .frame(width: 25, height: 25)
+                                .frame(width: 30, height: 30)
                                 .foregroundStyle(.black)
                         }.padding(.horizontal, 20)
                     }
+                    Spacer().frame(height: 10)
                     
                     // MUST HAVE THIS IF !!!!!!! NO IDEA WHY !!!!!!!!
                     if showPostsMapView{
@@ -167,7 +169,6 @@ extension PostsView {
                         isSearchFocused = false
                         processUserInput()
                     }
-                    .padding(.trailing)
                 }
                 Spacer().frame(width: 20)
             }
