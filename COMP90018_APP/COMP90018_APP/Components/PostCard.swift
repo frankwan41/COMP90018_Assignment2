@@ -78,6 +78,7 @@ struct PostCard: View {
                                 )
                             }
                         }
+                        Spacer().frame(width: 5)
                         LikeButtonPost(
                             width: 20,
                             height: 20,
