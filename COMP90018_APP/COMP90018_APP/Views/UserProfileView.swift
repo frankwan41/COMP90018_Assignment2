@@ -1,70 +1,90 @@
 //
-//  UserProfileView.swift
-//  COMP90018_APP
+// UserProfileView.swift
+// COMP90018_APP
 //
-//  Created by Shuyu Chen on 6/11/2023.
+// Created by Shuyu Chen on 6/11/2023.
 //
-
-
-
-
-import SwiftUI
-import Kingfisher
-
 
 import SwiftUI
 import Kingfisher
 
 struct UserProfileView: View {
     @ObservedObject var viewModel: UserProfileViewModel
-    
-    @Environment(\.dismiss) var dismiss
+    @State private var selectedPost: Post?
 
+    @Environment(\.dismiss) var dismiss
+    
+    // Define the gradient background
+    let gradientBackground = LinearGradient(
+        gradient: Gradient(colors: [Color.orange.opacity(0.1), Color.orange.opacity(0.1)]),
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
+    
     var body: some View {
-        VStack{
-            HStack{
-                
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "arrowshape.turn.up.left.circle.fill")
-                        .tint(.orange)
-                        .font(.largeTitle)
-                        .padding(.horizontal)
-                }
-                
-                Spacer()
-            }
-            ScrollView {
-                VStack(spacing: 20) {
-                    ForEach(viewModel.posts) { post in
-                        VStack(alignment: .leading) {
-                            if let imageURLString = post.imageURLs.first, let url = URL(string: imageURLString) {
-                                KFImage(url)
-                                    .resizable()
-                                    .scaledToFit()
+        NavigationView {
+            VStack {
+                ScrollView {
+                    VStack(spacing: 20) {
+                        ForEach(viewModel.posts) { post in
+                            Button(action: {
+                                self.selectedPost = post
+                            }) {
+                                PostCard(
+                                    post: .constant(post),
+                                    userViewModel: viewModel.userViewModel,
+                                    postCollectionModel: viewModel.postCollectionModel
+                                )
+                                .background(gradientBackground)
+                                .clipShape(RoundedRectangle(cornerRadius: 25))
+                                .padding(.horizontal)
                             }
-                            Text(post.postTitle)
-                                .font(.title)
-                                .fontWeight(.bold)
-                            Text(post.content)
-                            HStack {
-                                // Tags view could be a reusable component if you have one, otherwise just display the text
-                                ForEach(post.tags, id: \.self) { tag in
-                                    Text(tag)
-                                        .padding(.horizontal, 10)
-                                        .padding(.vertical, 5)
-                                        .background(Color.gray.opacity(0.2))
-                                        .clipShape(Capsule())
-                                }
-                            }
-                            // To Do Add more post details
+                            .buttonStyle(PlainButtonStyle())
                         }
-                        .padding()
                     }
                 }
             }
-            .navigationBarTitle("User Profile", displayMode: .inline)
+            .navigationBarTitle(viewModel.username.map { "\($0)'s Profile" } ?? "User Profile", displayMode: .inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "arrowshape.turn.up.left.circle.fill")
+                            .tint(.orange)
+                            .font(.title)
+                            .padding(.horizontal)
+                    }
+                }
+            }
+            .sheet(item: $selectedPost) { selectedPost in
+                SinglePostView(post: .constant(selectedPost))
+            }
         }
+        .background(Color.white) // Set the background color for the entire view to white
     }
 }
+
+
+
+
+
+
+                        // User profile button
+                        //                                    Button {
+                        //                                        // Action for user profile button
+                        //                                    } label: {
+                        //                                        if let urlString = viewModel.userProfileImage, let url = URL(string: urlString) {
+                        //                                            KFImage(url)
+                        //                                                .resizable()
+                        //                                                .scaledToFit()
+                        //                                                .frame(width: 30, height: 30)
+                        //                                                .clipShape(Circle())
+                        //                                                .overlay(Circle().stroke(Color.white, lineWidth: 1))
+                        //                                        } else {
+                        //                                            Image(systemName: "person.circle.fill")
+                        //                                                .resizable()
+                        //                                                .scaledToFit()
+                        //                                                .frame(width: 30, height: 30)
+                        //                                                .overlay(Circle().stroke(Color.white, lineWidth: 1))
+                        //                                        }

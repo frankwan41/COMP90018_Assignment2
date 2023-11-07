@@ -32,11 +32,15 @@ struct ChatMainView: View {
     init(currentUser: User, locationManager: LocationManager) {
         self.currentUser = currentUser
         showActiveButton = self.currentUser.isActive
+        
+        let userVM = UserViewModel()
+        let postCollectionVM = PostCollectionModel()
+        
         _messageViewModel = StateObject(wrappedValue: MessageViewModel(user: nil, currentUser: currentUser))
         _chatMainViewModel = StateObject(wrappedValue: ChatMainViewModel(currentUser: currentUser))
         _locationManager = ObservedObject(wrappedValue: locationManager)
-        _userProfileViewModel = StateObject(wrappedValue: UserProfileViewModel(userId: currentUser.uid))
-    }
+        _userProfileViewModel = StateObject(wrappedValue: UserProfileViewModel(userId: currentUser.uid, userViewModel: userVM, postCollectionModel: postCollectionVM))
+        }
     
     var body: some View {
         NavigationView {
