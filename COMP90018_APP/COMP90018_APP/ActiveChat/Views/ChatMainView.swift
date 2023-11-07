@@ -22,6 +22,9 @@ struct ChatMainView: View {
     @StateObject var messageViewModel: MessageViewModel
     @StateObject var chatMainViewModel: ChatMainViewModel
     @ObservedObject var locationManager : LocationManager
+    @StateObject var userProfileViewModel: UserProfileViewModel
+    
+    @State var showUserProfile: Bool = false
     
     
     @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
@@ -32,39 +35,47 @@ struct ChatMainView: View {
         _messageViewModel = StateObject(wrappedValue: MessageViewModel(user: nil, currentUser: currentUser))
         _chatMainViewModel = StateObject(wrappedValue: ChatMainViewModel(currentUser: currentUser))
         _locationManager = ObservedObject(wrappedValue: locationManager)
+        _userProfileViewModel = StateObject(wrappedValue: UserProfileViewModel(userId: currentUser.uid))
     }
     
     var body: some View {
         NavigationView {
             VStack {
                 HStack(spacing: 16) {
-                    if currentUser.profileImageURL.isEmpty{
-                        
-                        Image("person.circle")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 50, height: 50)
-                            .clipped()
-                            .cornerRadius(50)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 44)
-                                    .stroke(Color(.label), lineWidth: 1)
-                            )
-                            .shadow(radius: 5)
-                        
-                    }else{
-                        KFImage(URL(string: currentUser.profileImageURL))
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 50, height: 50)
-                            .clipped()
-                            .cornerRadius(50)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 44)
-                                    .stroke(Color(.label), lineWidth: 1)
-                            )
-                            .shadow(radius: 5)
+                    
+                    Button {
+                        showUserProfile.toggle()
+                    } label: {
+                        if currentUser.profileImageURL.isEmpty{
+                            
+                            Image("person.circle")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 50, height: 50)
+                                .clipped()
+                                .cornerRadius(50)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 44)
+                                        .stroke(Color(.label), lineWidth: 1)
+                                )
+                                .shadow(radius: 5)
+                            
+                        }else{
+                            KFImage(URL(string: currentUser.profileImageURL))
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 50, height: 50)
+                                .clipped()
+                                .cornerRadius(50)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 44)
+                                        .stroke(Color(.label), lineWidth: 1)
+                                )
+                                .shadow(radius: 5)
+                        }
                     }
+
+                    
                     
                     VStack(alignment: .leading, spacing: 4) {
                         Text(currentUser.userName)
@@ -100,6 +111,9 @@ struct ChatMainView: View {
                 
                 //NavigationLink("", destination: MessageView(viewModel: messageViewModel), isActive: $showMessageView)
             }
+            .fullScreenCover(isPresented: $showUserProfile, content: {
+                UserProfileView(viewModel: userProfileViewModel)
+            })
             .withFooter()
             .fullScreenCover(isPresented: $showMessageView, onDismiss: {
                 showMessageView = false
