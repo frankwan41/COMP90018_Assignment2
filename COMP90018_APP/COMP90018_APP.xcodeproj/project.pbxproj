@@ -45,6 +45,7 @@
 		47B08A6A2AED2F4B006F32AF /* CommentTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47B08A692AED2F4B006F32AF /* CommentTextField.swift */; };
 		47B08A6C2AED2F75006F32AF /* CommentSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47B08A6B2AED2F75006F32AF /* CommentSection.swift */; };
 		47B08A6E2AED2FA0006F32AF /* SingleComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47B08A6D2AED2FA0006F32AF /* SingleComment.swift */; };
+		47D8C40B2AFA41FD002900AB /* ColorPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D8C40A2AFA41FD002900AB /* ColorPalette.swift */; };
 		A2027C622AB2DDB800BA5391 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A2027C612AB2DDB800BA5391 /* FirebaseAuth */; };
 		A2027C642AB2DDB800BA5391 /* FirebaseDatabaseSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A2027C632AB2DDB800BA5391 /* FirebaseDatabaseSwift */; };
 		A2027C662AB2DDB800BA5391 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A2027C652AB2DDB800BA5391 /* FirebaseFirestore */; };
@@ -180,6 +181,7 @@
 		47B08A692AED2F4B006F32AF /* CommentTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentTextField.swift; sourceTree = "<group>"; };
 		47B08A6B2AED2F75006F32AF /* CommentSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentSection.swift; sourceTree = "<group>"; };
 		47B08A6D2AED2FA0006F32AF /* SingleComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleComment.swift; sourceTree = "<group>"; };
+		47D8C40A2AFA41FD002900AB /* ColorPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPalette.swift; sourceTree = "<group>"; };
 		A2027C952AB2FA4800BA5391 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
 		A2027C972AB2FE1B00BA5391 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		A2027C992AB3014F00BA5391 /* PostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostModel.swift; sourceTree = "<group>"; };
@@ -363,6 +365,7 @@
 				4787E6FA2AED145900025D4A /* LikeButtonComment.swift */,
 				4787E6FC2AED1A8F00025D4A /* DeleteButtonPost.swift */,
 				2D65DA4B2AF8B94400703782 /* FooterViewModifier.swift */,
+				47D8C40A2AFA41FD002900AB /* ColorPalette.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -677,6 +680,7 @@
 				2DE1A5B92AB2C25D000A2551 /* PostsView.swift in Sources */,
 				A2027C9C2AB304A100BA5391 /* UserModel.swift in Sources */,
 				47B08A6E2AED2FA0006F32AF /* SingleComment.swift in Sources */,
+				47D8C40B2AFA41FD002900AB /* ColorPalette.swift in Sources */,
 				A2027CD12AB7035500BA5391 /* AddPostViewModel.swift in Sources */,
 				4787E6F92AED143100025D4A /* LikeButtonPost.swift in Sources */,
 				A2D4FB792AECA67A001326A8 /* NewMessageView.swift in Sources */,
