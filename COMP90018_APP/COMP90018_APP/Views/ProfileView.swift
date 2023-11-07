@@ -130,49 +130,59 @@ extension ProfileView {
                 if let url = URL(string: profileViewPostsModel.user.profileImageURL) {
                     KFImage(url)
                         .resizable()
-                        .scaledToFit()
+                        .scaledToFill()
                         .frame(width: 150, height: 150)
                         .clipShape(Circle())
                         .shadow(radius: 10)
                 } else {
                     Image(systemName: "person.circle")
-                        .scaledToFit()
+                        .scaledToFill()
                         .frame(width: 150, height: 150)
                         .clipShape(Circle())
                         .shadow(radius: 10)
                 }
-                VStack{
+                VStack {
                     Text(profileViewPostsModel.user.userName)
                         .font(.largeTitle)
                         .bold()
                     
-                    NavigationLink(destination: ProfileSetttingView(profileSettingViewModel: ProfileSettingViewModel(), profileViewModel: profileViewPostsModel).navigationBarBackButtonHidden(true)) {
-                        Text("Modify Profile Details")
-                            .font(.caption)
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.orange)
-                            .cornerRadius(20)
-                    }
-                    Button(action: {
-                        if speechRecognizer.isListening {
-                            speechRecognizer.stopListening()
-                        } else {
-                            speechRecognizer.checkAndStartListening()
+                    HStack {
+                        Spacer()
+                        NavigationLink(destination: ProfileSetttingView(profileSettingViewModel: ProfileSettingViewModel(), profileViewModel: profileViewPostsModel).navigationBarBackButtonHidden(true)) {
+                            Text("Modify Profile Details")
+                                .font(.caption)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(minWidth: 0, maxWidth: .infinity)
+                                .background(Color.orange)
+                                .cornerRadius(20)
                         }
-                    }, label: {
-                        Text("Enable Voice Control: \(speechRecognizer.isListening ? "ON" : "OFF")")
-                            .font(.caption)
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.orange)
-                            .cornerRadius(20)
-                    })
+                        Spacer()
+                    }
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            if speechRecognizer.isListening {
+                                speechRecognizer.stopListening()
+                            } else {
+                                speechRecognizer.checkAndStartListening()
+                            }
+                        }, label: {
+                            Text("Enable Voice Control: \(speechRecognizer.isListening ? "ON" : "OFF")")
+                                .font(.caption)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(minWidth: 0, maxWidth: .infinity)
+                                .background(Color.orange)
+                                .cornerRadius(20)
+                        })
+                        Spacer()
+                    }
                     .alert(isPresented: $speechRecognizer.showingPermissionAlert) {
                         Alert(
                             title: Text("Permissions Required"),
                             message: Text("This app requires access to the microphone and speech recognition. Please enable permissions in settings."),
-                            primaryButton: .default(Text("Go settings"), action: openAppSettings),
+                            primaryButton: .default(Text("Go to settings"), action: openAppSettings),
                             secondaryButton: .cancel(Text("Reject"))
                         )
                     }
