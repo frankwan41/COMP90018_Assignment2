@@ -238,12 +238,12 @@ struct SinglePostView: View {
                                     }
                                 } label: {
                                     Text("Distance")
-                                        .fontWeight(.bold)
                                         .font(.system(size: 12))
-                                        .foregroundStyle(.black)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Color.white)
                                         .padding(.horizontal, 8)
                                         .padding(.vertical, 2)
-                                        .background(RoundedRectangle(cornerRadius: 15).stroke(Color.red))
+                                        .background(RoundedRectangle(cornerRadius: 20).fill(Color.orange))
                                 }
                                 .alert(isPresented: $showLocationRequestAlert, content: {
                                     Alert(
