@@ -27,7 +27,7 @@
   - [Development Setup](#development-setup)
 
 
-## Introducion
+## Introduction
 Developed an iOS mobile application named What2Eat, aimed at resolving users' meal choice dilemmas and providing a platform for user-generated content, primarily through user posts. What2Eat seeks to simplify users' dining choices, encouraging the sharing of culinary experiences and social interaction.
 
 User Posts: Users can share their food adventures, cooking ideas, and dining questions in the form of posts, creating their own food diaries.
