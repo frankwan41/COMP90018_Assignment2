@@ -72,8 +72,12 @@ class MessageViewModel: ObservableObject {
     
     
     func sendNewMessage() {
-        let messageTextToSend = self.newMessageText
+        
+        // Encrypt the message by the uid of the sender
+        let messageTextToSend = PrivacyManager.encryptMessage(self.newMessageText, with: currentUser.uid)
         self.newMessageText = ""
+        
+        
         
         
         guard let selectedUserUid = user?.uid else { return }

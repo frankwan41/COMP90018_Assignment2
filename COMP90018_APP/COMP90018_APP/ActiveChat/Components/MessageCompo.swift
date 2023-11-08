@@ -40,7 +40,7 @@ struct MessageCompo: View {
                             .frame(maxWidth: imageWidth, maxHeight: imageHeight)
                     }
                 }else{
-                    Text(message.text)
+                    Text(PrivacyManager.decryptMessage(message.text, with: message.fromId))
                         .foregroundColor(.white)
                         .padding(10)
                         .background(Color.orange)
@@ -157,7 +157,7 @@ struct MessageCompo: View {
                     }
                     
                 }else{
-                    Text(message.text)
+                    Text(PrivacyManager.decryptMessage(message.text, with: message.fromId))
                         .foregroundColor(.black)
                         .padding(10)
                         .background(Color.gray.opacity(0.2))
