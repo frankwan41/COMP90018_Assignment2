@@ -42,6 +42,7 @@ struct SinglePostView: View {
     
     @StateObject private var userViewModel = UserViewModel()
     @StateObject private var singlePostViewModel = SinglePostViewModel()
+    @StateObject var userProfileViewModel: UserProfileViewModel
     
     @EnvironmentObject var speechRecognizer: SpeechRecognizerViewModel
     @State private var microphoneAnimate = false
@@ -55,8 +56,17 @@ struct SinglePostView: View {
     var openMapCommand: String = "map"
     var checkWeatherCommand: String = "weather"
     
+    @State var showUserProfile: Bool = false
+    
     @Environment(\.presentationMode) var presentationMode
+    
 
+    init(post: Binding<Post>) {
+            self._post = post
+            
+            self._userProfileViewModel = StateObject(wrappedValue: UserProfileViewModel(userId: post.wrappedValue.userUID, userViewModel: UserViewModel(), postCollectionModel: PostCollectionModel()))
+        }
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -81,7 +91,30 @@ struct SinglePostView: View {
                             Text(dateTimeText)
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
-                                .padding(.horizontal)
+                                .padding(.leading)
+                            //Text(post.location)
+                                //.font(.subheadline)
+                                //.foregroundColor(.blue)
+                            Button(action: {
+                                let userLatitude = locationManager.location?.latitude ?? 0
+                                let userLontitude = locationManager.location?.longitude ?? 0
+                                
+                                let postCoordinate = CLLocation(latitude: post.latitude, longitude: post.longitude)
+                                let userCoordniate  = CLLocation(latitude: userLatitude, longitude: userLontitude)
+                                
+                                let distance = userCoordniate.distance(from: postCoordinate).rounded()
+                                // If the location is less than 50 km, navigate to map
+                                if distance <= farDistance {
+                                    // Open Map for navigation
+                                    openMapsForNavigation(toLatitude: post.latitude, longitude: post.longitude, locationName: post.location)
+                                }else{
+                                    showDistanceFarAlert = true
+                                }
+                            }){
+                                Text(post.location)
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(.blue)
                             Spacer()
                         }
                         Divider()
@@ -101,7 +134,7 @@ struct SinglePostView: View {
                     }
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button {
-                            // Access user profile
+                            showUserProfile.toggle()
                         } label: {
                             HStack {
                                 // Get user profile picture
@@ -156,25 +189,25 @@ struct SinglePostView: View {
                                         if distance < closeDistance {
                                             // If less than 1000 meters, show in meters
                                             Text("\(String(format: "%.0f", distance)) m")
-                                                .fontWeight(.bold)
                                                 .font(.system(size: 12))
-                                                .foregroundStyle(.black)
+                                                .fontWeight(.bold)
+                                                .foregroundColor(Color.white)
                                                 .padding(.horizontal, 8)
                                                 .padding(.vertical, 2)
-                                                .background(RoundedRectangle(cornerRadius: 15).stroke(Color.red))
+                                                .background(RoundedRectangle(cornerRadius: 20).fill(Color.orange))
                                         } else {
                                             // If 1 km or more, convert to kilometers
                                             let distanceInKilometers = distance / closeDistance
                                             VStack{
                                                 Text("\(String(format: "%.0f", distanceInKilometers)) km")
-                                                Text("Go Here").font(.system(size: 8))
+                                                //Text("Go Here").font(.system(size: 8))
                                             }
-                                                .fontWeight(.bold)
-                                                .font(.callout)
-                                                .foregroundStyle(.black)
-                                                .padding(.horizontal, 8)
-                                                .padding(.vertical, 2)
-                                                .background(RoundedRectangle(cornerRadius: 15).stroke(Color.red))
+                                            .font(.system(size: 12))
+                                            .fontWeight(.bold)
+                                            .foregroundColor(Color.white)
+                                            .padding(.horizontal, 8)
+                                            .padding(.vertical, 2)
+                                            .background(RoundedRectangle(cornerRadius: 20).fill(Color.orange))
                                         }
                                     }
                                     .alert(isPresented: $showDistanceFarAlert, content: {
@@ -205,12 +238,12 @@ struct SinglePostView: View {
                                     }
                                 } label: {
                                     Text("Distance")
-                                        .font(.system(size: 12))
                                         .fontWeight(.bold)
-                                        .foregroundColor(Color.pink)
+                                        .font(.system(size: 12))
+                                        .foregroundStyle(.black)
                                         .padding(.horizontal, 8)
                                         .padding(.vertical, 2)
-                                        .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
+                                        .background(RoundedRectangle(cornerRadius: 15).stroke(Color.red))
                                 }
                                 .alert(isPresented: $showLocationRequestAlert, content: {
                                     Alert(
@@ -232,10 +265,10 @@ struct SinglePostView: View {
                                 Text("Weather")
                                     .font(.system(size: 12))
                                     .fontWeight(.bold)
-                                    .foregroundColor(Color.pink)
+                                    .foregroundColor(Color.white)
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 2)
-                                    .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
+                                    .background(RoundedRectangle(cornerRadius: 20).fill(Color.orange))
                             }
                             
                             .alert(isPresented: $showAlert) {
@@ -278,6 +311,9 @@ struct SinglePostView: View {
                 }
                 
             }
+            .fullScreenCover(isPresented: $showUserProfile, content: {
+                UserProfileView(viewModel: userProfileViewModel)
+            })
             
         }
         .onAppear {
@@ -303,11 +339,19 @@ struct SinglePostView: View {
                 }
             }
             
+            singlePostViewModel.getPost(postID: post.id) { newPost in
+                if let newPost = newPost{
+                    self.post = newPost
+                }
+            }
+        
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
                 if locationManager.status == Status.success {
                     showLocationDistance = true
                 }
             }
+            userProfileViewModel.changeUserUID(newUID: post.userUID)
+            
         }
         .onChange(of: speechRecognizer.commandText, perform: { speech in
             if speechRecognizer.commandText.lowercased().contains(openMapCommand) {
@@ -443,22 +487,23 @@ extension SinglePostView {
         .edgesIgnoringSafeArea(.bottom)
         .withFooter()
     }
+    
     private var TagsSection: some View{
         HFlow(spacing: 10) {
             ForEach(post.tags.indices, id: \.self) { index in
                 ZStack(alignment: .topTrailing) {
-                    Button {
-                        
-                        shakeResult = post.tags[index]
-                        dismiss()
-                        
+                    
+                    NavigationLink {
+                        TagPostsView(tag: post.tags[index], userViewModel: userViewModel).navigationBarBackButtonHidden(true)
                     } label: {
                         Text(post.tags[index])
                             .font(.caption)
+                            .fontWeight(.bold)
                             .lineLimit(1)
+                            .foregroundStyle(.white)
                             .padding(.vertical, 5)
                             .padding(.horizontal, 10)
-                            .background(Capsule().fill(Color.gray.opacity(0.2)))
+                            .background(Capsule().fill(Color.orange))
                     }
 
                     

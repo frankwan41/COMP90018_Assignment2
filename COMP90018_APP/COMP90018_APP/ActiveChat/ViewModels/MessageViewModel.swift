@@ -180,14 +180,14 @@ class MessageViewModel: ObservableObject {
         let dateFormatter = DateFormatter()
 
         // Set Date Format
-        dateFormatter.dateFormat = "ss/mm/HH/dd/MM/yyyy"
+        dateFormatter.dateFormat = "ss-mm-HH-dd-MM-yyyy"
 
         // Convert Date to String
         let timestampStr = dateFormatter.string(from: timestamp.dateValue())
         
         
         // TODO: Create an unique pathReference for the image (Done)
-        let imagePath = currentUser.uid + selectedUserUid + timestampStr + String(uniqueNumber)
+        let imagePath = "ChatImages/" + currentUser.uid + "/" + selectedUserUid + "/" + timestampStr + "/" + String(uniqueNumber)
         
         // TODO: Upload the image and obtain its url and then Upload the message (Done)
         

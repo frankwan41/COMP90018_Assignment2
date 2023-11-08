@@ -93,7 +93,7 @@ class AddPostViewModel{
         
         if numberImages != 0 {
             for idx in 0...(numberImages - 1){
-                let imageReference = documentID + String(idx)
+                let imageReference = documentID + "/" + String(idx)
                 let image = images[idx]
                 dispatchGroup.enter()
                 self.saveSingleImage(image: image, documentID: imageReference){ imageURL in
@@ -125,11 +125,15 @@ class AddPostViewModel{
     func saveSingleImage(image: UIImage, documentID: String, completion: @escaping (String?) -> Void){
         
         
+        let folderName = "PostImages/"
+        
+        
+        
         // create the reference in the storage by the doumentID of the post
-        let ref = FirebaseManager.shared.storage.reference(withPath: documentID)
+        let ref = FirebaseManager.shared.storage.reference(withPath: folderName + documentID)
         
         // Compress the image
-        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+        guard let imageData = image.jpegData(compressionQuality: 1) else {
             print("Unable to compress the image of post \(documentID)")
             completion(nil)
             return}

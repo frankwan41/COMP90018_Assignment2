@@ -27,6 +27,10 @@ class UserProfileViewModel: ObservableObject {
         fetchUserProfile()
     }
     
+    func changeUserUID(newUID: String){
+        self.userId = newUID
+    }
+    
     func fetchUserPosts() {
         FirebaseManager.shared.firestore
             .collection("posts")

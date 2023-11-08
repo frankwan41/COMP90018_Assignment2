@@ -60,6 +60,57 @@ class PostsViewModel: PostCollectionModel {
     }
     
     /**
+     Fetch all posts that title or content contain the search text and order them by timestamps descendingly
+     */
+    func fetchPostsByTitleOrContent(searchText: String) {
+        FirebaseManager.shared.firestore
+            .collection("posts")
+            .order(by: "timestamp", descending: true)
+            .getDocuments { documentsSnapshot, error in
+                if let error = error {
+                    print("Failed to fetch posts in PostsViewModel in fetchPostsByTitleOrContent \(error)")
+                    return
+                }
+                var newPosts = [Post]()
+                documentsSnapshot?.documents.forEach { snapshot in
+                    let data = snapshot.data()
+                    let post = Post(data: data)
+                    newPosts.append(post)
+                }
+                
+                self.posts = newPosts.filter { post in
+                    post.postTitle.fuzzyMatch(searchText) || post.content.fuzzyMatch(searchText)
+                }
+            }
+    }
+    
+    /**
+     Fetch all posts that user name contain the search text and order them by timestamps descendingly
+     */
+    func fetchPostsByUsername(searchUsername: String){
+        FirebaseManager.shared.firestore
+            .collection("posts")
+            .order(by: "timestamp", descending: true)
+            .getDocuments { documentsSnapshot, error in
+                if let error = error {
+                    print("Failed to fetch posts in PostsViewModel in fetchPostsByUsername \(error)")
+                    return
+                }
+                var newPosts = [Post]()
+                documentsSnapshot?.documents.forEach { snapshot in
+                    let data = snapshot.data()
+                    let post = Post(data: data)
+                    newPosts.append(post)
+                }
+                
+                self.posts = newPosts.filter { post in
+                    post.userName.fuzzyMatch(searchUsername)
+                }
+            }
+    }
+
+    
+    /**
      Fetch all posts that contain a tag and order them by timestamps descendingly
      */
     func fetchPosts(tag: String) {

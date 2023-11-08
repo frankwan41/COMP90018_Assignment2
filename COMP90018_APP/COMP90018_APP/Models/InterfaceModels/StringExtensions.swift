@@ -24,9 +24,17 @@ extension String {
     }
     
     func fuzzyMatch(_ query: String) -> Bool {
-        let distance = self.lowercased().levenshteinDistance(to: query.lowercased())
-        let threshold = 1 // Adjust the threshold to make matching more or less strict
-        return distance <= threshold
+            let lowercasedSelf = self.lowercased()
+            let lowercasedQuery = query.lowercased()
+            
+            //check the string is contained
+            if lowercasedSelf.contains(lowercasedQuery) {
+                return true
+            }
+            
+            //if not, use Levenshtein do fuzzy search
+            let distance = lowercasedSelf.levenshteinDistance(to: lowercasedQuery)
+            let threshold = 1 // Can be modified
+            return distance <= threshold
+        }
     }
-}
-
