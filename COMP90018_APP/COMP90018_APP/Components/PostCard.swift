@@ -13,6 +13,7 @@ struct PostCard: View {
     @Binding var post: Post
     @State var author: User? = nil
     @State var user: User? = nil
+    @State private var showDeletePostAlert = false
     
     @ObservedObject var userViewModel: UserViewModel
     @ObservedObject var postCollectionModel: PostCollectionModel
@@ -67,18 +68,18 @@ struct PostCard: View {
                         }
                         Text(post.userName).font(.subheadline)
                         Spacer()
-                        if let author = author, let user = user {
-                            if author.userName == user.userName {
-                                DeleteButtonPost(
-                                    width: 20,
-                                    height: 20,
-                                    post: $post,
-                                    userViewModel: userViewModel,
-                                    postCollectionModel: postCollectionModel
-                                )
-                            }
-                        }
-                        Spacer().frame(width: 5)
+//                        if let author = author, let user = user {
+//                            if author.userName == user.userName {
+//                                DeleteButtonPost(
+//                                    width: 20,
+//                                    height: 20,
+//                                    post: $post,
+//                                    userViewModel: userViewModel,
+//                                    postCollectionModel: postCollectionModel
+//                                )
+//                            }
+//                        }
+//                        Spacer().frame(width: 5)
                         LikeButtonPost(
                             width: 20,
                             height: 20,
@@ -96,6 +97,20 @@ struct PostCard: View {
             .opacity(0)  // Making the NavigationLink invisible
             .allowsHitTesting(false)
         }
+        .swipeActions{
+            if let user = user {
+                if  post.userUID == user.uid {
+                    Button(role: .none) {
+                        withAnimation {
+                            showDeletePostAlert = true
+                        }
+                    } label: {
+                        Image(systemName: "trash")
+                    }
+                    .tint(.red)
+                }
+            }
+        }
         .onAppear {
             userViewModel.getUser(userUID: post.userUID) { user in
                 if let user = user {
@@ -108,6 +123,20 @@ struct PostCard: View {
                 }
             }
         }
+        .alert(isPresented: $showDeletePostAlert) {
+            Alert(
+                title: Text("Delete Confirmation"),
+                message: Text("Are you sure you want to delete this post?"),
+                primaryButton: .destructive(Text("Delete"), action: {
+                    postCollectionModel.removePost(postID: post.id)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                        postCollectionModel.fetchPosts()
+                    }
+                }),
+                secondaryButton: .cancel()
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
     }
     
 }
