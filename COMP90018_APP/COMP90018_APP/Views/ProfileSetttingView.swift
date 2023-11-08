@@ -400,7 +400,9 @@ extension ProfileSetttingView{
             print("Unable to get the uid of the user to obtain the profile image.")
             return}
         
-        let storageRef = Storage.storage().reference(withPath: uid)
+        let folderName = "ProfileImages/"
+        
+        let storageRef = Storage.storage().reference(withPath: folderName+uid)
         storageRef.getData(maxSize: 20 * 1024 * 1024) { data, error in
             if let error = error{
                 print("Error while downloading profile image, \(error.localizedDescription)")

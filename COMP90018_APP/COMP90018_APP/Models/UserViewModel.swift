@@ -146,8 +146,11 @@ class UserViewModel: ObservableObject {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
             return}
         
+        
+        let folderName = "ProfileImages/"
+        
         // Create the reference of the image in storage by the uid of the user
-        let ref = FirebaseManager.shared.storage.reference(withPath: uid)
+        let ref = FirebaseManager.shared.storage.reference(withPath: folderName+uid)
         
         // Compress the image
         guard let imageData = image.jpegData(compressionQuality: 1) else{return}
