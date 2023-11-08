@@ -449,8 +449,8 @@ extension SinglePostView {
                 ZStack(alignment: .topTrailing) {
                     Button {
                         
-                        shakeResult = post.tags[index]
-                        dismiss()
+//                        shakeResult = post.tags[index]
+//                        dismiss()
                         
                     } label: {
                         Text(post.tags[index])
