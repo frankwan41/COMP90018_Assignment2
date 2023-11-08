@@ -143,6 +143,15 @@
         "revision" : "d592b610a92869b74ede8ee4c0435a29219be9d8",
         "version" : "1.2.0"
       }
+    },
+    {
+      "identity" : "swipeactions",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Majekdor/SwipeActions",
+      "state" : {
+        "branch" : "main",
+        "revision" : "6689d4d75091563ebfe7594aa01b32bc44d696da"
+      }
     }
   ],
   "version" : 2

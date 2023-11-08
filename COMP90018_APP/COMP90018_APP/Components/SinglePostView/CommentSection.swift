@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwipeActions
 
 struct CommentsSection: View {
     
@@ -23,10 +24,12 @@ struct CommentsSection: View {
             }
             .padding(.bottom)
             
-            if comments.count > 0 {
-                ForEach($comments, id: \.commentID) { comment in
-                    SingleComment(post: $post, comment: comment, comments: $comments).padding()
-                    Divider()
+            SwipeViewGroup{
+                if comments.count > 0 {
+                    ForEach($comments, id: \.commentID) { comment in
+                        SingleComment(post: $post, comment: comment, comments: $comments).padding()
+                        Divider()
+                    }
                 }
             }
         }
