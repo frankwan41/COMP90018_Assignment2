@@ -27,8 +27,8 @@ struct UserProfileView: View {
                     }
                 }
                 .navigationBarTitle(userProfileViewModel.username.map {
-                    "\($0)'s Profile"
-                } ?? "User Profile", displayMode: .inline)
+                    "\($0)'s Posts"
+                } ?? "Loading...", displayMode: .inline)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button {
