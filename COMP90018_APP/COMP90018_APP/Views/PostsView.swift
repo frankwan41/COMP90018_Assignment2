@@ -161,14 +161,22 @@ extension PostsView {
             }
             HStack {
                 Spacer().frame(width: 10)
-                Picker("", selection: $searchType) {
-                    ForEach(SearchTypes.allCases) { type in
-                        Text(type.rawValue.capitalized).tag(type)
+                HStack{
+                    Picker("Tag", selection: $searchType) {
+                        ForEach(SearchTypes.allCases) { type in
+                            Text(type.rawValue.capitalized).tag(type)
                             
+                        }
                     }
+                    //.padding(.leading, -10)
+                    //.padding(.trailing, -10)
+                    .pickerStyle(.menu)
+                    .bold()
+                    .padding(.vertical, 4)
                 }
-                .padding(.trailing, -10)
-                .pickerStyle(.menu)
+                .background(.white.opacity(0.5))
+                
+                .cornerRadius(20)
                 
                 TextField(
                     "Search \(searchType.rawValue)...",

@@ -15,7 +15,7 @@ struct NewMessageCompo: View {
     
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm, dd/M/yyyy"
+        formatter.dateFormat =  "yyyy/M/dd, HH:mm"
         return formatter
     }
     
