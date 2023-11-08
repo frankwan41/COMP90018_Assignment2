@@ -27,20 +27,13 @@ struct MessageView: View {
     
     init(viewModel: MessageViewModel) {
         self.viewModel = viewModel
-        if let user = viewModel.user {
-            _userProfileViewModel = StateObject(wrappedValue: UserProfileViewModel(userId: user.uid))
-        } else {
-            _userProfileViewModel = StateObject(wrappedValue: UserProfileViewModel(userId: viewModel.currentUser.uid))
-        }
+        _userProfileViewModel = StateObject(
+            wrappedValue: UserProfileViewModel(userId: viewModel.user?.uid ?? "")
+        )
     }
     
     var body: some View {
         VStack {
-            
-//            VStack{
-//                Spacer()
-//            }
-            
             ZStack{
                 HStack{
                     Button {
@@ -229,6 +222,11 @@ struct MessageView: View {
                     images.removeAll()
                 }
         }
+        .onChange(of: viewModel.user, perform: { user in
+            if let user = user {
+                userProfileViewModel.changeUserUID(newUID: user.uid)
+            }
+        })
     }
 }
 
