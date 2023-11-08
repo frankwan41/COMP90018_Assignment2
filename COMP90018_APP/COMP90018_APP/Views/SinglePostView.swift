@@ -259,8 +259,9 @@ struct SinglePostView: View {
                     if (post.longitude != 0 && post.latitude != 0) {
                         ToolbarItem(placement: .navigationBarTrailing) {
                             Button {
-                                let apiKey = "95e381fda50cae025af8d88dde3f5c5c"
-                                getWeather(latitude: post.latitude, longitude: post.longitude, apiKey: apiKey)
+                                if let apiKey = Bundle.main.object(forInfoDictionaryKey: "OpenWeatherAPIKey") as? String {
+                                    getWeather(latitude: post.latitude, longitude: post.longitude, apiKey: apiKey)
+                                }
                             } label: {
                                 Text("Weather")
                                     .font(.system(size: 12))
