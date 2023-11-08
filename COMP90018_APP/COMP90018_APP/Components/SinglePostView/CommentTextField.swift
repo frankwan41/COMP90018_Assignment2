@@ -72,7 +72,7 @@ struct CommentTextField: View {
                 } label: {
                     Text("Send")
                         .padding(.all, 10)
-                        .background(Color.blue)
+                        .background(Color.orange)
                         .foregroundColor(.white)
                         .cornerRadius(20)
                 }.padding(.trailing,10)

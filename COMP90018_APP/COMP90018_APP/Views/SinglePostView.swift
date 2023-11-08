@@ -81,7 +81,10 @@ struct SinglePostView: View {
                             Text(dateTimeText)
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
-                                .padding(.horizontal)
+                                .padding(.leading)
+                            Text(post.location)
+                                .font(.subheadline)
+                                .foregroundColor(.blue)
                             Spacer()
                         }
                         Divider()
@@ -171,10 +174,10 @@ struct SinglePostView: View {
                                             }
                                                 .fontWeight(.bold)
                                                 .font(.callout)
-                                                .foregroundStyle(.black)
+                                                .foregroundStyle(.white)
                                                 .padding(.horizontal, 8)
                                                 .padding(.vertical, 2)
-                                                .background(RoundedRectangle(cornerRadius: 15).stroke(Color.red))
+                                                .background(RoundedRectangle(cornerRadius: 15).fill(Color.orange))
                                         }
                                     }
                                     .alert(isPresented: $showDistanceFarAlert, content: {
@@ -207,10 +210,10 @@ struct SinglePostView: View {
                                     Text("Distance")
                                         .font(.system(size: 12))
                                         .fontWeight(.bold)
-                                        .foregroundColor(Color.pink)
+                                        .foregroundColor(Color.white)
                                         .padding(.horizontal, 8)
                                         .padding(.vertical, 2)
-                                        .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
+                                        .background(RoundedRectangle(cornerRadius: 20).fill(Color.orange))
                                 }
                                 .alert(isPresented: $showLocationRequestAlert, content: {
                                     Alert(
@@ -232,10 +235,10 @@ struct SinglePostView: View {
                                 Text("Weather")
                                     .font(.system(size: 12))
                                     .fontWeight(.bold)
-                                    .foregroundColor(Color.pink)
+                                    .foregroundColor(Color.white)
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 2)
-                                    .background(RoundedRectangle(cornerRadius: 20).stroke(Color.pink))
+                                    .background(RoundedRectangle(cornerRadius: 20).fill(Color.orange))
                             }
                             
                             .alert(isPresented: $showAlert) {
@@ -303,6 +306,12 @@ struct SinglePostView: View {
                 }
             }
             
+            singlePostViewModel.getPost(postID: post.id) { newPost in
+                if let newPost = newPost{
+                    self.post = newPost
+                }
+            }
+        
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
                 if locationManager.status == Status.success {
                     showLocationDistance = true
@@ -443,22 +452,23 @@ extension SinglePostView {
         .edgesIgnoringSafeArea(.bottom)
         .withFooter()
     }
+    
     private var TagsSection: some View{
         HFlow(spacing: 10) {
             ForEach(post.tags.indices, id: \.self) { index in
                 ZStack(alignment: .topTrailing) {
-                    Button {
-                        
-                        shakeResult = post.tags[index]
-                        dismiss()
-                        
+                    
+                    NavigationLink {
+                        TagPostsView(tag: post.tags[index], userViewModel: userViewModel).navigationBarBackButtonHidden(true)
                     } label: {
                         Text(post.tags[index])
                             .font(.caption)
+                            .fontWeight(.bold)
                             .lineLimit(1)
+                            .foregroundStyle(.white)
                             .padding(.vertical, 5)
                             .padding(.horizontal, 10)
-                            .background(Capsule().fill(Color.gray.opacity(0.2)))
+                            .background(Capsule().fill(Color.orange))
                     }
 
                     

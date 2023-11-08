@@ -18,10 +18,11 @@
 		2D5B978C2AE76E49008ED0A5 /* COMP90018-APP-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2D5B978B2AE76E49008ED0A5 /* COMP90018-APP-Info.plist */; };
 		2D65DA442AEDFE4600703782 /* PostsMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D65DA432AEDFE4600703782 /* PostsMapView.swift */; };
 		2D65DA4C2AF8B94400703782 /* FooterViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D65DA4B2AF8B94400703782 /* FooterViewModifier.swift */; };
+		2D65DA4E2AFB21AF00703782 /* TagPostsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D65DA4D2AFB21AF00703782 /* TagPostsView.swift */; };
 		2DB04A5A2AECF41C00270DC5 /* SpeechRecognizerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB04A592AECF41C00270DC5 /* SpeechRecognizerViewModel.swift */; };
 		2DD346AA2AE913F7001F6A57 /* LocationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD346A92AE913F7001F6A57 /* LocationViewModel.swift */; };
 		2DD346AE2AEBE5E8001F6A57 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2DD346AD2AEBE5E8001F6A57 /* Settings.bundle */; };
-		2DE1A5B72AB2C1A3000A2551 /* WelcomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE1A5B62AB2C1A3000A2551 /* WelcomView.swift */; };
+		2DE1A5B72AB2C1A3000A2551 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE1A5B62AB2C1A3000A2551 /* WelcomeView.swift */; };
 		2DE1A5B92AB2C25D000A2551 /* PostsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE1A5B82AB2C25D000A2551 /* PostsView.swift */; };
 		2DE1A5BB2AB2C26E000A2551 /* ShakeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE1A5BA2AB2C26E000A2551 /* ShakeView.swift */; };
 		2DE1A5BD2AB2C297000A2551 /* SignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE1A5BC2AB2C297000A2551 /* SignView.swift */; };
@@ -153,10 +154,11 @@
 		2D5B978B2AE76E49008ED0A5 /* COMP90018-APP-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "COMP90018-APP-Info.plist"; sourceTree = SOURCE_ROOT; };
 		2D65DA432AEDFE4600703782 /* PostsMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsMapView.swift; sourceTree = "<group>"; };
 		2D65DA4B2AF8B94400703782 /* FooterViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterViewModifier.swift; sourceTree = "<group>"; };
+		2D65DA4D2AFB21AF00703782 /* TagPostsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagPostsView.swift; sourceTree = "<group>"; };
 		2DB04A592AECF41C00270DC5 /* SpeechRecognizerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizerViewModel.swift; sourceTree = "<group>"; };
 		2DD346A92AE913F7001F6A57 /* LocationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationViewModel.swift; sourceTree = "<group>"; };
 		2DD346AD2AEBE5E8001F6A57 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
-		2DE1A5B62AB2C1A3000A2551 /* WelcomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomView.swift; sourceTree = "<group>"; };
+		2DE1A5B62AB2C1A3000A2551 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		2DE1A5B82AB2C25D000A2551 /* PostsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsView.swift; sourceTree = "<group>"; };
 		2DE1A5BA2AB2C26E000A2551 /* ShakeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeView.swift; sourceTree = "<group>"; };
 		2DE1A5BC2AB2C297000A2551 /* SignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignView.swift; sourceTree = "<group>"; };
@@ -338,7 +340,7 @@
 		2DE1A5B32AB2C04D000A2551 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				2DE1A5B62AB2C1A3000A2551 /* WelcomView.swift */,
+				2DE1A5B62AB2C1A3000A2551 /* WelcomeView.swift */,
 				A2AC2AF32AF9B87600A33259 /* UserProfileView.swift */,
 				2DE1A5B82AB2C25D000A2551 /* PostsView.swift */,
 				2DE1A5BA2AB2C26E000A2551 /* ShakeView.swift */,
@@ -349,6 +351,7 @@
 				2DE1A5C42AB2CA68000A2551 /* TabMainView.swift */,
 				2DE1A5C62AB2CC0F000A2551 /* AddPostView.swift */,
 				2D65DA432AEDFE4600703782 /* PostsMapView.swift */,
+				2D65DA4D2AFB21AF00703782 /* TagPostsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -629,6 +632,7 @@
 			files = (
 				A2D4FAE42AEC8B92001326A8 /* LatestMessage.swift in Sources */,
 				A2027C962AB2FA4800BA5391 /* FirebaseManager.swift in Sources */,
+				2D65DA4E2AFB21AF00703782 /* TagPostsView.swift in Sources */,
 				4787E6EE2AEBE94C00025D4A /* PostCollection.swift in Sources */,
 				2D1890F22AE5F50A00B63D8F /* ImagePickerView.swift in Sources */,
 				2D65DA442AEDFE4600703782 /* PostsMapView.swift in Sources */,
@@ -652,7 +656,7 @@
 				47B08A6C2AED2F75006F32AF /* CommentSection.swift in Sources */,
 				A2D4FB702AEC9B94001326A8 /* ChatMainViewModel.swift in Sources */,
 				2DE1A5BB2AB2C26E000A2551 /* ShakeView.swift in Sources */,
-				2DE1A5B72AB2C1A3000A2551 /* WelcomView.swift in Sources */,
+				2DE1A5B72AB2C1A3000A2551 /* WelcomeView.swift in Sources */,
 				2DE1A5BF2AB2C2D7000A2551 /* ProfileView.swift in Sources */,
 				A2AC2AF22AF9B85D00A33259 /* UserProfileViewModel.swift in Sources */,
 				A2D4FB722AECA2A3001326A8 /* ChatMainView.swift in Sources */,
