@@ -82,9 +82,29 @@ struct SinglePostView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                                 .padding(.leading)
-                            Text(post.location)
-                                .font(.subheadline)
-                                .foregroundColor(.blue)
+                            //Text(post.location)
+                                //.font(.subheadline)
+                                //.foregroundColor(.blue)
+                            Button(action: {
+                                let userLatitude = locationManager.location?.latitude ?? 0
+                                let userLontitude = locationManager.location?.longitude ?? 0
+                                
+                                let postCoordinate = CLLocation(latitude: post.latitude, longitude: post.longitude)
+                                let userCoordniate  = CLLocation(latitude: userLatitude, longitude: userLontitude)
+                                
+                                let distance = userCoordniate.distance(from: postCoordinate).rounded()
+                                // If the location is less than 50 km, navigate to map
+                                if distance <= farDistance {
+                                    // Open Map for navigation
+                                    openMapsForNavigation(toLatitude: post.latitude, longitude: post.longitude, locationName: post.location)
+                                }else{
+                                    showDistanceFarAlert = true
+                                }
+                            }){
+                                Text(post.location)
+                            }
+                            .font(.subheadline)
+                            .foregroundColor(.blue)
                             Spacer()
                         }
                         Divider()
@@ -159,25 +179,25 @@ struct SinglePostView: View {
                                         if distance < closeDistance {
                                             // If less than 1000 meters, show in meters
                                             Text("\(String(format: "%.0f", distance)) m")
-                                                .fontWeight(.bold)
                                                 .font(.system(size: 12))
-                                                .foregroundStyle(.black)
+                                                .fontWeight(.bold)
+                                                .foregroundColor(Color.white)
                                                 .padding(.horizontal, 8)
                                                 .padding(.vertical, 2)
-                                                .background(RoundedRectangle(cornerRadius: 15).stroke(Color.red))
+                                                .background(RoundedRectangle(cornerRadius: 20).fill(Color.orange))
                                         } else {
                                             // If 1 km or more, convert to kilometers
                                             let distanceInKilometers = distance / closeDistance
                                             VStack{
                                                 Text("\(String(format: "%.0f", distanceInKilometers)) km")
-                                                Text("Go Here").font(.system(size: 8))
+                                                //Text("Go Here").font(.system(size: 8))
                                             }
-                                                .fontWeight(.bold)
-                                                .font(.callout)
-                                                .foregroundStyle(.white)
-                                                .padding(.horizontal, 8)
-                                                .padding(.vertical, 2)
-                                                .background(RoundedRectangle(cornerRadius: 15).fill(Color.orange))
+                                            .font(.system(size: 12))
+                                            .fontWeight(.bold)
+                                            .foregroundColor(Color.white)
+                                            .padding(.horizontal, 8)
+                                            .padding(.vertical, 2)
+                                            .background(RoundedRectangle(cornerRadius: 20).fill(Color.orange))
                                         }
                                     }
                                     .alert(isPresented: $showDistanceFarAlert, content: {
@@ -208,12 +228,12 @@ struct SinglePostView: View {
                                     }
                                 } label: {
                                     Text("Distance")
-                                        .font(.system(size: 12))
                                         .fontWeight(.bold)
-                                        .foregroundColor(Color.white)
+                                        .font(.system(size: 12))
+                                        .foregroundStyle(.black)
                                         .padding(.horizontal, 8)
                                         .padding(.vertical, 2)
-                                        .background(RoundedRectangle(cornerRadius: 20).fill(Color.orange))
+                                        .background(RoundedRectangle(cornerRadius: 15).stroke(Color.red))
                                 }
                                 .alert(isPresented: $showLocationRequestAlert, content: {
                                     Alert(
