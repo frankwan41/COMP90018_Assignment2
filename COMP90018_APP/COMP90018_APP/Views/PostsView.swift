@@ -160,6 +160,7 @@ extension PostsView {
                 ProgressView().padding(.bottom, 2)
             }
             HStack {
+                Spacer().frame(width: 10)
                 Picker("", selection: $searchType) {
                     ForEach(SearchTypes.allCases) { type in
                         Text(type.rawValue.capitalized).tag(type)

@@ -41,8 +41,7 @@ struct TagPostsView: View {
                 List {
                     PostCollection(
                         userViewModel: userViewModel,
-                        postCollectionModel: postsViewModel,
-                        gradientBackground: postGradientBackground
+                        postCollectionModel: postsViewModel
                     )
                 }
                 .listStyle(.plain)
