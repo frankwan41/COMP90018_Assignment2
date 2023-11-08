@@ -103,7 +103,7 @@ struct PostsMapView: View {
                                         Text("Prev")
                                     }
                                     .fontWeight(.bold)
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(.black)
                                 }
                                 .offset(x: -170, y: -70)
                                 
@@ -134,7 +134,7 @@ struct PostsMapView: View {
                                         Text("Next")
                                     }
                                     .fontWeight(.bold)
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(.black)
                                 }
                                 .offset(x: 170, y: -70)
                                 
