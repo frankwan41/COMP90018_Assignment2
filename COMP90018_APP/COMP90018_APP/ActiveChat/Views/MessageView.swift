@@ -9,9 +9,10 @@ import SwiftUI
 import Photos
 
 struct MessageView: View {
-    @ObservedObject var viewModel: MessageViewModel
-    @State private var isEditing: Bool = false
     
+    @ObservedObject var viewModel: MessageViewModel
+    @StateObject var userProfileViewModel: UserProfileViewModel
+    @State private var isEditing: Bool = false
     
     @State private var showImagePicker = false
     @State private var showImageCamera = false
@@ -24,6 +25,14 @@ struct MessageView: View {
     
     @State private var showUserProfile = false
     
+    init(viewModel: MessageViewModel) {
+        self.viewModel = viewModel
+        if let user = viewModel.user {
+            _userProfileViewModel = StateObject(wrappedValue: UserProfileViewModel(userId: user.uid))
+        } else {
+            _userProfileViewModel = StateObject(wrappedValue: UserProfileViewModel(userId: viewModel.currentUser.uid))
+        }
+    }
     
     var body: some View {
         VStack {
@@ -180,10 +189,7 @@ struct MessageView: View {
 //            viewModel.toProfileImage = nil
 //        })
         .fullScreenCover(isPresented: $showUserProfile, content: {
-            let userViewModel = UserViewModel()
-            let postCollectionModel = PostCollectionModel()
-
-            UserProfileView(viewModel: UserProfileViewModel(userId: viewModel.user?.uid ?? "", userViewModel: userViewModel, postCollectionModel: postCollectionModel))
+            UserProfileView(userProfileViewModel: userProfileViewModel)
         })
 
         

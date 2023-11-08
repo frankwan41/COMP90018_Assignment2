@@ -64,7 +64,7 @@ struct SinglePostView: View {
     init(post: Binding<Post>) {
             self._post = post
             
-            self._userProfileViewModel = StateObject(wrappedValue: UserProfileViewModel(userId: post.wrappedValue.userUID, userViewModel: UserViewModel(), postCollectionModel: PostCollectionModel()))
+            self._userProfileViewModel = StateObject(wrappedValue: UserProfileViewModel(userId: post.wrappedValue.userUID))
         }
     
     var body: some View {
@@ -313,7 +313,7 @@ struct SinglePostView: View {
                 
             }
             .fullScreenCover(isPresented: $showUserProfile, content: {
-                UserProfileView(viewModel: userProfileViewModel)
+                UserProfileView(userProfileViewModel: userProfileViewModel)
             })
             
         }

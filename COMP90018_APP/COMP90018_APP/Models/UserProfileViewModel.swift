@@ -9,29 +9,21 @@
 import Foundation
 import Firebase
 
-class UserProfileViewModel: ObservableObject {
-    @Published var posts: [Post] = []
+class UserProfileViewModel: PostCollectionModel {
+
     @Published var username: String? = nil
     @Published var userProfileImage: String? = nil
     private var userId: String
 
-
-    var userViewModel: UserViewModel
-    var postCollectionModel: PostCollectionModel
-
-    init(userId: String, userViewModel: UserViewModel, postCollectionModel: PostCollectionModel) {
+    init(userId: String) {
         self.userId = userId
-        self.userViewModel = userViewModel
-        self.postCollectionModel = postCollectionModel
-        fetchUserPosts()
-        fetchUserProfile()
     }
     
     func changeUserUID(newUID: String){
         self.userId = newUID
     }
     
-    func fetchUserPosts() {
+    override func fetchPosts() {
         FirebaseManager.shared.firestore
             .collection("posts")
             .whereField("useruid", isEqualTo: self.userId)
@@ -54,19 +46,19 @@ class UserProfileViewModel: ObservableObject {
     }
     
     func fetchUserProfile() {
-            FirebaseManager.shared.firestore
-                .collection("users")
-                .document(self.userId)
-                .getDocument { documentSnapshot, error in
-                    if let error = error {
-                        print("Failed to fetch user profile for user \(self.userId), \(error.localizedDescription)")
-                        return
-                    }
-                    guard let data = documentSnapshot?.data() else { return }
-                    DispatchQueue.main.async {
-                        self.username = data["username"] as? String
-                        self.userProfileImage = data["profileImageURL"] as? String
-                    }
+        FirebaseManager.shared.firestore
+            .collection("users")
+            .document(self.userId)
+            .getDocument { documentSnapshot, error in
+                if let error = error {
+                    print("Failed to fetch user profile for user \(self.userId), \(error.localizedDescription)")
+                    return
                 }
+                guard let data = documentSnapshot?.data() else { return }
+                DispatchQueue.main.async {
+                    self.username = data["username"] as? String
+                    self.userProfileImage = data["profileImageURL"] as? String
+                }
+            }
         }
     }
