@@ -42,6 +42,7 @@ struct SinglePostView: View {
     
     @StateObject private var userViewModel = UserViewModel()
     @StateObject private var singlePostViewModel = SinglePostViewModel()
+    @StateObject var userProfileViewModel: UserProfileViewModel
     
     @EnvironmentObject var speechRecognizer: SpeechRecognizerViewModel
     @State private var microphoneAnimate = false
@@ -55,8 +56,17 @@ struct SinglePostView: View {
     var openMapCommand: String = "map"
     var checkWeatherCommand: String = "weather"
     
+    @State var showUserProfile: Bool = false
+    
     @Environment(\.presentationMode) var presentationMode
+    
 
+    init(post: Binding<Post>) {
+            self._post = post
+            
+            self._userProfileViewModel = StateObject(wrappedValue: UserProfileViewModel(userId: post.wrappedValue.userUID, userViewModel: UserViewModel(), postCollectionModel: PostCollectionModel()))
+        }
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -124,7 +134,7 @@ struct SinglePostView: View {
                     }
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button {
-                            // Access user profile
+                            showUserProfile.toggle()
                         } label: {
                             HStack {
                                 // Get user profile picture
@@ -301,6 +311,9 @@ struct SinglePostView: View {
                 }
                 
             }
+            .fullScreenCover(isPresented: $showUserProfile, content: {
+                UserProfileView(viewModel: userProfileViewModel)
+            })
             
         }
         .onAppear {
@@ -337,6 +350,8 @@ struct SinglePostView: View {
                     showLocationDistance = true
                 }
             }
+            userProfileViewModel.changeUserUID(newUID: post.userUID)
+            
         }
         .onChange(of: speechRecognizer.commandText, perform: { speech in
             if speechRecognizer.commandText.lowercased().contains(openMapCommand) {
