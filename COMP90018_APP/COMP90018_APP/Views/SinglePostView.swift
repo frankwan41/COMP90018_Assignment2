@@ -157,7 +157,8 @@ struct SinglePostView: View {
                                 if let username = authorUsername {
                                     Text(username)
                                         .truncationMode(.tail)
-                                        .frame(width: 100)
+                                        //.frame(width: 100)
+                                        .padding(.horizontal, 5)
                                 }
                             }
                             .foregroundColor(.black)
