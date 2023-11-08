@@ -6,8 +6,8 @@
 ## Table of Contents
 
 - [What2Eat](#comp90018_SoftwareProject-what2eat)
-  - [Introduction](#introduction)
   - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
   - [Demo Video](#demo-video)
   - [User Guide](#user-guide-and-key-features)
     - [Guest Mode](#guest-mode)
