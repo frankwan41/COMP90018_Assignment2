@@ -6,7 +6,7 @@
 ## Table of Contents
 
 - [What2Eat](#comp90018_SoftwareProject-what2eat)
-  - [Introduction] 
+  - [Introduction](#Introduction)
   - [Table of Contents](#table-of-contents)
   - [Demo Video](#demo-video)
   - [User Guide](#user-guide-and-key-features)
