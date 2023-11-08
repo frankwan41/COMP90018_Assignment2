@@ -18,7 +18,6 @@ struct ChatMainView: View {
     @State private var showActiveButton = false
     @State private var showLocationRequestAlert: Bool = false
     
-    
     @StateObject var messageViewModel: MessageViewModel
     @StateObject var chatMainViewModel: ChatMainViewModel
     @ObservedObject var locationManager : LocationManager
@@ -33,14 +32,11 @@ struct ChatMainView: View {
         self.currentUser = currentUser
         showActiveButton = self.currentUser.isActive
         
-        let userVM = UserViewModel()
-        let postCollectionVM = PostCollectionModel()
-        
         _messageViewModel = StateObject(wrappedValue: MessageViewModel(user: nil, currentUser: currentUser))
         _chatMainViewModel = StateObject(wrappedValue: ChatMainViewModel(currentUser: currentUser))
         _locationManager = ObservedObject(wrappedValue: locationManager)
-        _userProfileViewModel = StateObject(wrappedValue: UserProfileViewModel(userId: currentUser.uid, userViewModel: userVM, postCollectionModel: postCollectionVM))
-        }
+        _userProfileViewModel = StateObject(wrappedValue: UserProfileViewModel(userId: currentUser.uid))
+    }
     
     var body: some View {
         NavigationView {
@@ -116,7 +112,7 @@ struct ChatMainView: View {
                 //NavigationLink("", destination: MessageView(viewModel: messageViewModel), isActive: $showMessageView)
             }
             .fullScreenCover(isPresented: $showUserProfile, content: {
-                UserProfileView(viewModel: userProfileViewModel)
+                UserProfileView(userProfileViewModel: userProfileViewModel)
             })
             .withFooter()
             .fullScreenCover(isPresented: $showMessageView, onDismiss: {

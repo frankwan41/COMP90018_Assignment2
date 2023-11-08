@@ -9,9 +9,10 @@ import SwiftUI
 import Photos
 
 struct MessageView: View {
-    @ObservedObject var viewModel: MessageViewModel
-    @State private var isEditing: Bool = false
     
+    @ObservedObject var viewModel: MessageViewModel
+    @StateObject var userProfileViewModel: UserProfileViewModel
+    @State private var isEditing: Bool = false
     
     @State private var showImagePicker = false
     @State private var showImageCamera = false
@@ -24,14 +25,15 @@ struct MessageView: View {
     
     @State private var showUserProfile = false
     
+    init(viewModel: MessageViewModel) {
+        self.viewModel = viewModel
+        _userProfileViewModel = StateObject(
+            wrappedValue: UserProfileViewModel(userId: viewModel.user?.uid ?? "")
+        )
+    }
     
     var body: some View {
         VStack {
-            
-//            VStack{
-//                Spacer()
-//            }
-            
             ZStack{
                 HStack{
                     Button {
@@ -180,10 +182,7 @@ struct MessageView: View {
 //            viewModel.toProfileImage = nil
 //        })
         .fullScreenCover(isPresented: $showUserProfile, content: {
-            let userViewModel = UserViewModel()
-            let postCollectionModel = PostCollectionModel()
-
-            UserProfileView(viewModel: UserProfileViewModel(userId: viewModel.user?.uid ?? "", userViewModel: userViewModel, postCollectionModel: postCollectionModel))
+            UserProfileView(userProfileViewModel: userProfileViewModel)
         })
 
         
@@ -223,6 +222,11 @@ struct MessageView: View {
                     images.removeAll()
                 }
         }
+        .onChange(of: viewModel.user, perform: { user in
+            if let user = user {
+                userProfileViewModel.changeUserUID(newUID: user.uid)
+            }
+        })
     }
 }
 
