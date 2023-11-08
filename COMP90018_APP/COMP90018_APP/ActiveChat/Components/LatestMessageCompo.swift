@@ -60,7 +60,7 @@ struct LatestMessageCompo: View {
                     
                     // TODO: IF this is an image (Done)
                     //Text(latestMessage.text)
-                    Text(latestMessage.isImage ? "[Image]" : latestMessage.text)
+                    Text(latestMessage.isImage ? "[Image]" : PrivacyManager.decryptMessage(latestMessage.text, with: latestMessage.fromUid))
                         .font(.subheadline)
                         .foregroundColor(Auth.auth().currentUser?.uid == latestMessage.fromUid ? .secondary : .primary)
                         .lineLimit(1)
