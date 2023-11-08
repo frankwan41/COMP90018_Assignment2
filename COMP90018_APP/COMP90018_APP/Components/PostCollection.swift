@@ -12,8 +12,6 @@ struct PostCollection: View {
     @ObservedObject var userViewModel: UserViewModel
     @ObservedObject var postCollectionModel: PostCollectionModel
     
-    var gradientBackground: LinearGradient
-    
     var body: some View {
         ForEach($postCollectionModel.posts) { $post in
             PostCard(
@@ -21,9 +19,9 @@ struct PostCollection: View {
                 userViewModel: userViewModel,
                 postCollectionModel: postCollectionModel
             )
-            .listRowBackground(gradientBackground)
         }
-        .background(.white)
         .clipShape(RoundedRectangle(cornerRadius: 25))
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
     }
 }

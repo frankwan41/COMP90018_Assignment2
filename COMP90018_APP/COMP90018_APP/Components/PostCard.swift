@@ -17,18 +17,15 @@ struct PostCard: View {
     @ObservedObject var userViewModel: UserViewModel
     @ObservedObject var postCollectionModel: PostCollectionModel
     
-    let postGradientBackground = LinearGradient(
-        gradient: Gradient(colors: [
-            Color.orange.opacity(0.85),
-            Color.white.opacity(0.1)
-        ]),
+    let gradientBackground = LinearGradient(
+        gradient: Gradient(colors: [primaryColor, secondaryColor]),
         startPoint: .top,
         endPoint: .bottom
     )
     
     var body: some View {
         ZStack {
-            postGradientBackground.edgesIgnoringSafeArea(.all)
+            gradientBackground.edgesIgnoringSafeArea(.all)
             VStack(spacing: 10){
                 if let urlString = post.imageURLs.first {
                     if urlString.isEmpty {
@@ -81,6 +78,7 @@ struct PostCard: View {
                                 )
                             }
                         }
+                        Spacer().frame(width: 5)
                         LikeButtonPost(
                             width: 20,
                             height: 20,

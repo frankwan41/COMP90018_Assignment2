@@ -38,39 +38,58 @@ struct PostsView: View {
     @EnvironmentObject var speechRecognizer: SpeechRecognizerViewModel
     var shakeCommand = "shake"
     
-    let gradientBackground = LinearGradient(
-        gradient: Gradient(colors: [Color.orange, Color.white]),
-        startPoint: .top,
-        endPoint: .bottom
-    )
-    
-    let postGradientBackground = LinearGradient(
-        gradient: Gradient(colors: [Color.orange.opacity(0.1), Color.orange.opacity(0.1)]),
-        startPoint: .top,
-        endPoint: .bottom
-    )
-    
     var body: some View {
        
         NavigationView {
             ZStack {
-                gradientBackground.edgesIgnoringSafeArea(.all)
+                backgroundColor.edgesIgnoringSafeArea(.all)
                 VStack {
-                    Button {
-                        locationManager.requestPermission { authorized in
-                            if authorized {
-                                showPostsMapView.toggle()
-                            } else {
-                                return
+                    
+                    Spacer().frame(height: 10)
+                    HStack {
+                        
+                        Spacer().frame(width: 25)
+                        
+                        if userViewModel.isLoggedIn {
+                            Button {
+                                viewSwitcher = viewPage.chat
+                            } label: {
+                                Image(systemName: "message.circle.fill")
+                                    .resizable().scaledToFit()
+                                    .frame(width: 30, height: 30)
+                                    .foregroundStyle(.black)
                             }
-                            
                         }
-                    } label: {
-                        Image(systemName: "map.fill")
-                            .resizable().scaledToFit()
-                            .frame(width: 20, height: 20)
-                            .foregroundStyle(.black)
-                    }.padding()
+
+                        Spacer()
+
+                        Button {
+                            locationManager.requestPermission { authorized in
+                                if authorized {
+                                    showPostsMapView.toggle()
+                                } else {
+                                    return
+                                }
+                            }
+                        } label: {
+                            Image(systemName: "map.fill")
+                                .resizable().scaledToFit()
+                                .frame(width: 30, height: 30)
+                                .foregroundStyle(.black)
+                        }
+
+                        Spacer()
+
+                        Button {
+                            viewSwitcher = viewPage.shake
+                        } label: {
+                            Image(systemName: "dice")
+                                .resizable().scaledToFit()
+                                .frame(width: 30, height: 30)
+                                .foregroundStyle(.black)
+                        }.padding(.horizontal, 20)
+                    }
+                    Spacer().frame(height: 10)
                     
                     // MUST HAVE THIS IF !!!!!!! NO IDEA WHY !!!!!!!!
                     if showPostsMapView{
@@ -81,40 +100,6 @@ struct PostsView: View {
                     PostsListView
                         .opacity(showPostsMapView ? 0 : 1)
                         .frame(maxHeight: showPostsMapView ? 0 : .infinity)
-                    HStack {
-                                            Spacer()
-                                        }
-                }
-                .toolbar {
-                    
-                    if userViewModel.isLoggedIn{
-                        ToolbarItem(placement: .topBarLeading) {
-                            HStack{
-                                Button {
-                                    viewSwitcher = viewPage.chat
-                                } label: {
-                                    Image(systemName: "message.circle.fill")
-                                }
-                                
-                                Text("Chat")
-                                    .font(.headline)
-                                    .italic()
-                                    .bold()
-                                    .background(Color.orange.opacity(0.5))
-                                    .padding(.horizontal, 1)
-                            }
-                        }
-                    }
-                    
-                    
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            viewSwitcher = viewPage.shake
-                        } label: {
-                            Image(systemName: "dice")
-                        }
-                        
-                    }
                 }
             }
             NavigationLink(
@@ -175,6 +160,7 @@ extension PostsView {
                 ProgressView().padding(.bottom, 2)
             }
             HStack {
+                Spacer().frame(width: 10)
                 Picker("", selection: $searchType) {
                     ForEach(SearchTypes.allCases) { type in
                         Text(type.rawValue.capitalized).tag(type)
@@ -204,16 +190,16 @@ extension PostsView {
                 .cornerRadius(20)
                 
                 if isSearchFocused || !searchCategory.isEmpty {
+                    Spacer().frame(width: 20)
                     Button("Cancel") {
                         searchCategory = ""
                         shakeResult = ""
                         isSearchFocused = false
                         processUserInput()
                     }
-                    .padding(.trailing)
                 }
+                Spacer().frame(width: 20)
             }
-            .listRowBackground(postGradientBackground)
             
             if !shakeResult.isEmpty {
                 if postsViewModel.posts.isEmpty {
@@ -239,12 +225,10 @@ extension PostsView {
             List {
                 PostCollection(
                     userViewModel: userViewModel,
-                    postCollectionModel: postsViewModel,
-                    gradientBackground: postGradientBackground
+                    postCollectionModel: postsViewModel
                 )
             }
             .listStyle(.plain)
         }
-        .padding(.horizontal, 5)
     }
 }

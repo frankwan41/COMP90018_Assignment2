@@ -79,7 +79,6 @@ struct AddPostView: View {
                         
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.leading)
                     .padding()
                 }
                 
@@ -159,18 +158,16 @@ struct AddPostView: View {
                             return
                         }
                         
-                        //TODO: Submit the post
                         addPostViewModel.addPost(
                             postTitle:titleText, images: images, date: Date(), longitude: longitude, latitude: latitude, content: contentText, tags: tags, location: location
                         )
                         dismiss()
                         
                     } label: {
-                        Text("post".uppercased())
+                        Text("Post")
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(.orange)
-                    .padding()
                 }
             }
         }
@@ -221,14 +218,14 @@ struct TextEditorView: View {
         ZStack(alignment: .topLeading){
             TextEditor(text: $text)
                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: height)
-                .clipShape(RoundedRectangle(cornerRadius: 15))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
                 .padding(.bottom)
             
             if text.isEmpty {
                Text(placeHolder)
                     .foregroundColor(.gray.opacity(0.6))
                     .padding(.top, 7)
-                    .padding(.leading, 5)
+                    .padding(.leading, 7)
                     .allowsHitTesting(false)
            }
         }

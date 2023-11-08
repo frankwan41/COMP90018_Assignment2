@@ -25,19 +25,18 @@ struct MessageCompo: View {
         HStack {
             if isFromCurrentUser {
                 Spacer()
-                // TODO: If this is an image (Done)
                 if message.isImage{
                     if message.imageUrl.isEmpty{
                         ProgressView()
                             .scaledToFill()
-                            .aspectRatio(contentMode: .fit)
                             .frame(maxWidth: imageWidth, maxHeight: imageHeight)
+                            .cornerRadius(10)
                     }else{
                         KFImage(URL(string: message.imageUrl))
                             .resizable()
                             .scaledToFill()
-                            .aspectRatio(contentMode: .fit)
                             .frame(maxWidth: imageWidth, maxHeight: imageHeight)
+                            .cornerRadius(10)
                     }
                 }else{
                     Text(message.text)
@@ -123,36 +122,19 @@ struct MessageCompo: View {
                     
                 }
                 
-                
-                
-                
-                
-//                Image(systemName: "arrowtriangle.right.circle.fill")
-//                    //.resizable()
-//                    .scaledToFill()
-//                    .frame(width: 5, height: 5)
-//                    //.cornerRadius(50)
-//                    //.clipShape(Circle())
-//                    .foregroundColor(.secondary)
-//                    .overlay(
-//                        RoundedRectangle(cornerRadius: 44)
-//                            .stroke(Color(.label), lineWidth: 1)
-//                    )
-//                    .shadow(radius: 5)
-                
                 if message.isImage{
                     if message.imageUrl.isEmpty{
                         ProgressView()
                             .scaledToFill()
-                            .aspectRatio(contentMode: .fit)
                             .frame(maxWidth: imageWidth, maxHeight: imageHeight)
+                            .cornerRadius(10)
                             
                     }else{
                         KFImage(URL(string: message.imageUrl))
                             .resizable()
                             .scaledToFill()
-                            .aspectRatio(contentMode: .fit)
                             .frame(maxWidth: imageWidth, maxHeight: imageHeight)
+                            .cornerRadius(10)
                             
                     }
                     

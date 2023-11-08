@@ -40,8 +40,13 @@ struct NewMessageView: View {
                         dismiss()
                     } label: {
                         Text("Cancel")
-                            .tint(Color.orange)
+                            .font(.custom("ChalkboardSE-Bold", size: 20))
+                            .tint(.white)
+                            .padding(.leading, 10)
+                            .padding(.trailing, 3)
                     }
+                    .background(.orange)
+                    .cornerRadius(10)
                 }
             }
             .refreshable {
