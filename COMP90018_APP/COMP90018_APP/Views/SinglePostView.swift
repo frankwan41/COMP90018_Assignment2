@@ -21,9 +21,7 @@ struct SinglePostView: View {
     @State private var showAlert: Bool = false
     @State private var showLocationRequestAlert: Bool = false
     @State private var showLocationDistance: Bool = false
-    @State private var showDistanceFarAlert: Bool = false
     var closeDistance: Double = 1000
-    var farDistance: Double = 50000
     @State private var temperature: Int = 0
     @State private var cityName: String = ""
     @State private var weatherDescription: String = ""
@@ -101,13 +99,9 @@ struct SinglePostView: View {
                                 let userCoordniate  = CLLocation(latitude: userLatitude, longitude: userLontitude)
                                 
                                 let distance = userCoordniate.distance(from: postCoordinate).rounded()
-                                // If the location is less than 50 km, navigate to map
-                                if distance <= farDistance {
-                                    // Open Map for navigation
-                                    openMapsForNavigation(toLatitude: post.latitude, longitude: post.longitude, locationName: post.location)
-                                }else{
-                                    showDistanceFarAlert = true
-                                }
+                                // Open Map for navigation
+                                openMapsForNavigation(distance: distance, toLatitude: post.latitude, longitude: post.longitude, locationName: post.location)
+                                
                             }){
                                 Text(post.location)
                             }
@@ -176,15 +170,9 @@ struct SinglePostView: View {
                                 let userCoordniate  = CLLocation(latitude: userLatitude, longitude: userLontitude)
                                 
                                 let distance = userCoordniate.distance(from: postCoordinate).rounded()
-                            
                                     Button(action: {
-                                        // If the location is less than 50 km, navigate to map
-                                        if distance <= farDistance {
-                                            // Open Map for navigation
-                                            openMapsForNavigation(toLatitude: post.latitude, longitude: post.longitude, locationName: post.location)
-                                        }else{
-                                            showDistanceFarAlert = true
-                                        }
+                                        // Open Map for navigation
+                                        openMapsForNavigation(distance: distance, toLatitude: post.latitude, longitude: post.longitude, locationName: post.location)
                                     }) {
                                         if distance < closeDistance {
                                             // If less than 1000 meters, show in meters
@@ -210,17 +198,6 @@ struct SinglePostView: View {
                                             .background(RoundedRectangle(cornerRadius: 20).fill(Color.orange))
                                         }
                                     }
-                                    .alert(isPresented: $showDistanceFarAlert, content: {
-                                        Alert(
-                                            title: Text("Confirmation"),
-                                            message: Text("This distance is over \(String(format: "%.0f", farDistance/closeDistance))km, Are you sure you want to proceed?"),
-                                            primaryButton: .default(Text("Yes")) {
-                                                // Open Map for navigation
-                                                openMapsForNavigation(toLatitude: post.latitude, longitude: post.longitude, locationName: post.location)
-                                            },
-                                            secondaryButton: .cancel()
-                                        )
-                                    })
                                 
                             }
                         }else{
@@ -513,9 +490,23 @@ extension SinglePostView {
 }
 
 // MARK: UTILITIES
-func openMapsForNavigation(toLatitude latitude: CLLocationDegrees, longitude: CLLocationDegrees, locationName: String?) {
-   let destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude)))
-   destination.name = locationName ?? "Target Location"
-
-   MKMapItem.openMaps(with: [destination], launchOptions: [MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving])
+func openMapsForNavigation(distance: CLLocationDistance = 0, toLatitude latitude: CLLocationDegrees, longitude: CLLocationDegrees, locationName: String?) {
+    let destination = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude)))
+    destination.name = locationName ?? "Target Location"
+    
+    let walkDistance: CLLocationDistance = 5000
+    let transitDistance: CLLocationDistance = 200000
+    
+    let transportationType: String
+    
+    if distance <= walkDistance { // If the distance is less than 1 km, suggest walking
+            transportationType = MKLaunchOptionsDirectionsModeWalking
+    } else if distance <= transitDistance { // If the distance is less than 10 km, suggest transit
+        transportationType = MKLaunchOptionsDirectionsModeTransit
+    } else {
+        // For longer distances, suggest driving
+        transportationType = MKLaunchOptionsDirectionsModeDriving
+    }
+    
+    MKMapItem.openMaps(with: [destination], launchOptions: [MKLaunchOptionsDirectionsModeKey: transportationType])
 }
