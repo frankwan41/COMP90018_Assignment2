@@ -14,7 +14,7 @@ struct SinglePostCommentButton: View {
     @Binding var isTextFieldVisible: Bool
     @Binding var commentText: String
     @FocusState.Binding var autoFocused: Bool
-    @StateObject var userViewModel = UserViewModel()
+    @EnvironmentObject var userViewModel: UserViewModel
     @State private var showLoginAlert = false
     
     var body: some View {

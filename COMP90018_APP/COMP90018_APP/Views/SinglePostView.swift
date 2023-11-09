@@ -38,7 +38,7 @@ struct SinglePostView: View {
     
     @State private var selectedPhotoIndex = 0
     
-    @StateObject private var userViewModel = UserViewModel()
+    @EnvironmentObject var userViewModel: UserViewModel
     @StateObject private var singlePostViewModel = SinglePostViewModel()
     @StateObject var userProfileViewModel: UserProfileViewModel
     
@@ -512,7 +512,7 @@ func openMapsForNavigation(distance: CLLocationDistance = 0, toLatitude latitude
     destination.name = locationName ?? "Target Location"
     
     let walkDistance: CLLocationDistance = 5000
-    let transitDistance: CLLocationDistance = 200000
+    let transitDistance: CLLocationDistance = 20000
     
     let transportationType: String
     

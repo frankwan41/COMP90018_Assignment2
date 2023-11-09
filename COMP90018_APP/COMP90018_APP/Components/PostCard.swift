@@ -68,18 +68,6 @@ struct PostCard: View {
                         }
                         Text(post.userName).font(.subheadline)
                         Spacer()
-//                        if let author = author, let user = user {
-//                            if author.userName == user.userName {
-//                                DeleteButtonPost(
-//                                    width: 20,
-//                                    height: 20,
-//                                    post: $post,
-//                                    userViewModel: userViewModel,
-//                                    postCollectionModel: postCollectionModel
-//                                )
-//                            }
-//                        }
-//                        Spacer().frame(width: 5)
                         LikeButtonPost(
                             width: 20,
                             height: 20,
@@ -111,7 +99,7 @@ struct PostCard: View {
                 }
             }
         }
-        .onAppear {
+        .task {
             postCollectionModel.getPost(postID: post.id) { post in
                 if let post = post {
                     self.post = post;

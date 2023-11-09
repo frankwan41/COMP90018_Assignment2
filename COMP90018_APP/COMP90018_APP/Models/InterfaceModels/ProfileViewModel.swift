@@ -29,7 +29,7 @@ class ProfileViewModel: PostCollectionModel {
                 let data = documentSnapshot?.data()
                 let user = User(data: data!)
                 self.user = user
-                
+                self.fetchPosts()
             }
         
     }

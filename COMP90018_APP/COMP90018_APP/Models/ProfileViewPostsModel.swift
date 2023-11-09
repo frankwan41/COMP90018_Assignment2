@@ -33,7 +33,6 @@ class ProfileViewPostsModel: ProfileViewModel {
                 self.posts = newPosts
             }
         
-        self.getUserInformation()
         
     }
     

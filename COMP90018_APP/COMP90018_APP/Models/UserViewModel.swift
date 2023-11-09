@@ -45,10 +45,11 @@ class UserViewModel: ObservableObject {
                 self.errorMessage = "Invalid sign credentials!"
                 return
             }
-            self.isLoggedIn = true
+//            self.isLoggedIn = true
             
             self.getCurrentUser { user in
                 self.currentUser = user
+                self.isLoggedIn = true
             }
             print("Successfully signed in as user: \(result!.user.uid)")
             

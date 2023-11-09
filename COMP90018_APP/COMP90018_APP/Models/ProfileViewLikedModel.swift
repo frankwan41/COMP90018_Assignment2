@@ -52,7 +52,6 @@ class ProfileViewLikedModel: ProfileViewModel {
                     
                 }
         }
-        
     }
     
 }

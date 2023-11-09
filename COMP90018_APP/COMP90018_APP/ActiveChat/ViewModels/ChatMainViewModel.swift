@@ -20,7 +20,6 @@ class ChatMainViewModel: ObservableObject {
     
     init(currentUser: User) {
         self.currentUser = currentUser
-//        fetchRecentMessages()
         lastTimestamp = Timestamp()
     }
     

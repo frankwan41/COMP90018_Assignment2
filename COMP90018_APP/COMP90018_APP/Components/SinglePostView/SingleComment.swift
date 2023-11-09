@@ -23,7 +23,7 @@ struct SingleComment: View {
     @State var userID: String?
     @State private var showDeleteCommentAlert = false
     
-    @StateObject var userViewModel = UserViewModel()
+    @EnvironmentObject var userViewModel: UserViewModel
     @StateObject var singlePostViewModel = SinglePostViewModel()
     
     private let dateFormatter = DateFormatter()

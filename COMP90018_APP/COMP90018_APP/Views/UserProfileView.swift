@@ -10,7 +10,7 @@ import Kingfisher
 
 struct UserProfileView: View {
     
-    @StateObject var userViewModel = UserViewModel()
+    @EnvironmentObject var userViewModel: UserViewModel
     @ObservedObject var userProfileViewModel: UserProfileViewModel
 
     @Environment(\.presentationMode) var presentationMode

@@ -19,7 +19,7 @@ struct WelcomView: View {
 
     @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
     // @State private var currentUser: User?
-    @StateObject private var userViewModel = UserViewModel()
+    @EnvironmentObject var userViewModel: UserViewModel
     @StateObject private var locationManager = LocationManager()
     @StateObject private var chatMainViewModel: ChatMainViewModel
     

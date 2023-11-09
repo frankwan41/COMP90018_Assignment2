@@ -69,7 +69,12 @@ struct ProfileView: View {
                     wantsLogin = false
                     refresh()
                 }
+                
             })
+            .onChange(of: userViewModel.currentUser) { newValue in
+                profileViewLikedModel.posts.removeAll()
+                profileViewPostsModel.posts.removeAll()
+            }
             .sheet(isPresented: $wantsLogin) {
                 SignView(userViewModel: userViewModel)
                     .onDisappear {
@@ -83,10 +88,9 @@ struct ProfileView: View {
     }
     
     func refresh() {
-        profileViewPostsModel.getUserInformation()
-        profileViewPostsModel.fetchPosts()
         profileViewLikedModel.getUserInformation()
-        profileViewLikedModel.fetchPosts()
+        profileViewPostsModel.getUserInformation()
+        
     }
 
     

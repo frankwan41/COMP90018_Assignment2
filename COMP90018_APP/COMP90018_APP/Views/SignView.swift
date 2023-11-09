@@ -210,8 +210,3 @@ struct InputPair {
     let textBinding: Binding<String>
 }
 
-struct SignView_Previews: PreviewProvider {
-    static var previews: some View {
-        SignView(userViewModel: UserViewModel())
-    }
-}
