@@ -68,6 +68,20 @@ struct PostCard: View {
                         }
                         Text(post.userName).font(.subheadline)
                         Spacer()
+                            // Alert needs to be here to not suppress LikeButton alert
+                            .alert(isPresented: $showDeletePostAlert) {
+                                Alert(
+                                    title: Text("Delete Confirmation"),
+                                    message: Text("Are you sure you want to delete this post?"),
+                                    primaryButton: .destructive(Text("Delete"), action: {
+                                        postCollectionModel.removePost(postID: post.id)
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                                            postCollectionModel.fetchPosts()
+                                        }
+                                    }),
+                                    secondaryButton: .cancel()
+                                )
+                            }
                         LikeButtonPost(
                             width: 20,
                             height: 20,
@@ -115,19 +129,6 @@ struct PostCard: View {
                     self.user = user
                 }
             }
-        }
-        .alert(isPresented: $showDeletePostAlert) {
-            Alert(
-                title: Text("Delete Confirmation"),
-                message: Text("Are you sure you want to delete this post?"),
-                primaryButton: .destructive(Text("Delete"), action: {
-                    postCollectionModel.removePost(postID: post.id)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                        postCollectionModel.fetchPosts()
-                    }
-                }),
-                secondaryButton: .cancel()
-            )
         }
         .buttonStyle(PlainButtonStyle())
     }
