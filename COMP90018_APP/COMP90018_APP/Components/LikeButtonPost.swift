@@ -48,7 +48,7 @@ struct LikeButtonPost: View {
         }
         .buttonStyle(PlainButtonStyle())
         .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1){
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 userViewModel.getCurrentUser { user in
                     if let user = user {
                         isLiked = user.likedPostsIDs.contains(post.id)

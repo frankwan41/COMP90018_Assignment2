@@ -112,6 +112,11 @@ struct PostCard: View {
             }
         }
         .onAppear {
+            postCollectionModel.getPost(postID: post.id) { post in
+                if let post = post {
+                    self.post = post;
+                }
+            }
             userViewModel.getUser(userUID: post.userUID) { user in
                 if let user = user {
                     self.author = user

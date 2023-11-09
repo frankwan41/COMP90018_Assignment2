@@ -289,7 +289,6 @@ struct SinglePostView: View {
                 }
                 
             }
-            
         }
         .onAppear {
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"

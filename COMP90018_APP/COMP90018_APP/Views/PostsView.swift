@@ -115,6 +115,9 @@ struct PostsView: View {
                 }
             }
         })
+        .onChange(of: searchType, perform: { newValue in
+            processUserInput()
+        })
         .refreshable {
             // Refresh code
             processUserInput()
@@ -219,8 +222,8 @@ extension PostsView {
                         .padding(.vertical, 5)
                 } else {
                     VStack{
-                        Text("Searching category: \(searchType.rawValue)")
-                        Text("💝Posts For \(shakeResult)")
+                        Text("Searching 💝Posts For ")
+                        Text("\(shakeResult) in \(searchType.rawValue)")
                     }
                         .frame(alignment: .center)
                         .bold()
