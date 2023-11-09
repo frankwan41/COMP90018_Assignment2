@@ -121,6 +121,11 @@ Social Interaction: Users can  with other active users, with active users sorted
   <img src="readme_images/userMode/chat3.PNG" alt="Send Message" width="200" height="400" align="center">
 </p>
 
+#### Show the real-time weather
+<p align="center">
+  <img src="readme_images/userMode/weather.PNG" alt="Chat" width="200" height="400" align="center">
+</p>
+
 
 
 
