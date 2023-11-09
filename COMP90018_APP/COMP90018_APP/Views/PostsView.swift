@@ -26,6 +26,7 @@ struct PostsView: View {
     
     @ObservedObject var userViewModel: UserViewModel
     @ObservedObject var postsViewModel: PostsViewModel
+    @ObservedObject var chatViewModel: ChatMainViewModel
     
     @StateObject var locationManager = LocationManager()
   
@@ -34,6 +35,7 @@ struct PostsView: View {
     @State private var searchType: SearchTypes = .tag
     @State private var pickerIsActive = false
     @State private var showDropDown = false
+    @State private var newMessageHint = false
     
     @EnvironmentObject var speechRecognizer: SpeechRecognizerViewModel
     var shakeCommand = "shake"
@@ -53,11 +55,22 @@ struct PostsView: View {
                         if userViewModel.isLoggedIn {
                             Button {
                                 viewSwitcher = viewPage.chat
+                                newMessageHint = false
                             } label: {
-                                Image(systemName: "message.circle.fill")
-                                    .resizable().scaledToFit()
-                                    .frame(width: 30, height: 30)
-                                    .foregroundStyle(.black)
+                                ZStack(alignment: .topTrailing){
+                                    Image(systemName: "message.circle.fill")
+                                        .resizable().scaledToFit()
+                                        .frame(width: 30, height: 30)
+                                        .foregroundStyle(.black)
+                                    
+                                    if !chatViewModel.isFirstFetch {
+                                        Circle()
+                                            .fill(newMessageHint ? .red : .clear)
+                                            .frame(width: 12,height: 12)
+                                            .offset(x: 3, y: -3)
+                                    }
+                                }
+                                    
                             }
                         }
 
@@ -118,6 +131,10 @@ struct PostsView: View {
         .onChange(of: searchType, perform: { newValue in
             processUserInput()
         })
+        .onChange(of: chatViewModel.lastTimestamp, perform: {_ in
+            newMessageHint = true
+        })
+
         .refreshable {
             // Refresh code
             processUserInput()

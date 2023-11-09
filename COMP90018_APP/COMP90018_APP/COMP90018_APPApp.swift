@@ -12,9 +12,12 @@ import UIKit
 @main
 struct COMP90018_APPApp: App {
     
+    @AppStorage("viewDisplay") var viewSwitcher = viewPage.welcome
+    
     init() {
         // Changes the tab bar's background color to white
         UITabBar.appearance().barTintColor = UIColor.white
+        viewSwitcher = .welcome
     }
     
     var body: some Scene {

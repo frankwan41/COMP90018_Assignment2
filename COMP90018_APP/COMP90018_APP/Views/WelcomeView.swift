@@ -21,9 +21,11 @@ struct WelcomView: View {
     // @State private var currentUser: User?
     @StateObject private var userViewModel = UserViewModel()
     @StateObject private var locationManager = LocationManager()
+    @StateObject private var chatMainViewModel: ChatMainViewModel
     
     init(){
         viewSwitcher = viewPage.welcome
+        _chatMainViewModel = StateObject(wrappedValue: ChatMainViewModel(currentUser: User(data: ["":""])))
     }
     
     
@@ -36,7 +38,7 @@ struct WelcomView: View {
             if viewSwitcher == viewPage.welcome{
                 welcomeMainView()
             }else if viewSwitcher == viewPage.tab{
-                TabMainView(userViewModel: userViewModel)
+                TabMainView(userViewModel: userViewModel, chatViewModel: chatMainViewModel)
                 //TODO: Change the color scheme if neccessary
                     .preferredColorScheme(.light)
                     .task {
@@ -48,10 +50,10 @@ struct WelcomView: View {
                 ShakeView()
             }else if viewSwitcher == viewPage.chat{
                 if let currentUser = userViewModel.currentUser{
-                    ChatMainView(currentUser: currentUser, locationManager: locationManager)
+                    ChatMainView(currentUser: currentUser, locationManager: locationManager, chatMainViewModel: chatMainViewModel)
                         .preferredColorScheme(.light)
                 }else{
-                    TabMainView(userViewModel: userViewModel)
+                    TabMainView(userViewModel: userViewModel, chatViewModel: chatMainViewModel)
                         .preferredColorScheme(.light)
                         .task {
                             userViewModel.getCurrentUser { user in
@@ -61,9 +63,21 @@ struct WelcomView: View {
                 }
             }
         }
+        .onChange(of: userViewModel.currentUser, perform: { newValue in
+            if newValue != nil{
+                chatMainViewModel.currentUser = userViewModel.currentUser ?? User(data: ["":""])
+                chatMainViewModel.fetchRecentMessages()
+            }else {
+                chatMainViewModel.currentUser = User(data: ["":""])
+            }
+        })
         .task {
             userViewModel.getCurrentUser { user in
                 userViewModel.currentUser = user
+                if let user = user {
+                    chatMainViewModel.currentUser = user
+                    chatMainViewModel.fetchRecentMessages()
+                }
             }
         }
     }

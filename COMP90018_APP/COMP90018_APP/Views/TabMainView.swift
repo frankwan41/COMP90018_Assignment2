@@ -15,7 +15,8 @@ struct TabMainView: View {
     @State private var isActive: Bool = false
     @State private var selectedTab: Int = 0
     
-    @StateObject var userViewModel = UserViewModel()
+    @ObservedObject var userViewModel: UserViewModel
+    @ObservedObject var chatViewModel: ChatMainViewModel
     @StateObject var postsViewModel = PostsViewModel()
     
     @State private var showLoginAlert = false
@@ -26,7 +27,8 @@ struct TabMainView: View {
                 PostsView(
                     searchCategory: $searchCategory,
                     userViewModel: userViewModel,
-                    postsViewModel: postsViewModel
+                    postsViewModel: postsViewModel,
+                    chatViewModel: chatViewModel
                 )
                     .navigationBarBackButtonHidden(true)
                     .tabItem {

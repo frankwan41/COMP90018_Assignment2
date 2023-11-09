@@ -12,11 +12,16 @@ import FirebaseFirestore
 class ChatMainViewModel: ObservableObject {
     
     @Published var latestMessages = [LatestMessage]()
+    
+    @Published var isFirstFetch = true
     var currentUser: User
+    
+    @Published var lastTimestamp: Timestamp? = nil
     
     init(currentUser: User) {
         self.currentUser = currentUser
-        fetchRecentMessages()
+//        fetchRecentMessages()
+        lastTimestamp = Timestamp()
     }
     
     private var listenerRegistration: ListenerRegistration?
@@ -34,7 +39,7 @@ class ChatMainViewModel: ObservableObject {
                     print("Failed to listen for recent messages \(error)")
                     return
                 }
-                
+                self.isFirstFetch = false
                 querySnapshot?.documentChanges.forEach({ change in
                     if let rm = try? change.document.data(as: LatestMessage.self) {
                         
@@ -55,6 +60,12 @@ class ChatMainViewModel: ObservableObject {
                         
                         // Sort the latest messages based on the timestamp
                         self.latestMessages.sort { $0.timestamp.dateValue() > $1.timestamp.dateValue()
+                        }
+                        
+                        if let newTimestamp = self.latestMessages.first?.timestamp, let oldTimestamp = self.lastTimestamp{
+                            if oldTimestamp.dateValue() < newTimestamp.dateValue() {
+                                self.lastTimestamp = newTimestamp
+                            }
                         }
                     } else {
                         print("Failed to decode document data as recent message.")
