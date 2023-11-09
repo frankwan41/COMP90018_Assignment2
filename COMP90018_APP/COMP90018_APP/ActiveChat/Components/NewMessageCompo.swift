@@ -45,7 +45,7 @@ struct NewMessageCompo: View {
                     .font(.headline)
                     .foregroundColor(.orange)
                 
-                if (!user.infoVisibility) {
+                if (user.infoVisibility) {
                     VStack(alignment: .leading, spacing: 1) {
                         Text("Gender: " + user.gender)
                             .foregroundColor(.gray)
