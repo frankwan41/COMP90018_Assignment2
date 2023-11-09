@@ -112,7 +112,7 @@ Social Interaction: Users can  with other active users, with active users sorted
 
 #### View user's posts
 <p align="center">
-  <img src="readme_images/userMode/viewPosts.PNG" alt="Own Posts" width="200" height="400" align="center">
+  <img src="readme_images/userMode/viewposts.PNG" alt="Own Posts" width="200" height="400" align="center">
 </p>
 
 #### Edit Profile
