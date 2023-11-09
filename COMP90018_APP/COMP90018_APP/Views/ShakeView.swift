@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import AudioToolbox
+
 
 struct ShakeView: View {
     @State private var categoryName: String?
@@ -38,7 +40,10 @@ struct ShakeView: View {
     var body: some View {
         NavigationView{
             ZStack{
-                Color.orange.ignoresSafeArea()
+                Image("shakeBackground")
+                    .resizable()
+                    .scaledToFill()
+                    .edgesIgnoringSafeArea(.all)
                 
                 VStack(spacing: 150){
                     Image("shakePhone")
@@ -57,6 +62,7 @@ struct ShakeView: View {
                 // Create animation for shaking affect
                 withAnimation(Animation.easeInOut(duration: 0.5)) {
                     isShaking = true
+                    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate)
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     withAnimation(Animation.easeInOut(duration: 0.5)){

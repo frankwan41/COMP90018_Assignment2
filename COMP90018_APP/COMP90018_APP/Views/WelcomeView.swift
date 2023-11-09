@@ -79,14 +79,14 @@ struct welcomeMainView: View {
     
     var body: some View{
         ZStack {
-            LinearGradient(
-                gradient: Gradient(colors: [Color.red, Color.yellow]),
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-                                    )
+            Image("welcomeBackground")
+                .resizable()
+                .scaledToFill()
+                .edgesIgnoringSafeArea(.all)
+            
             VStack(spacing: 80){
                 Text("🩷Do you know🩷\nwhat to eat today?")
-                    .font(.largeTitle)
+                    .font(.custom("ChalkboardSE-Bold", size: 30))
                     .multilineTextAlignment(.center)
                     .bold()
                 Text("🌭🍔🍟🍕🥪\n🥙🧆🌮🌯🫔\n🥗🥘🫕🍝🍜")
@@ -138,6 +138,7 @@ struct welcomeMainView: View {
                     }
                 }
             }
+            .offset(x: -35, y: 40)
         }.ignoresSafeArea()
             .withFooter()
     }

@@ -157,6 +157,9 @@ struct AddPostView: View {
                             showInvalidPostAlert = true
                             return
                         }
+                        if location == "Add Location" {
+                            location = ""
+                        }
                         
                         addPostViewModel.addPost(
                             postTitle:titleText, images: images, date: Date(), longitude: longitude, latitude: latitude, content: contentText, tags: tags, location: location

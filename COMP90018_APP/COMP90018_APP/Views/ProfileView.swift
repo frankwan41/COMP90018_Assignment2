@@ -159,25 +159,26 @@ extension ProfileView {
                         }
                         Spacer()
                     }
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                            if speechRecognizer.isListening {
-                                speechRecognizer.stopListening()
-                            } else {
-                                speechRecognizer.checkAndStartListening()
-                            }
-                        }, label: {
-                            Text("Enable Voice Control: \(speechRecognizer.isListening ? "ON" : "OFF")")
-                                .font(.caption)
-                                .foregroundColor(.white)
-                                .padding()
-                                .frame(minWidth: 0, maxWidth: .infinity)
-                                .background(Color.orange)
-                                .cornerRadius(20)
-                        })
-                        Spacer()
-                    }
+                    // Voice enable section, hide for now
+//                    HStack {
+//                        Spacer()
+//                        Button(action: {
+//                            if speechRecognizer.isListening {
+//                                speechRecognizer.stopListening()
+//                            } else {
+//                                speechRecognizer.checkAndStartListening()
+//                            }
+//                        }, label: {
+//                            Text("Enable Voice Control: \(speechRecognizer.isListening ? "ON" : "OFF")")
+//                                .font(.caption)
+//                                .foregroundColor(.white)
+//                                .padding()
+//                                .frame(minWidth: 0, maxWidth: .infinity)
+//                                .background(Color.orange)
+//                                .cornerRadius(20)
+//                        })
+//                        Spacer()
+//                    }
                     .alert(isPresented: $speechRecognizer.showingPermissionAlert) {
                         Alert(
                             title: Text("Permissions Required"),

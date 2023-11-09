@@ -92,18 +92,35 @@ struct SinglePostView: View {
                                 //.font(.subheadline)
                                 //.foregroundColor(.blue)
                             Button(action: {
-                                let userLatitude = locationManager.location?.latitude ?? 0
-                                let userLontitude = locationManager.location?.longitude ?? 0
-                                
-                                let postCoordinate = CLLocation(latitude: post.latitude, longitude: post.longitude)
-                                let userCoordniate  = CLLocation(latitude: userLatitude, longitude: userLontitude)
-                                
-                                let distance = userCoordniate.distance(from: postCoordinate).rounded()
-                                // Open Map for navigation
-                                openMapsForNavigation(distance: distance, toLatitude: post.latitude, longitude: post.longitude, locationName: post.location)
+                                if (post.longitude != 0 && post.latitude != 0) {
+                                    let userLatitude = locationManager.location?.latitude ?? 0
+                                    let userLontitude = locationManager.location?.longitude ?? 0
+                                    
+                                    let postCoordinate = CLLocation(latitude: post.latitude, longitude: post.longitude)
+                                    let userCoordniate  = CLLocation(latitude: userLatitude, longitude: userLontitude)
+                                    
+                                    let distance = userCoordniate.distance(from: postCoordinate).rounded()
+                                    // If the location is enabled, show distance direclty, otherwise show distance tip button for enable location service
+                                    if showLocationDistance {
+                                        // Open Map for navigation
+                                        openMapsForNavigation(distance: distance, toLatitude: post.latitude, longitude: post.longitude, locationName: post.location)
+                                    }else {
+                                        locationManager.requestPermission { authorized in
+                                            if authorized {
+                                                showLocationDistance = true
+                                                openMapsForNavigation(distance: distance, toLatitude: post.latitude, longitude: post.longitude, locationName: post.location)
+                                            } else {
+                                                showLocationRequestAlert = true
+                                            }
+                                            
+                                        }
+                                    }
+                                }
                                 
                             }){
                                 Text(post.location)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
                             }
                             .font(.subheadline)
                             .foregroundColor(.blue)
@@ -160,16 +177,16 @@ struct SinglePostView: View {
 
                     // Only show the distance tip/distance if the post has location
                     if (post.longitude != 0 && post.latitude != 0) {
+                        let userLatitude = locationManager.location?.latitude ?? 0
+                        let userLontitude = locationManager.location?.longitude ?? 0
+                        
+                        let postCoordinate = CLLocation(latitude: post.latitude, longitude: post.longitude)
+                        let userCoordniate  = CLLocation(latitude: userLatitude, longitude: userLontitude)
+                        
+                        let distance = userCoordniate.distance(from: postCoordinate).rounded()
                         // If the location is enabled, show distance direclty, otherwise show distance tip button for enable location service
                         if showLocationDistance {
                             ToolbarItem(placement: .navigationBarTrailing) {
-                                let userLatitude = locationManager.location?.latitude ?? 0
-                                let userLontitude = locationManager.location?.longitude ?? 0
-                                
-                                let postCoordinate = CLLocation(latitude: post.latitude, longitude: post.longitude)
-                                let userCoordniate  = CLLocation(latitude: userLatitude, longitude: userLontitude)
-                                
-                                let distance = userCoordniate.distance(from: postCoordinate).rounded()
                                     Button(action: {
                                         // Open Map for navigation
                                         openMapsForNavigation(distance: distance, toLatitude: post.latitude, longitude: post.longitude, locationName: post.location)
@@ -208,6 +225,7 @@ struct SinglePostView: View {
                                     locationManager.requestPermission { authorized in
                                         if authorized {
                                             showLocationDistance = true
+                                            openMapsForNavigation(distance: distance, toLatitude: post.latitude, longitude: post.longitude, locationName: post.location)
                                         } else {
                                             showLocationRequestAlert = true
                                         }
@@ -222,14 +240,6 @@ struct SinglePostView: View {
                                         .padding(.vertical, 2)
                                         .background(RoundedRectangle(cornerRadius: 20).fill(Color.orange))
                                 }
-                                .alert(isPresented: $showLocationRequestAlert, content: {
-                                    Alert(
-                                        title: Text("Location Permission Denied"),
-                                        message: Text("The App requires location permission"),
-                                        primaryButton: .default(Text("Go Settings"), action: openAppSettings),
-                                        secondaryButton: .cancel(Text("Reject"))
-                                    )
-                                })
                             }
                         }
                     }
@@ -290,6 +300,14 @@ struct SinglePostView: View {
                 
             }
         }
+        .alert(isPresented: $showLocationRequestAlert, content: {
+            Alert(
+                title: Text("Location Permission Denied"),
+                message: Text("The App requires location permission"),
+                primaryButton: .default(Text("Go Settings"), action: openAppSettings),
+                secondaryButton: .cancel(Text("Reject"))
+            )
+        })
         .onAppear {
             dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             dateTimeText = dateFormatter.string(from: post.timestamp)
