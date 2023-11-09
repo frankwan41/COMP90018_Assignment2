@@ -35,7 +35,6 @@ struct ProfileView: View {
                     }
                 }
                 .padding(.horizontal)
-                .navigationBarItems(trailing: userViewModel.isLoggedIn ? logoutButton : nil)
                 
                 // Show a whole screen progress view while enabling the voice control
                 if speechRecognizer.inProgress {
@@ -126,22 +125,26 @@ extension ProfileView {
 
     private var loggedInView: some View {
         VStack(spacing: 15) {
-            HStack(alignment: .top,spacing: 10){
-                if let url = URL(string: profileViewPostsModel.user.profileImageURL) {
-                    KFImage(url)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 150, height: 150)
-                        .clipShape(Circle())
-                        .shadow(radius: 10)
-                } else {
-                    Image(systemName: "person.circle")
-                        .scaledToFill()
-                        .frame(width: 150, height: 150)
-                        .clipShape(Circle())
-                        .shadow(radius: 10)
+            HStack(alignment: .top, spacing: 10) {
+                VStack {
+                    Spacer().frame(height: 30)
+                    if let url = URL(string: profileViewPostsModel.user.profileImageURL) {
+                        KFImage(url)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 150, height: 150)
+                            .clipShape(Circle())
+                            .shadow(radius: 10)
+                    } else {
+                        Image(systemName: "person.circle")
+                            .scaledToFill()
+                            .frame(width: 150, height: 150)
+                            .clipShape(Circle())
+                            .shadow(radius: 10)
+                    }
                 }
                 VStack {
+                    Spacer().frame(height: 10)
                     Text(profileViewPostsModel.user.userName)
                         .font(.largeTitle)
                         .bold()
@@ -150,7 +153,8 @@ extension ProfileView {
                         Spacer()
                         NavigationLink(destination: ProfileSetttingView(profileSettingViewModel: ProfileSettingViewModel(), profileViewModel: profileViewPostsModel).navigationBarBackButtonHidden(true)) {
                             Text("Modify Profile Details")
-                                .font(.caption)
+                                .font(.custom("ChalkboardSE-Bold", size: 15))
+                                .tint(.orange)
                                 .foregroundColor(.white)
                                 .padding()
                                 .frame(minWidth: 0, maxWidth: .infinity)
@@ -162,14 +166,11 @@ extension ProfileView {
                     HStack {
                         Spacer()
                         Button(action: {
-                            if speechRecognizer.isListening {
-                                speechRecognizer.stopListening()
-                            } else {
-                                speechRecognizer.checkAndStartListening()
-                            }
+                            userViewModel.signOutUser()
                         }, label: {
-                            Text("Enable Voice Control: \(speechRecognizer.isListening ? "ON" : "OFF")")
-                                .font(.caption)
+                            Text("Sign Out")
+                                .font(.custom("ChalkboardSE-Bold", size: 15))
+                                .tint(.orange)
                                 .foregroundColor(.white)
                                 .padding()
                                 .frame(minWidth: 0, maxWidth: .infinity)
