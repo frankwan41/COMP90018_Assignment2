@@ -75,7 +75,7 @@ struct TabMainView: View {
                             
                         )
                     }
-                    .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height - UIScreen.main.bounds.height * 0.138)
+                    .position(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height - UIScreen.main.bounds.height * 0.125)
                     .fullScreenCover(isPresented: $isActive, content: {
                         // Your destination view goes here
                         AddPostView()
