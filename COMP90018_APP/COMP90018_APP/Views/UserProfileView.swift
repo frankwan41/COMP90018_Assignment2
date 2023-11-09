@@ -13,7 +13,7 @@ struct UserProfileView: View {
     @StateObject var userViewModel = UserViewModel()
     @ObservedObject var userProfileViewModel: UserProfileViewModel
 
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         NavigationView {
@@ -32,12 +32,10 @@ struct UserProfileView: View {
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button {
-                            dismiss()
+                            presentationMode.wrappedValue.dismiss()
                         } label: {
-                            Image(systemName: "arrowshape.turn.up.left.circle.fill")
-                                .tint(.orange)
-                                .font(.title)
-                                .padding(.horizontal)
+                            Image(systemName: "chevron.left")
+                                .foregroundColor(.black)
                         }
                     }
                 }
