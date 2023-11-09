@@ -114,7 +114,7 @@ Social Interaction: Users can  with other active users, with active users sorted
   <img src="readme_images/userMode/editProfile2.PNG" alt="Edit Profile" width="200" height="400" align="center">
 </p>
 
-####  with Nearby Users
+#### Chat with Nearby Users
 <p align="center">
   <img src="readme_images/userMode/chat1.PNG" alt="" width="200" height="400" align="center">
   <img src="readme_images/userMode/chat2.PNG" alt="Find Active users" width="200" height="400" align="center">
