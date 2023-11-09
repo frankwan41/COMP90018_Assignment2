@@ -135,6 +135,56 @@ class UserViewModel: ObservableObject {
         print("Successfully Uploaded the link to the image of user profile to the details of the user \(FirebaseManager.shared.auth.currentUser?.uid ?? "")")
     }
     
+    func updateUserCurrentLocation(latitude: Double, longitude: Double, completion: @escaping (String?) -> Void){
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else{
+            return
+        }
+        
+        let userData = [
+            "currentlatitude": latitude,
+            "currentlongitude": longitude,
+            "locationtimestamp": Timestamp()
+        ] as [String: Any]
+        
+        FirebaseManager.shared.firestore
+            .collection("users")
+            .document(uid)
+            .updateData(userData){ error in
+                if let error = error {
+                    print("Failed to update location \(error.localizedDescription)")
+                    completion(nil)
+                }
+                completion("Success")
+                
+            }
+    }
+    
+    func setUserActiveState(state: Bool, completion: @escaping (String?) -> Void){
+        
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else{
+            return
+        }
+        
+        let userData = [
+            "isactive": state
+        ] as [String: Any]
+        
+        FirebaseManager.shared.firestore
+            .collection("users")
+            .document(uid)
+            .updateData(userData){ error in
+                if let error = error {
+                    print("Failed to update Active state \(error.localizedDescription)")
+                    completion(nil)
+                }
+                
+                completion("Success")
+                
+            }
+        
+        completion(nil)
+    }
+    
     /**
      Inputs: Image of the user
      This function takes iimage of the user and saves them to the storage of firebase
