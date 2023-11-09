@@ -34,10 +34,36 @@ struct TagPostsView: View {
             gradientBackground.edgesIgnoringSafeArea(.all)
             
             VStack{
-                Text("Tag: \(tag)").bold()
-                    .font(.title2)
-                Text("Total Posts: \(postsViewModel.posts.count)")
-                    .font(.body)
+                VStack{
+                    HStack{
+                        Text(" Tag: ")
+                            .font(.title2)
+                            .padding(.vertical, 2)
+                        Text("\(tag)")
+                            .bold()
+                            .font(.title2)
+                        //.background(Color.white.opacity(0.5))
+                        //.cornerRadius(10)
+                            .padding(.vertical, 2)
+                        
+                        
+                        
+                        
+                    }
+                    HStack{
+                        Text("Number of Posts:")
+                            .font(.body)
+                        Text("\(postsViewModel.posts.count)")
+                            .font(.body)
+                            .bold()
+                            .padding(.leading, 2)
+                        //.background(Color.white.opacity(0.5))
+                        //.cornerRadius(5)
+                    }
+                }
+                
+                
+                Divider()
                 List {
                     PostCollection(
                         userViewModel: userViewModel,
