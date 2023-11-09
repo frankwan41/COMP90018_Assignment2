@@ -22,7 +22,7 @@
       - [View Own or Liked Posts](#view-own-or-liked-posts)
       - [Edit Profile](#edit-profile)
       - [Chat with Nearby Users](#chat-with-nearby-users)
-      - [Show the real-time weather](#Show the real-time weather)
+      - [Show the real-time weather](#Show-the-real-time-weather)
   - [Team Members](#team-members)
   - [Technologies Applied](#technologies-applied)
   - [Development Setup](#development-setup)
