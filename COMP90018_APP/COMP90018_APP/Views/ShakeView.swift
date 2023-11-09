@@ -35,7 +35,9 @@ struct ShakeView: View {
                               "Chinese",
                               "Mediterranean",
                               "Ethiopian",
-                              "Brazilian"]
+                              "Brazilian",
+                              "Korean"
+    ]
     
     var body: some View {
         NavigationView{

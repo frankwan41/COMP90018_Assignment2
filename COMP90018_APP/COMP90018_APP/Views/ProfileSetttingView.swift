@@ -25,6 +25,7 @@ struct ProfileSetttingView: View {
     @State private var editedAge = ""
     @State private var editedGender = ""
     @State private var editedUsername = ""
+    @State private var editedVisibility = false
     
     @State private var originalEmail = "Loading..."
     @State private var originalPassword = "Loading..."
@@ -32,6 +33,7 @@ struct ProfileSetttingView: View {
     @State private var originalAge = "Loading..."
     @State private var originalGender = "Loading..."
     @State private var originalUsername = "Loading..."
+    @State private var originalVisibility = false
     
     @State private var showImagePicker = false
     @State private var showImageCamera = false
@@ -58,14 +60,6 @@ struct ProfileSetttingView: View {
             ("Gender", $editedGender, false, originalGender, false) // Assuming gender is not numeric
         ]
     }
-
-    
-    
-    let gradientBackground = LinearGradient(
-        gradient: Gradient(colors: [Color.orange.opacity(0.1), Color.white.opacity(0.1)]),
-        startPoint: .leading,
-        endPoint: .trailing
-    )
     
     var body: some View {
         NavigationView {
@@ -112,17 +106,7 @@ struct ProfileSetttingView: View {
                                 .font(.title2)
                         }
                     }
-                    
-                    //                    Circle().fill(.white)
-                    //                        .shadow(radius: 10)
-                    //                        .frame(width: 200, height: 200)
-                    //                        .padding(.vertical, 50)
-                    //                        .overlay(Text("Select Your Image")
-                    //                        )
                 }
-                
-                
-                
                 
                 List {
                     ForEach(fieldData, id: \.0) { (title, value, isSecure, defaultValue, isNumeric) in
@@ -134,9 +118,13 @@ struct ProfileSetttingView: View {
                             isNumeric: isNumeric,
                             passwordCover: $passwordCover
                         )
-                        .listRowBackground(gradientBackground)
                         .padding(.vertical, 10)
                     }
+                    ToggleableButtonRow(
+                        title: "Visibility",
+                        isToggled: isEditing ? $editedVisibility : .constant(originalVisibility),
+                        isEditable: isEditing
+                    ).padding(.vertical, 10)
                 }
 
                 .listStyle(.inset)
@@ -286,6 +274,33 @@ struct EditableTextRow: View {
     }
 }
 
+struct ToggleableButtonRow: View {
+    var title: String
+    @Binding var isToggled: Bool
+    var isEditable: Bool
+    
+    var body: some View {
+        HStack {
+            Text(title)
+            Spacer()
+            if isEditable {
+                Toggle(isOn: $isToggled) {
+                    // Empty view because the label is already provided by the Text(title)
+                }
+                .labelsHidden() // This will hide the label for the toggle, since the title is already shown
+            } else {
+                Image(systemName: isToggled ? "checkmark.square" : "square")
+                    .onTapGesture {
+                        if isEditable {
+                            isToggled.toggle()
+                        }
+                    }
+            }
+        }
+    }
+}
+
+
 extension ProfileSetttingView {
     
     private var profileEditButton: some View{
@@ -297,6 +312,7 @@ extension ProfileSetttingView {
             editedAge = originalAge
             editedGender = originalGender
             editedUsername = originalUsername
+            editedVisibility = originalVisibility
         } label: {
             Text("Edit Profile")
                 .frame(width: 200, height: 20)
@@ -340,7 +356,7 @@ extension ProfileSetttingView {
                 //originalPassword = editedPassword
                 
                 // Update the details of the user
-                profileSettingViewModel.updateUserInformation(userName: editedUsername, gender: editedGender, age: editedAge, phoneNumber: editedPhoneNumber)
+                profileSettingViewModel.updateUserInformation(userName: editedUsername, gender: editedGender, age: editedAge, phoneNumber: editedPhoneNumber, visibility: editedVisibility)
                 
                 if let profileImage = profileImage{
                     if profileImageIsChanged{
@@ -384,6 +400,7 @@ extension ProfileSetttingView{
         originalAge = user?.age ?? "Network Error"
         originalGender = user?.gender ?? "Network Error"
         originalUsername = user?.userName ?? "Network Error"
+        originalVisibility = user?.infoVisibility ?? false
         
         // Set initial values for editing fields when the view appears
         //editedEmail = originalEmail
@@ -391,6 +408,7 @@ extension ProfileSetttingView{
         editedAge = originalAge
         editedGender = originalGender
         editedUsername = originalUsername
+        editedVisibility = originalVisibility
         
     }
     

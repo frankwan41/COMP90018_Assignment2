@@ -49,7 +49,7 @@ struct SinglePostView: View {
     @State var profileImageURL: String?
     
     private let dateFormatter = DateFormatter()
-    @State var dateTimeText: String = "";
+    @State var dateTimeText: String = ""
     
     var openMapCommand: String = "map"
     var checkWeatherCommand: String = "weather"

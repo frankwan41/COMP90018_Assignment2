@@ -90,13 +90,15 @@ Social Interaction: Users can chat with other active users, with active users so
 #### Send or Delete Post
 <p align="center">
   <img src="readme_images/userMode/sendAPost.PNG" alt="Send a Post" width="200" height="400" align="center">
-  <img src="readme_images/userMode/deleteAPost.PNG" alt="Delete a Post" width="200" height="400" align="center">
+  <img src="readme_images/userMode/deleteApost1.PNG" alt="Delete a Post1" width="200" height="400" align="center">
+  <img src="readme_images/userMode/deleteApost2.PNG" alt="Delete a Post2" width="200" height="400" align="center">
 </p>
 
 #### Send or Delete Comment
 <p align="center">
   <img src="readme_images/userMode/sendAComment.PNG" alt="Send A Comment" width="200" height="400" align="center">
-  <img src="readme_images/userMode/deleteAComment.PNG" alt="Delete A Comment" width="200" height="400" align="center">
+  <img src="readme_images/userMode/deleteAComment1.PNG" alt="Delete A Comment" width="200" height="400" align="center">
+  <img src="readme_images/userMode/deleteAComment2.PNG" alt="Delete A Comment" width="200" height="400" align="center">
 </p>
 
 #### View Own or Liked Posts
@@ -108,6 +110,8 @@ Social Interaction: Users can chat with other active users, with active users so
 #### Edit Profile
 <p align="center">
   <img src="readme_images/userMode/editProfile.PNG" alt="Edit Profile" width="200" height="400" align="center">
+  <img src="readme_images/userMode/editProfile1.PNG" alt="Edit Profile" width="200" height="400" align="center">
+  <img src="readme_images/userMode/editProfile2.PNG" alt="Edit Profile" width="200" height="400" align="center">
 </p>
 
 #### Chat with Nearby Users
