@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Kingfisher
+import SwipeActions
 
 struct SingleComment: View {
     
@@ -20,62 +21,77 @@ struct SingleComment: View {
     @State var profileImageURL: String?
     @State var authorUsername: String?
     @State var userID: String?
+    @State private var showDeleteCommentAlert = false
     
     @StateObject var userViewModel = UserViewModel()
+    @StateObject var singlePostViewModel = SinglePostViewModel()
     
     var body: some View {
-
-        HStack(alignment: .top, spacing: 10) {
-            // Front section: contains only user profile photo
-            if let urlString = profileImageURL {
-                let url = URL(string: urlString)
-                KFImage(url)
-                    .resizable()
-                    .frame(maxWidth: 35, maxHeight: 35)
-                    .clipped()
-                    .cornerRadius(50)
-                    .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label), lineWidth: 1))
-            } else {
-                Image(systemName: "person.circle.fill")
-                    .resizable()
-                    .frame(maxWidth: 35, maxHeight: 35)
-                    .clipped()
-                    .cornerRadius(50)
-                    .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label), lineWidth: 1))
-            }
-            
-            // Middle section: contains username, comments, possible image comment
-            VStack(alignment:.leading, spacing: 5){
-                if let username = authorUsername {
-                    Text(username)
-                        .font(.subheadline)
+        
+        SwipeView{
+            HStack(alignment: .top, spacing: 10) {
+                // Front section: contains only user profile photo
+                if let urlString = profileImageURL {
+                    let url = URL(string: urlString)
+                    KFImage(url)
+                        .resizable()
+                        .frame(maxWidth: 35, maxHeight: 35)
+                        .clipped()
+                        .cornerRadius(50)
+                        .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label), lineWidth: 1))
+                } else {
+                    Image(systemName: "person.circle.fill")
+                        .resizable()
+                        .frame(maxWidth: 35, maxHeight: 35)
+                        .clipped()
+                        .cornerRadius(50)
+                        .overlay(RoundedRectangle(cornerRadius: 44).stroke(Color(.label), lineWidth: 1))
+                }
+                
+                // Middle section: contains username, comments, possible image comment
+                VStack(alignment:.leading, spacing: 5){
+                    if let username = authorUsername {
+                        Text(username)
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                    }
+                    Text(comment.content)
+                        .padding(.bottom)
+                }
+                // End section: contains like button and number of likes
+                Spacer() // Aligns the following UI to the right
+                //                VStack {
+                //                    if userID == comment.userID {
+                //                        DeleteButtonComment(
+                //                            post: $post,
+                //                            comments: $comments,
+                //                            comment: $comment
+                //                        )
+                //                    }
+                //                }
+                VStack {
+                    LikeButtonComment(
+                        comment: $comment,
+                        userViewModel: userViewModel
+                    )
+                    Text(String(comment.likes))
+                        .font(.footnote)
                         .foregroundColor(.gray)
                 }
-                Text(comment.content)
-                    .padding(.bottom)
+                
             }
-            // End section: contains like button and number of likes
-            Spacer() // Aligns the following UI to the right
-            VStack {
-                if userID == comment.userID {
-                    DeleteButtonComment(
-                        post: $post,
-                        comments: $comments,
-                        comment: $comment
-                    )
-                }
+            .contentShape(Rectangle())
+        } trailingActions: { context in
+            SwipeAction(systemImage: "trash", backgroundColor: .red) {
+                context.state.wrappedValue = .closed
+                showDeleteCommentAlert = true
             }
-            VStack {
-                LikeButtonComment(
-                    comment: $comment,
-                    userViewModel: userViewModel
-                )
-                Text(String(comment.likes))
-                    .font(.footnote)
-                    .foregroundColor(.gray)
-            }
-            
+            .clipShape(Circle())
+            .foregroundStyle(.white)
         }
+        .closeOnLabelTap(true)
+        .swipeEnabled(userID == comment.userID)
+        
         .onAppear {
             userID = userViewModel.getUserUID()
             userViewModel.getUser(userUID: comment.userID) { user in
@@ -88,5 +104,24 @@ struct SingleComment: View {
                 }
             }
         }
+        .alert(isPresented: $showDeleteCommentAlert) {
+            Alert(
+                title: Text("Delete Confirmation"),
+                message: Text("Are you sure you want to delete this comment?"),
+                primaryButton: .destructive(Text("Delete"), action: {
+                    singlePostViewModel.removeComment(commentID: comment.commentID)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                        singlePostViewModel.getPostComments(postID: post.id) { comments in
+                            if let fetchedComments = comments {
+                                self.comments = fetchedComments
+                            }
+                        }
+                    }
+                }),
+                secondaryButton: .cancel()
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
+        
     }
 }
