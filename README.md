@@ -110,6 +110,8 @@ Social Interaction: Users can chat with other active users, with active users so
 #### Edit Profile
 <p align="center">
   <img src="readme_images/userMode/editProfile.PNG" alt="Edit Profile" width="200" height="400" align="center">
+  <img src="readme_images/userMode/editProfile1.PNG" alt="Edit Profile" width="200" height="400" align="center">
+  <img src="readme_images/userMode/editProfile2.PNG" alt="Edit Profile" width="200" height="400" align="center">
 </p>
 
 #### Chat with Nearby Users
