@@ -187,7 +187,7 @@ struct SignView: View {
         let lengthRequirement = 8
         let letterRegex = ".*[A-Za-z]+.*"
         let numberRegex = ".*[0-9]+.*"
-        let specialCharRegex = ".*[!&^%$#@()/]+.*"
+        let specialCharRegex = ".*[!&^%$#@()/?.]+.*"
         
         if password.count < lengthRequirement {
             return (false, "Password must be at least \(lengthRequirement) characters long.")
