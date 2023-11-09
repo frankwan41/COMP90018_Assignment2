@@ -45,9 +45,19 @@ struct NewMessageCompo: View {
                     .font(.headline)
                     .foregroundColor(.orange)
                 
-                Text(user.email)
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
+                if (!user.infoVisibility) {
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text("Gender: " + user.gender)
+                            .foregroundColor(.gray)
+                            .font(.system(size: 10))
+                        Text("Age: " + user.age)
+                            .foregroundColor(.gray)
+                            .font(.system(size: 10))
+                        Text("Phone No.: " + user.phoneNumber)
+                            .foregroundColor(.gray)
+                            .font(.system(size: 10))
+                    }
+                }
             }
             
             Spacer()

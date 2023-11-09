@@ -26,6 +26,9 @@ struct SingleComment: View {
     @StateObject var userViewModel = UserViewModel()
     @StateObject var singlePostViewModel = SinglePostViewModel()
     
+    private let dateFormatter = DateFormatter()
+    @State var dateTimeText: String = ""
+    
     var body: some View {
         
         SwipeView{
@@ -57,6 +60,9 @@ struct SingleComment: View {
                     }
                     Text(comment.content)
                         .padding(.bottom)
+                    Text(dateTimeText)
+                        .foregroundColor(.gray)
+                        .font(.system(size: 12))
                 }
                 // End section: contains like button and number of likes
                 Spacer() // Aligns the following UI to the right
@@ -93,6 +99,8 @@ struct SingleComment: View {
         .swipeEnabled(userID == comment.userID)
         
         .onAppear {
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            dateTimeText = dateFormatter.string(from: comment.timestamp)
             userID = userViewModel.getUserUID()
             userViewModel.getUser(userUID: comment.userID) { user in
                 if let user = user {

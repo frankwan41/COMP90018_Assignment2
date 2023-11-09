@@ -71,6 +71,7 @@ class SinglePostViewModel: ObservableObject {
                     "content": content,
                     "likes": 0,
                     "userid": uid,
+                    "timestamp": Date()
                 ])
                 
                 // Add comment into post
@@ -128,6 +129,8 @@ class SinglePostViewModel: ObservableObject {
                             dispatchGroup.leave()
                         }
                     }
+                    
+                    comments.sort { $0.timestamp < $1.timestamp }
                     
                     dispatchGroup.notify(queue: .main) {
                         completion(comments)
