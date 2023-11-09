@@ -26,6 +26,7 @@ struct User: Identifiable, Codable, Hashable {
     var isActive: Bool
     var currentLatitude: Double
     var currentLongitude: Double
+    var infoVisibility: Bool
     var locationTimestamp: Timestamp
 
     
@@ -42,6 +43,7 @@ struct User: Identifiable, Codable, Hashable {
         self.isActive = data["isactive"] as? Bool ?? false
         self.currentLatitude = data["currentlatitude"] as? Double ?? 0.0
         self.currentLongitude = data["currentlongitude"] as? Double ?? 0.0
+        self.infoVisibility = data["infovisibility"] as? Bool ?? false
         self.locationTimestamp = (data["locationtimestamp"] as? Timestamp ?? Timestamp(date: Date()))
         
         

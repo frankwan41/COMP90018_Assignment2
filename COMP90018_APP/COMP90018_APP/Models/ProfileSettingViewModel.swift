@@ -41,7 +41,7 @@ class ProfileSettingViewModel: ObservableObject{
     }
     
     
-    func updateUserInformation(userName:String, gender:String, age:String, phoneNumber:String){
+    func updateUserInformation(userName:String, gender:String, age:String, phoneNumber:String, visibility:Bool){
         
         // Cherck whether the user has logined
         // uid = Auth.auth().currentUser?.uid
@@ -54,7 +54,8 @@ class ProfileSettingViewModel: ObservableObject{
             "username": userName,
             "gender": gender,
             "age": age,
-            "phonenumber": phoneNumber
+            "phonenumber": phoneNumber,
+            "infovisibility": visibility
         ] as [String: Any]
         
         FirebaseManager.shared.firestore
