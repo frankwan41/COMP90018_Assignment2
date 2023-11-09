@@ -392,34 +392,13 @@ struct AddPostTagsView: View {
                 .frame(height: 200)
             }
         }
-        .onAppear {
-            tagsExisting = [
-                // Melbourne tags
-                "Melbourne food", "Melbourne coffee", "Melbourne nightlife",
-                "Melbourne markets", "Melbourne culture", "Melbourne events",
-
-                // Sydney tags
-                "Sydney beaches", "Sydney dining", "Sydney opera house",
-                "Sydney markets", "Sydney festivals", "Sydney seafood",
-
-                // Brisbane tags
-                "Brisbane river", "Brisbane BBQ", "Brisbane markets",
-                "Brisbane street food", "Brisbane local produce",
-
-                // Perth tags
-                "Perth beaches", "Perth vineyards", "Perth local cuisine",
-                "Perth seafood", "Perth festivals", "Perth street art",
-
-                // Adelaide tags
-                "Adelaide wineries", "Adelaide local food", "Adelaide art",
-                "Adelaide festivals", "Adelaide beaches", "Adelaide markets",
-
-                // Other tags
-                "Australian BBQ", "Australian wildlife", "Australian hiking",
-                "Australian surfing", "Australian outback", "Australian road trip"
-            ]
+        .task {
+            addPostViewModel.fetchAllTags(){ tagsFetched in
+                if let tagsFetched = tagsFetched{
+                    self.tagsExisting = tagsFetched
+                }
+            }
         }
-
     }
 }
 

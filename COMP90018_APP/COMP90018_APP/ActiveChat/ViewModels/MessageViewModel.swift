@@ -54,7 +54,8 @@ class MessageViewModel: ObservableObject {
      This function will retrieve the image of user profile.
      */
     func getUserProfileImage(userUID: String, completion: @escaping (UIImage?) -> Void){
-        let ref = FirebaseManager.shared.storage.reference(withPath: userUID)
+        let folderName = "ProfileImages/"
+        let ref = FirebaseManager.shared.storage.reference(withPath: folderName+userUID)
         ref.getData(maxSize: Int64(PostsViewModel.MAX_IMAGE_SIZE)) { data, error in
             if let error = error{
                 print("Unable to retrieve the image in the user profile, \(error.localizedDescription)")

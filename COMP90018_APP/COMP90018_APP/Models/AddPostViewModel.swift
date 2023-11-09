@@ -188,7 +188,7 @@ class AddPostViewModel{
     }
     
     // TODO: Fetch all tags from Firestore
-    func fetchAllTags(searchTerm: String, completion: @escaping ([String]?) -> Void) {
+    func fetchAllTags(completion: @escaping ([String]?) -> Void) {
         FirebaseManager.shared.firestore
             .collection("tags")
             .getDocuments { documentsSnapshot, error in
@@ -201,9 +201,13 @@ class AddPostViewModel{
                 
                 documentsSnapshot?.documents.forEach({ snapshot in
                     let data = snapshot.data()
-                    if let tag = data["name"] as? String, tag.fuzzyMatch(searchTerm) {
-                        tags.append(tag)
-                    }
+                    
+//                    if let tag = data["name"] as? String, tag.fuzzyMatch(searchTerm) {
+//                        tags.append(tag)
+//                    }
+                    
+                    let tag = Tag(data: data)
+                    tags.append(tag.name)
                 })
                 
                 completion(tags)
