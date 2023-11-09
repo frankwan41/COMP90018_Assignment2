@@ -23,6 +23,7 @@
       - [Edit Profile](#edit-profile)
       - [Chat with Nearby Users](#chat-with-nearby-users)
       - [Show the real-time weather](#Show-the-real-time-weather)
+      - [Fuzzy search on Tag/User/Post](#Fuzzy-search-on-Tag/User/Post)
   - [Team Members](#team-members)
   - [Technologies Applied](#technologies-applied)
   - [Development Setup](#development-setup)
@@ -127,6 +128,12 @@ Social Interaction: Users can  with other active users, with active users sorted
   <img src="readme_images/userMode/weather.PNG" alt="Chat" width="200" height="400" align="center">
 </p>
 
+#### Fuzzy search on Tag/User/Post
+<p align="center">
+  <img src="readme_images/userMode/search.PNG" alt="Chat" width="200" height="400" align="center">
+  <img src="readme_images/userMode/search2.PNG" alt="Chat" width="200" height="400" align="center">
+  <img src="readme_images/userMode/search3.PNG" alt="Chat" width="200" height="400" align="center">
+</p>
 
 
 
