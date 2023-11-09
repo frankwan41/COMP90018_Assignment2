@@ -59,7 +59,7 @@ Social Interaction: Users can  with other active users, with active users sorted
 <p align="center">
 <img src="readme_images/gmPosts.PNG" alt="Posts View" width="200" height="400" align="center">
   <img src="readme_images/gmMapPosts.PNG" alt="Map Posts View" width="200" height="400" align="center">
-  <img src="readme_images/singlePost.jpeg" alt="SinglePost View" width="200" height="400" align="center">
+  <img src="readme_images/singlePost.PNG" alt="SinglePost View" width="200" height="400" align="center">
 </p>
 
 #### Shake A Kind of Cuisine If NO
