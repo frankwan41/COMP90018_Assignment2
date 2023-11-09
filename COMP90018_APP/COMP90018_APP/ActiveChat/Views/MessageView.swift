@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Photos
+import Kingfisher
 
 struct MessageView: View {
     
@@ -53,6 +54,9 @@ struct MessageView: View {
                     .font(.title2)
                     .bold()
                     .padding(.horizontal)
+                    .onTapGesture {
+                        showUserProfile.toggle()
+                    }
                 
                 HStack{
                     Spacer()
@@ -60,10 +64,9 @@ struct MessageView: View {
                     Button{
                         showUserProfile.toggle()
                     }label:{
-                        Image(systemName: "photo.stack.fill")
+                       Image(systemName: "house")
+                            .font(.title2)
                             .tint(.orange)
-                            .font(.largeTitle)
-                        
                     }
                     .padding(.trailing)
                     
@@ -90,20 +93,6 @@ struct MessageView: View {
                         }
                         .id("bottom")
                     }
-//                    .onReceive(viewModel.$count) { _ in
-//                        withAnimation(.easeOut(duration: 0.5)) {
-//                            proxy.scrollTo("bottom", anchor: .bottom)
-//                        }
-//                    }
-//                    .onAppear{
-//                        if viewModel.messages.count != 0 {
-//                            withAnimation(.easeOut(duration: 0.5)) {
-//                                //proxy.scrollTo("bottom", anchor: .bottom)
-//                                //proxy.scrollTo(viewModel.messages.last?.id, anchor: .bottom)
-//                                proxy.scrollTo(viewModel.messages.last?.id)
-//                            }
-//                        }
-//                    }
                     .onChange(of: isEditing, perform: { _ in
                         withAnimation(.easeOut(duration: 0.5)) {
                             // proxy.scrollTo("bottom", anchor: .bottom)
@@ -173,14 +162,7 @@ struct MessageView: View {
             }
             .padding()
         }
-        //.navigationTitle(viewModel.user?.userName ?? "Loading...")
-        //.navigationBarTitleDisplayMode(.inline)
-        //.navigationBarHidden(true)
-        //.toolbar(.hidden)
-        //.navigationBarBackButtonHidden()
-//        .onAppear(perform: {
-//            viewModel.toProfileImage = nil
-//        })
+        
         .fullScreenCover(isPresented: $showUserProfile, content: {
             UserProfileView(userProfileViewModel: userProfileViewModel)
         })
