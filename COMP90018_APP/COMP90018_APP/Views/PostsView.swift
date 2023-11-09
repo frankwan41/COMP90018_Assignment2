@@ -165,7 +165,7 @@ struct PostsView: View {
             locationManager.requestPermission { authorized in
                 if authorized {
                     requestAndUpdateLocationForBeingActive()
-                    postsViewModel.posts.sort { calculateDistance(post: $0) > calculateDistance(post: $1) }
+                    postsViewModel.posts.sort { calculateDistance(post: $0) < calculateDistance(post: $1) }
                 } else {
                     sortOrder = "Most Recent"
                 }
