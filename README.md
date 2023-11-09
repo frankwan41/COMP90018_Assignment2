@@ -90,7 +90,8 @@ Social Interaction: Users can chat with other active users, with active users so
 #### Send or Delete Post
 <p align="center">
   <img src="readme_images/userMode/sendAPost.PNG" alt="Send a Post" width="200" height="400" align="center">
-  <img src="readme_images/userMode/deleteAPost.PNG" alt="Delete a Post" width="200" height="400" align="center">
+  <img src="readme_images/userMode/deleteAPost1.PNG" alt="Delete a Post" width="200" height="400" align="center">
+  <img src="readme_images/userMode/deleteAPost2.PNG" alt="Delete a Post" width="200" height="400" align="center">
 </p>
 
 #### Send or Delete Comment
