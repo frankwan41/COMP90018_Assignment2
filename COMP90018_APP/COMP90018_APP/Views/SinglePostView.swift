@@ -315,6 +315,18 @@ struct SinglePostView: View {
             }
             .fullScreenCover(isPresented: $showUserProfile, content: {
                 UserProfileView(userProfileViewModel: userProfileViewModel)
+                    .onDisappear {
+                        singlePostViewModel.getPost(postID: post.id) { newPost in
+                            if let newPost = newPost{
+                                self.post = newPost
+                            }
+                        }
+                        userViewModel.getCurrentUser { user in
+                            if let user = user {
+                                self.currentUser = user
+                            }
+                        }
+                    }
             })
             
         }

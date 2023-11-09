@@ -26,4 +26,22 @@ class PostCollectionModel: ObservableObject {
             }
     }
     
+    func getPost(postID: String, completion: @escaping (Post?) -> Void) {
+        FirebaseManager.shared.firestore
+            .collection("posts")
+            .document(postID)
+            .getDocument { documentSnapshot, error in
+                if let error = error {
+                    print("Failed to fetch post \(postID), \(error.localizedDescription)")
+                    completion(nil)
+                } else if let documentSnapshot = documentSnapshot, let data = documentSnapshot.data() {
+                    let post = Post(data: data)
+                    print("Successfully fetched post \(postID)")
+                    completion(post)
+                } else {
+                    completion(nil)
+                }
+        }
+    }
+    
 }
