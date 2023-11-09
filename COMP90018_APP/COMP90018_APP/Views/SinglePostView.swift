@@ -55,9 +55,7 @@ struct SinglePostView: View {
     
     var openMapCommand: String = "map"
     var checkWeatherCommand: String = "weather"
-    
-    @State var showUserProfile: Bool = false
-    
+        
     @Environment(\.presentationMode) var presentationMode
     
 
@@ -133,8 +131,8 @@ struct SinglePostView: View {
                         }
                     }
                     ToolbarItem(placement: .navigationBarLeading) {
-                        Button {
-                            showUserProfile.toggle()
+                        NavigationLink {
+                            UserProfileView(userProfileViewModel: userProfileViewModel).navigationBarBackButtonHidden(true)
                         } label: {
                             HStack {
                                 // Get user profile picture
@@ -163,6 +161,7 @@ struct SinglePostView: View {
                             }
                             .foregroundColor(.black)
                         }
+
                     }
 
                     // Only show the distance tip/distance if the post has location
@@ -313,9 +312,6 @@ struct SinglePostView: View {
                 }
                 
             }
-            .fullScreenCover(isPresented: $showUserProfile, content: {
-                UserProfileView(userProfileViewModel: userProfileViewModel)
-            })
             
         }
         .onAppear {
