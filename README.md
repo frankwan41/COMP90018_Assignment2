@@ -20,6 +20,7 @@
       - [Send or Delete Post](#send-or-delete-post)
       - [Send or Delete Comment](#send-or-delete-comment)
       - [View Own or Liked Posts](#view-own-or-liked-posts)
+      - [View user's posts](#view-user's-posts)
       - [Edit Profile](#edit-profile)
       - [Chat with Nearby Users](#chat-with-nearby-users)
       - [Show the real-time weather](#Show-the-real-time-weather)
@@ -107,6 +108,11 @@ Social Interaction: Users can  with other active users, with active users sorted
 <p align="center">
   <img src="readme_images/userMode/ownPosts.PNG" alt="Own Posts" width="200" height="400" align="center">
   <img src="readme_images/userMode/likedPosts.PNG" alt="Liked Posts" width="200" height="400" align="center">
+</p>
+
+#### View user's posts
+<p align="center">
+  <img src="readme_images/userMode/viewPosts.PNG" alt="Own Posts" width="200" height="400" align="center">
 </p>
 
 #### Edit Profile
