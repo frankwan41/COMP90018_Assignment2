@@ -146,7 +146,7 @@ extension ProfileView {
                 VStack {
                     Spacer().frame(height: 10)
                     Text(profileViewPostsModel.user.userName)
-                        .font(.largeTitle)
+                        .font(.custom("ChalkboardSE-Bold", size: 39))
                         .bold()
                     
                     HStack {

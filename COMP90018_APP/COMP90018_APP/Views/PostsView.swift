@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Kingfisher
+import CoreLocation
 
 enum SearchTypes: String,CaseIterable,Identifiable {
     case tag = "tag"
@@ -36,6 +37,12 @@ struct PostsView: View {
     @State private var pickerIsActive = false
     @State private var showDropDown = false
     @State private var newMessageHint = false
+    
+    @State var sortOrder = "Most Recent"
+    let orders = ["Most Recent", "Most Popular", "Nearest"]
+    
+    @State var userLocationActive = false
+    @State var showActivateConfirmation = false
     
     @EnvironmentObject var speechRecognizer: SpeechRecognizerViewModel
     var shakeCommand = "shake"
@@ -100,7 +107,8 @@ struct PostsView: View {
                                 .resizable().scaledToFit()
                                 .frame(width: 30, height: 30)
                                 .foregroundStyle(.black)
-                        }.padding(.horizontal, 20)
+                        }
+                        Spacer().frame(width: 20)
                     }
                     Spacer().frame(height: 10)
                     
@@ -135,6 +143,9 @@ struct PostsView: View {
             newMessageHint = true
         })
 
+        .onChange(of: sortOrder, perform: { newValue in
+            sortPosts()
+        })
         .refreshable {
             // Refresh code
             processUserInput()
@@ -142,6 +153,66 @@ struct PostsView: View {
         .onAppear {
             searchCategory = shakeResult
             processUserInput()
+        }
+    }
+    
+    func sortPosts() {
+        if (sortOrder == "Most Recent") {
+            postsViewModel.posts.sort { $0.timestamp > $1.timestamp }
+        } else if (sortOrder == "Most Popular") {
+            postsViewModel.posts.sort { $0.likes > $1.likes }
+        } else if (sortOrder == "Nearest") {
+            locationManager.requestPermission { authorized in
+                if authorized {
+                    requestAndUpdateLocationForBeingActive()
+                    postsViewModel.posts.sort { calculateDistance(post: $0) > calculateDistance(post: $1) }
+                } else {
+                    sortOrder = "Most Recent"
+                }
+            }
+        }
+    }
+    
+    func calculateDistance(post: Post) -> CLLocationDistance{
+        let currentUserCoordinate = CLLocation(latitude: userViewModel.currentUser?.currentLatitude ?? 0, longitude: userViewModel.currentUser?.currentLongitude ?? 0)
+        let selectedUserCoordinate = CLLocation(latitude: post.latitude, longitude: post.longitude)
+        return currentUserCoordinate.distance(from: selectedUserCoordinate).rounded()
+    }
+    
+    private func requestAndUpdateLocationForBeingActive(){
+        // Request location
+        locationManager.requestPermission { authorized in
+            if authorized{
+                // Update the current location of the user
+                if let location = locationManager.location{
+
+                    self.userViewModel.updateUserCurrentLocation(latitude: location.latitude, longitude: location.longitude) { result in
+                        if result == nil{
+                            userLocationActive = false
+                        } else {
+                            
+                            // Update the active state of the user
+                            self.userViewModel.setUserActiveState(state: true) { info in
+                            if info != nil{
+                                userLocationActive = true
+                            }else{
+                                userLocationActive = false
+                            }
+                        }
+                            
+                        }
+                    }
+                    
+                }else{
+                    // Unable to update the location of the user
+                    userLocationActive = false
+                }
+            }else{
+                // Unable to update the location of the user
+                showActivateConfirmation = true
+                userLocationActive = false
+                
+            }
         }
     }
     
@@ -167,11 +238,12 @@ struct PostsView: View {
             postsViewModel.fetchPosts()
             
         }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+            sortPosts()
+        })
     }
 
 }
-
-
 
 extension PostsView {
     private var PostsListView: some View {
@@ -228,6 +300,14 @@ extension PostsView {
                 }
                 Spacer().frame(width: 20)
             }
+            
+            Picker("Sort By", selection: $sortOrder) {
+                ForEach(orders, id: \.self) {
+                    Text($0)
+                }
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal, 20)
             
             if !shakeResult.isEmpty {
                 if postsViewModel.posts.isEmpty {

@@ -20,8 +20,11 @@
       - [Send or Delete Post](#send-or-delete-post)
       - [Send or Delete Comment](#send-or-delete-comment)
       - [View Own or Liked Posts](#view-own-or-liked-posts)
+      - [View user's posts](#view-user's-posts)
       - [Edit Profile](#edit-profile)
       - [Chat with Nearby Users](#chat-with-nearby-users)
+      - [Show the real-time weather](#Show-the-real-time-weather)
+      - [Fuzzy search on Tag/User/Post](#Fuzzy-search-on-Tag/User/Post)
   - [Team Members](#team-members)
   - [Technologies Applied](#technologies-applied)
   - [Development Setup](#development-setup)
@@ -38,7 +41,7 @@ Diverse Display: Users can browse geolocation-based posts in a map format.
 
 Random Dining Selection: Users can search for posts with random food tags by shaking their device.
 
-Social Interaction: Users can chat with other active users, with active users sorted by geographical proximity.
+Social Interaction: Users can  with other active users, with active users sorted by geographical proximity.
 
 ## [Demo Video]()
 
@@ -107,6 +110,11 @@ Social Interaction: Users can chat with other active users, with active users so
   <img src="readme_images/userMode/likedPosts.PNG" alt="Liked Posts" width="200" height="400" align="center">
 </p>
 
+#### View user's posts
+<p align="center">
+  <img src="readme_images/userMode/viewposts.PNG" alt="Own Posts" width="200" height="400" align="center">
+</p>
+
 #### Edit Profile
 <p align="center">
   <img src="readme_images/userMode/editProfile.PNG" alt="Edit Profile" width="200" height="400" align="center">
@@ -116,11 +124,22 @@ Social Interaction: Users can chat with other active users, with active users so
 
 #### Chat with Nearby Users
 <p align="center">
-  <img src="readme_images/userMode/chat.PNG" alt="Chat" width="200" height="400" align="center">
-  <img src="readme_images/userMode/findActive.PNG" alt="Find Active users" width="200" height="400" align="center">
-  <img src="readme_images/userMode/sendMessage.PNG" alt="Send Message" width="200" height="400" align="center">
+  <img src="readme_images/userMode/chat1.PNG" alt="" width="200" height="400" align="center">
+  <img src="readme_images/userMode/chat2.PNG" alt="Find Active users" width="200" height="400" align="center">
+  <img src="readme_images/userMode/chat3.PNG" alt="Send Message" width="200" height="400" align="center">
 </p>
 
+#### Show the real-time weather
+<p align="center">
+  <img src="readme_images/userMode/weather.PNG" alt="Chat" width="200" height="400" align="center">
+</p>
+
+#### Fuzzy search on Tag/User/Post
+<p align="center">
+  <img src="readme_images/userMode/search.PNG" alt="Chat" width="200" height="400" align="center">
+  <img src="readme_images/userMode/search2.PNG" alt="Chat" width="200" height="400" align="center">
+  <img src="readme_images/userMode/search3.PNG" alt="Chat" width="200" height="400" align="center">
+</p>
 
 
 
