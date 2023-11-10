@@ -22,6 +22,7 @@
       - [View Own or Liked Posts](#view-own-or-liked-posts)
       - [View user's posts](#view-user's-posts)
       - [Edit Profile](#edit-profile)
+      - [Visibility](#Visibility)
       - [Chat with Nearby Users](#chat-with-nearby-users)
       - [Show the real-time weather](#Show-the-real-time-weather)
       - [Navigate to the Map](#Navigate-to-the-map)
@@ -121,6 +122,12 @@ Social Networking: Users can  with other active users, sorted by geographical pr
   <img src="readme_images/userMode/editProfile.PNG" alt="Edit Profile" width="200" height="400" align="center">
   <img src="readme_images/userMode/editProfile1.PNG" alt="Edit Profile" width="200" height="400" align="center">
   <img src="readme_images/userMode/editProfile2.PNG" alt="Edit Profile" width="200" height="400" align="center">
+</p>
+
+#### Visibility
+<p align="center">
+  <img src="readme_images/userMode/Visibility.jpg" alt="Edit Profile" width="200" height="400" align="center">
+  <img src="readme_images/userMode/Visibility1.jpg" alt="Edit Profile" width="200" height="400" align="center">
 </p>
 
 #### Chat with Nearby Users
