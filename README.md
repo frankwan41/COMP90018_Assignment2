@@ -52,7 +52,7 @@ Social Networking: Users can  with other active users, sorted by geographical pr
 
 #### Welcome
 <p align="center">
-<img src="readme_images/welcome.PNG" alt="Welcome View" width="200" height="400" align="center">
+<img src="readme_images/welcome.PNG" alt="Welcome View" width="600" height="400" align="center">
 </p>
 
 #### Read Posts as A Guest If YES
