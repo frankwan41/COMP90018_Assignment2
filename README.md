@@ -26,6 +26,7 @@
       - [Show the real-time weather](#Show-the-real-time-weather)
       - [Navigate to the Map](#Navigate-to-the-map)
       - [Fuzzy search on Tag/User/Post](#Fuzzy-search-on-Tag/User/Post)
+  - [Architecture](#Architecture)
   - [Team Members](#team-members)
   - [Technologies Applied](#technologies-applied)
   - [Development Setup](#development-setup)
@@ -146,6 +147,11 @@ Social Networking: Users can  with other active users, sorted by geographical pr
   <img src="readme_images/userMode/search.PNG" alt="Chat" width="200" height="400" align="center">
   <img src="readme_images/userMode/search2.PNG" alt="Chat" width="200" height="400" align="center">
   <img src="readme_images/userMode/search3.PNG" alt="Chat" width="200" height="400" align="center">
+</p>
+
+## Architecture
+<p align="center">
+  <img src="readme_images/architecture.PNG" alt="Chat" width="300" height="400" align="center">
 </p>
 
 
