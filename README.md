@@ -126,7 +126,7 @@ Social Networking: Users can  with other active users, sorted by geographical pr
 #### Visibility
 <p align="center">
   <img src="readme_images/userMode/Visibility.jpg" alt="Edit Profile" width="200" height="400" align="center">
-  <img src="readme_images/userMode/Visibility2.jpg" alt="Edit Profile" width="200" height="400" align="center">
+  <img src="readme_images/userMode/Visibility1.jpg" alt="Edit Profile" width="200" height="400" align="center">
 </p>
 
 #### Chat with Nearby Users
