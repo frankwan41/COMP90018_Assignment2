@@ -148,7 +148,7 @@ struct PostsView: View {
         })
         .refreshable {
             // Refresh code
-            processUserInput()
+            sortPosts()
         }
         .onAppear {
             searchCategory = shakeResult
@@ -236,11 +236,8 @@ struct PostsView: View {
             // If there is no search term, display all posts
             // This may require calling another method to re-fetch all posts
             postsViewModel.fetchPosts()
-            
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-            sortPosts()
-        })
+        
     }
 
 }
