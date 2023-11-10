@@ -45,7 +45,7 @@ Diverse Display: Posts based on geographical location information can be browsed
 Random Meal Selection: Users can search for posts with random food tags by shaking their device.
 
 Social Networking: Users can  with other active users, sorted by geographical proximity.
-## [Demo Video]()
+## [Demo Video](https://youtu.be/vd8gYSgu7EM)
 
 
 ## User Guide and Key Features
