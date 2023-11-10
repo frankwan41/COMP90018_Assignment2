@@ -124,7 +124,7 @@ Social Networking: Users can  with other active users, sorted by geographical pr
 
 #### Chat with Nearby Users
 <p align="center">
-   <img src="readme_images/userMode/chat.PNG" alt="" width="200" height="400" align="center">
+   <img src="readme_images/userMode/chat.jpg" alt="" width="200" height="400" align="center">
   <img src="readme_images/userMode/chat1.PNG" alt="" width="200" height="400" align="center">
   <img src="readme_images/userMode/chat2.PNG" alt="Find Active users" width="200" height="400" align="center">
   <img src="readme_images/userMode/chat3.PNG" alt="Send Message" width="200" height="400" align="center">
