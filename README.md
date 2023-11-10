@@ -25,6 +25,7 @@
       - [Chat with Nearby Users](#chat-with-nearby-users)
       - [Show the real-time weather](#Show-the-real-time-weather)
       - [Fuzzy search on Tag/User/Post](#Fuzzy-search-on-Tag/User/Post)
+      - [Navigate to the Map](#Navigate-to-the-map)
   - [Team Members](#team-members)
   - [Technologies Applied](#technologies-applied)
   - [Development Setup](#development-setup)
@@ -138,6 +139,12 @@ Social Networking: Users can chat with other active users, sorted by geographica
   <img src="readme_images/userMode/search.PNG" alt="Chat" width="200" height="400" align="center">
   <img src="readme_images/userMode/search2.PNG" alt="Chat" width="200" height="400" align="center">
   <img src="readme_images/userMode/search3.PNG" alt="Chat" width="200" height="400" align="center">
+</p>
+
+#### Navigate to the Map
+<p align="center">
+  <img src="readme_images/userMode/Navigation.PNG" alt="Chat" width="200" height="400" align="center">
+  <img src="readme_images/userMode/Navigation1.PNG" alt="Chat" width="200" height="400" align="center">
 </p>
 
 
