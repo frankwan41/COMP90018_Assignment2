@@ -1,6 +1,6 @@
 # COMP90018_SoftwareProject-What2Eat
 <p align="center">
-<img src="readme_images/welcomeView.jpg" alt="Welcome View" width="600" height="400" align="center">
+<img src="readme_images/welcomeView.jpg" alt="Welcome View" width="700" height="400" align="center">
 </p>
 
 ## Table of Contents
