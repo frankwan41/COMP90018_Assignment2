@@ -150,14 +150,14 @@ extension ProfileView {
                 VStack {
                     Spacer().frame(height: 10)
                     Text(profileViewPostsModel.user.userName)
-                        .font(.custom("ChalkboardSE-Bold", size: 39))
+                        .font(.custom("ChalkboardSE-Bold", size: 35))
                         .bold()
                     
                     HStack {
                         Spacer()
                         NavigationLink(destination: ProfileSetttingView(profileSettingViewModel: ProfileSettingViewModel(), profileViewModel: profileViewPostsModel).navigationBarBackButtonHidden(true)) {
                             Text("Modify Profile Details")
-                                .font(.custom("ChalkboardSE-Bold", size: 15))
+                                .font(.custom("ChalkboardSE-Bold", size: 13))
                                 .tint(.orange)
                                 .foregroundColor(.white)
                                 .padding()
@@ -173,7 +173,7 @@ extension ProfileView {
                             userViewModel.signOutUser()
                         }, label: {
                             Text("Sign Out")
-                                .font(.custom("ChalkboardSE-Bold", size: 15))
+                                .font(.custom("ChalkboardSE-Bold", size: 13))
                                 .tint(.orange)
                                 .foregroundColor(.white)
                                 .padding()
