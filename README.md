@@ -144,7 +144,7 @@ Social Networking: Users can chat with other active users, sorted by geographica
 #### Navigate to the Map
 <p align="center">
   <img src="readme_images/userMode/Navigation.PNG" alt="Chat" width="200" height="400" align="center">
-  <img src="readme_images/userMode/Navigation1.PNG" alt="Chat" width="200" height="400" align="center">
+  <img src="readme_images/userMode/Navigation2.PNG" alt="Chat" width="200" height="400" align="center">
 </p>
 
 
