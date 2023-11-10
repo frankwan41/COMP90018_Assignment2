@@ -22,6 +22,7 @@
       - [View Own or Liked Posts](#view-own-or-liked-posts)
       - [View user's posts](#view-user's-posts)
       - [Edit Profile](#edit-profile)
+      - [Visibility](#Visibility)
       - [Chat with Nearby Users](#chat-with-nearby-users)
       - [Show the real-time weather](#Show-the-real-time-weather)
       - [Navigate to the Map](#Navigate-to-the-map)
