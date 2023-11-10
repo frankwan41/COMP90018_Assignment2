@@ -24,6 +24,7 @@
       - [Edit Profile](#edit-profile)
       - [Chat with Nearby Users](#chat-with-nearby-users)
       - [Show the real-time weather](#Show-the-real-time-weather)
+      - [Navigate to the Map](#Navigate-to-the-map)
       - [Fuzzy search on Tag/User/Post](#Fuzzy-search-on-Tag/User/Post)
   - [Team Members](#team-members)
   - [Technologies Applied](#technologies-applied)
@@ -41,7 +42,7 @@ Diverse Display: Posts based on geographical location information can be browsed
 
 Random Meal Selection: Users can search for posts with random food tags by shaking their device.
 
-Social Networking: Users can chat with other active users, sorted by geographical proximity.
+Social Networking: Users can  with other active users, sorted by geographical proximity.
 ## [Demo Video]()
 
 
@@ -123,6 +124,7 @@ Social Networking: Users can chat with other active users, sorted by geographica
 
 #### Chat with Nearby Users
 <p align="center">
+   <img src="readme_images/userMode/chat.PNG" alt="" width="200" height="400" align="center">
   <img src="readme_images/userMode/chat1.PNG" alt="" width="200" height="400" align="center">
   <img src="readme_images/userMode/chat2.PNG" alt="Find Active users" width="200" height="400" align="center">
   <img src="readme_images/userMode/chat3.PNG" alt="Send Message" width="200" height="400" align="center">
@@ -133,12 +135,19 @@ Social Networking: Users can chat with other active users, sorted by geographica
   <img src="readme_images/userMode/weather.PNG" alt="Chat" width="200" height="400" align="center">
 </p>
 
+#### Navigate to the Map
+<p align="center">
+  <img src="readme_images/userMode/Navigation.PNG" alt="Chat" width="200" height="400" align="center">
+  <img src="readme_images/userMode/Navigation2.PNG" alt="Chat" width="200" height="400" align="center">
+</p>
+
 #### Fuzzy search on Tag/User/Post
 <p align="center">
   <img src="readme_images/userMode/search.PNG" alt="Chat" width="200" height="400" align="center">
   <img src="readme_images/userMode/search2.PNG" alt="Chat" width="200" height="400" align="center">
   <img src="readme_images/userMode/search3.PNG" alt="Chat" width="200" height="400" align="center">
 </p>
+
 
 
 
