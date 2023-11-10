@@ -151,7 +151,7 @@ Social Networking: Users can  with other active users, sorted by geographical pr
 
 ## Architecture
 <p align="center">
-  <img src="readme_images/architecture.png" alt="Chat" width="600" height="900" align="center">
+  <img src="readme_images/architecture.png" alt="Chat" width="600" height="800" align="center">
 </p>
 
 
